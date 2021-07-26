@@ -56,3 +56,41 @@ git checkout DBarrow_JointFit
 make clean
 make
 ```
+
+## Print event rates study
+
+SK minituple files: ```/gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/skatm/SKMC```
+SK spline files: ```/gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/skatm/SKMCSplines```
+
+```
+cd /gpfs/projects/McGrewGroup/weishi/MaCh3/MaCh3
+```
+
+In case you logged out from the previous session and re-login, source this to set library path (or put it into your .bashrc),
+
+```
+source setup.sh
+```
+
+Now symlink the relevant minituples and splines,
+
+```
+ln -s /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/skatm/SKMC ./inputs/skatm/SKMC   
+ln -s /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/skatm/SKMCSplines ./inputs/skatm/SKMCSplines
+```
+
+Now create sample configs for all the ATMPD sample with the relevant sample bools, values and binning information,
+
+```
+python makeConfigs.py
+```
+
+Now run the following (AtmConfig.cfg is the fit config),
+
+```
+./AtmJointFit_Bin/PrintEventRate configs/AtmosphericConfigs/AtmConfig.cfg  
+```
+
+The output is in ```PrintEventRate_output.txt```. Compare printed event rates to https://docs.google.com/spreadsheets/d/1z2AsWpKUhx113r9PGo1S-7_k5MQGmvfo-kTUhl3MhzE/edit?usp=sharing
+
+```

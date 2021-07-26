@@ -1,0 +1,1790 @@
+[weishi2@login1 MaCh3]$ ./AtmJointFit_Bin/PrintEventRate configs/AtmosphericConfigs/AtmConfig.cfg
+
+RooFit v3.60 -- Developed by Wouter Verkerke and David Kirkby
+                Copyright (C) 2000-2013 NIKHEF, University of California & Stanford University
+                All rights reserved, please read http://roofit.sourceforge.net/license.txt
+
+
+Reading configuration from configs/AtmosphericConfigs/AtmConfig.cfg
+Number of burn in steps not specified, using 1000
+- ND280 test statistic specified, using Barlow-Beeston
+- no PCA threshold specified for ND280, setting to -1
+- found BANFF CovMatrix = inputs/BANFF_postfit_OA2020_fixed2p2h_fixedIHalfLowPPi_20200409_NatUnits.root
+- found BANFF CovMatrix name = postfit_cov
+- found BANFF vector of parameters = postfit_params_natunits
+- found Generated Tune name = postfit_cov
+- found Gnerated Tune vector of parameters = xsec_param_nom
+- found fluxCovMatrix = inputs/13av7p1_run1-10_ndto9_banff.root
+- found fluxCovMatrix name = total_flux_cov
+- found xsecCovMatrix = inputs/xsec_covariance_2020a_IncAtmosphericModel_v4.root
+- found xsecCovMatrix name = xsec_cov
+- found NDdetCovMatrix = inputs/ND280_Syst_Cov_20200114_TH2D574BinningTH2Poly_convertedToMaCh3.root
+- didn't find ndDetCovMatrix! Setting default = nddet_cov
+- fousk skDet CovMatrix name = SKJointError_Erec_Total
+- found oscCovMatrix = inputs/oscillation_covariance_6par_nondouble_PDG2019.root
+- found oscCovMatrix name = osc_cov
+- found STAT only, setting 0
+- found DOOSC, setting 1
+- didn't find USESKSYST, setting default 1
+- didn't find CUSTOM_REWEIGHT, setting to false
+---------------------------------
+General settings
+    Output file:      output/MaCh3-Atmospherics.root
+    Seed:             0
+    Debug:            1
+    GPU fit:          0
+    CPU MP fit:       1
+       N cores:       40
+    PlotByMode:       0
+---------------------------------
+MCMC settings
+    N steps:          1000
+    Flux step scale:  0.075
+    Xsec step scale:  0.01
+    ND det step scale:0.04
+    SK det stet scale:0.05
+    Osc step scale:   0.045
+    Anneal. temp:     -1
+    Random start:     1
+    Process MCMC:     0
+    Posterior start:  0
+    Posterior chain:
+---------------------------------
+T2K run settings
+    ND runs:          P6T 2a 2w 3 4a 4w 5 6 7 8a 8w 9
+    SK nu POT:        1.9664e+21
+    SK antinu POT:    1.63456e+21
+    Livetime:         500
+    Save nominal:     0
+---------------------------------
+Samples settings
+    ND280:            1
+    FHC nu_mu CC0pi:  1
+    FHC nu_e CC0pi:   1
+    FHC nu_e CC1pi:   1
+    RHC nu_mu CC0pi:  0
+    RHC nu_e CC0pi:   1
+    Sand in ND280:    1
+    ND280 likelihood: 1 (Barlow-Beeston)
+    PCA thresholds:   -1
+    SK MaQE Hydrogen tuning:  0
+---------------------------------
+Samples at ND280
+Samples binning ND280
+    Bin anu mom qe:
+    Bin anu th qe:
+    Bin anu mom nqe:
+    Bin anu th nqe:
+    Bin anu numu p qe:
+    Bin anu numu th qe:
+    Bin anu numu p nqe:
+    Bin anu numu th nqe:
+Samples binning SK
+    XAxisBins:      0 1
+    YAxisBins:      0 1
+---------------------------------
+Input settings
+    Data file:   inputs/run1-10data.root
+---------------------------------
+Real data settings
+    RealDataFitFlag:  1
+---------------------------------
+Fake data settings
+    FakeDataFitFlag:           0
+      FakeDataFile:
+    FakeDataFluctuatedFitFlag: 0
+---------------------------------
+Asimov settings
+    AsimovFitFlag:    0
+    NDAsimovFitFlag:  0
+    MakeAsimovOnly:   0
+---------------------------------
+Toy fit settings
+    Post. pred. file:
+    ToyFitFlag:       0
+    Toy file:         toys.root
+    N toys:           20
+    Full LLH:         1
+---------------------------------
+Systematics settings
+    Flux syst:        1
+    Flux flat:
+    Flux fixed:
+    X-sec syst:       1
+    X-sec flat:       1 2 6 7 8 9 10 11 12 13 14
+    X-sec fixed:
+    ND280 detector syst:    1
+    ND280 detector flat:
+    ND280 detector fixed:
+    Sk detector syst:    1
+    Sk detector flat:
+    Sk detector fixed:
+    Oscill. flat:
+    Oscill. fixed:
+    Oscill. flat antinu:
+    Oscill. fixed antinu:
+    Reactor const.:   0
+    Stat only?:       0
+    Do oscillation?:       1
+    Use SK syst?:       1
+    Use BANFF tuning?:0
+    Use MaCh3 ND best fit tuning? (nb currently requires use BANFF tuning to be on):0
+---------------------------------
+Covariance matrices
+    Flux file:         inputs/13av7p1_run1-10_ndto9_banff.root
+      flux matrix:     total_flux_cov
+    Xsec file:         inputs/xsec_covariance_2020a_IncAtmosphericModel_v4.root
+      xsec matrix:     xsec_cov
+    BANFF file:        inputs/BANFF_postfit_OA2020_fixed2p2h_fixedIHalfLowPPi_20200409_NatUnits.root
+      BANFF matrix:    postfit_cov
+      BANFF vector:    postfit_params_natunits
+    ND280 file:        inputs/ND280_Syst_Cov_20200114_TH2D574BinningTH2Poly_convertedToMaCh3.root
+      ND280 matrix:    nddet_cov
+    SK file:           inputs/SKJointErrorMatrix2020_Total_fitqun_v4_16042020.root
+      SK matrix:       SKJointError_Erec_Total
+    Osc file:          inputs/oscillation_covariance_6par_nondouble_PDG2019.root
+      osc matrix:      osc_cov
+    Osc file antinu:   osc_cov
+      osc matrix:
+    Use BANFF covariance instead of ND data (and flux/xsec cov): 0
+---------------------------------
+Oscillation parameters
+    Double angle :              0
+    Binned oscillation :        0
+    Oscillation binning:
+    Starting parameters:           0.307 0.528 0.0218 7.53e-05 0.002509 -1.601
+    Starting parameters RHC:
+    Input parameters (if different from starting parameters):
+    Flat likelihood parameters:
+---------------------------------
+Beta options:
+    Use Beta :              0
+    Flip Beta :             0
+    Apply Beta to Nue :     0
+    Apply Diagnal Beta :    0
+Succesfully read config configs/AtmosphericConfigs/AtmConfig.cfg, now proceeding
+
+
+********* Parameters pulled from config file in Exec *********
+
+Atmospheric MC livetime (Years): 500
+Oscillator config:0
+**** Samples:1 4  ****
+Oscillation Parameters: { 0.307 0.528 0.0218 7.53e-05 0.002509 -1.601 }
+Oscillation covariance used: osc_cov from inputs/oscillation_covariance_6par_nondouble_PDG2019.root
+Config used for Atmospheric Flux Systematics: configs/AtmosphericConfigs/AtmFluxSyst.cfg
+Config used for ATMPD Detector Systematics: configs/AtmosphericConfigs/ATMPDDetSyst.cfg
+Xsec covariance used: xsec_cov from inputs/xsec_covariance_2020a_IncAtmosphericModel_v4.root
+Xsec covariance step scale: 0.01
+Osc covariance step scale: 0.045
+Flat Xsec parameters: { 1 2 6 7 8 9 10 11 12 13 14 }
+Not Using Reactor Constraint
+
+
+******************
+
+-----------------------------------------------------------
+Creating Oscillator object
+Using standard Oscillator configuration where a secondary bin only has one contribution
+Oscillator set to use normal mode
+Initialising oscillograms in base constructor
+---------------------------------
+           nBins  LowerEdge HigherEdge
+Primary Oscillogram Binning:
+Energy =     300       0.01       1000
+Cosz   =     300         -1          1
+
+
+Secondary Oscillogram Binning:
+Energy =     800       0.01       1000
+Cosz   =     800         -1          1
+---------------------------------
+Setting array length:640000
+-------------------------
+Set Oscillator to use CPU
+-------------------------
+Using standard Oscillator configuration where a secondary bin only has one contribution
+-----------------------------------------------------------
+Created covariance matrix named: osc_cov
+from file: inputs/oscillation_covariance_6par_nondouble_PDG2019.root
+Number of pars: 6
+current osc_cov parameters:
+sin2th_12 current: 	0.30700   	proposed: 	0.29102
+sin2th_23 current: 	0.52800   	proposed: 	0.57861
+sin2th_13 current: 	0.02180   	proposed: 	0.02221
+delm2_12 current: 	0.00008   	proposed: 	0.00008
+delm2_23 current: 	0.00251   	proposed: 	0.00233
+delta_cp current: 	-1.60100   	proposed: 	-7.46682
+created oscillation parameter handler
+Setting sin2th_23 (parameter 1) to flat prior? 0
+Setting sin2th_13 (parameter 2) to flat prior? 0
+Setting delm2_23 (parameter 4) to flat prior? 0
+Setting delta_cp (parameter 5) to flat prior? 0
+osc_cov setStepScale() = 0.04500
+---------------------------------------
+Creating atmospheric flux systematics..
+
+Created covariance matrix named: AtmFluxSyst
+from file: inputs/skatm/covariance_AtmFluxSyst.root
+Created AtmFluxSyst object:      atmflux_0 / Abs_norm_E_lt_1GeV || With parameters -  | Index: 0 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:      atmflux_1 / Abs_norm_E_gt_1GeV || With parameters -  | Index: 1 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:      atmflux_2 / Ratio_nu_nubar_E_lt_1GeV || With parameters -  | Index: 2 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:      atmflux_3 / Ratio_nu_nubar_1_E_10GeV || With parameters -  | Index: 3 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:      atmflux_4 / Ratio_nu_nubar_E_gt_10GeV || With parameters -  | Index: 4 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:      atmflux_5 / Ratio_nuebar_nue_E_lt_1GeV || With parameters -  | Index: 5 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:      atmflux_6 / Ratio_nuebar_nue_1_E_10GeV || With parameters -  | Index: 6 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:      atmflux_7 / Ratio_nuebar_nue_E_gt_10GeV || With parameters -  | Index: 7 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:      atmflux_8 / Ratio_numubar_numu_E_lt_1GeV || With parameters -  | Index: 8 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:      atmflux_9 / Ratio_numubar_numu_1_E_10GeV || With parameters -  | Index: 9 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:     atmflux_10 / Ratio_numubar_numu_E_gt_10GeV || With parameters -  | Index:10 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:     atmflux_11 / Ratio_up_down || With parameters -  | Index:11 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:     atmflux_12 / Ratio_horizontal_vertical || With parameters -  | Index:12 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:     atmflux_13 / Ratio_k_pi || With parameters -  | Index:13 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:     atmflux_14 / Nu_path || With parameters -  | Index:14 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created AtmFluxSyst object:     atmflux_15 / Solar_Activity || With parameters -  | Index:15 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+============================================================
+                         Parameter: | Step scale:
+                          atmflux_0 |     0.10000
+                          atmflux_1 |     0.10000
+                          atmflux_2 |     0.10000
+                          atmflux_3 |     0.10000
+                          atmflux_4 |     0.10000
+                          atmflux_5 |     0.10000
+                          atmflux_6 |     0.10000
+                          atmflux_7 |     0.10000
+                          atmflux_8 |     0.10000
+                          atmflux_9 |     0.10000
+                         atmflux_10 |     0.10000
+                         atmflux_11 |     0.10000
+                         atmflux_12 |     0.10000
+                         atmflux_13 |     0.10000
+                         atmflux_14 |     0.10000
+                         atmflux_15 |     0.10000
+============================================================
+Created atmospheric flux systematics
+---------------------------------------
+Setting Abs_norm_E_lt_1GeV to 0.00000
+Setting Abs_norm_E_gt_1GeV to 0.00000
+Setting Ratio_nu_nubar_E_lt_1GeV to 0.00000
+Setting Ratio_nu_nubar_1_E_10GeV to 0.00000
+Setting Ratio_nu_nubar_E_gt_10GeV to 0.00000
+Setting Ratio_nuebar_nue_E_lt_1GeV to 0.00000
+Setting Ratio_nuebar_nue_1_E_10GeV to 0.00000
+Setting Ratio_nuebar_nue_E_gt_10GeV to 0.00000
+Setting Ratio_numubar_numu_E_lt_1GeV to 0.00000
+Setting Ratio_numubar_numu_1_E_10GeV to 0.00000
+Setting Ratio_numubar_numu_E_gt_10GeV to 0.00000
+Setting Ratio_up_down to 0.00000
+Setting Ratio_horizontal_vertical to 0.00000
+Setting Ratio_k_pi to 0.00000
+Setting Nu_path to 0.00000
+Setting Solar_Activity to 0.00000
+---------------------------------------
+Creating ATMPDDet systematics..
+
+ATMPDDetSyst from inputs/skatm/covariance_ATMPDDetSyst.root
+Created covariance matrix named: ATMPDDetSyst
+from file: inputs/skatm/covariance_ATMPDDetSyst.root
+Created ATMPDDetSyst object:     atmpddet_0 /                             FC_Reduction || With parameters -  | Index: 0 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:     atmpddet_1 /                             PC_Reduction || With parameters -  | Index: 1 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:     atmpddet_2 /                         FC_PC_Separation || With parameters -  | Index: 2 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:     atmpddet_3 /         PC_Stopping_ThruGoing_Separation || With parameters -  | Index: 3 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:     atmpddet_4 /                    Cosmic_Ray_Background || With parameters -  | Index: 4 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:     atmpddet_5 /                       Flasher_Background || With parameters -  | Index: 5 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:     atmpddet_6 /                          Fiducial_Volume || With parameters -  | Index: 6 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:     atmpddet_7 /                           Upmu_Reduction || With parameters -  | Index: 7 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:     atmpddet_8 /       Upmu_Stopping_ThruGoing_Separation || With parameters -  | Index: 8 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:     atmpddet_9 /                           Upmu_EnergyCut || With parameters -  | Index: 9 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:    atmpddet_10 /                      Upmu_Path_LengthCut || With parameters -  | Index:10 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:    atmpddet_11 /                          Upmu_Separation || With parameters -  | Index:11 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:    atmpddet_12 /                 Upmu_Stopping_Background || With parameters -  | Index:12 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:    atmpddet_13 /   Upmu_ThruGoing_NonShowering_Background || With parameters -  | Index:13 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:    atmpddet_14 /      Upmu_ThruGoing_Showering_Background || With parameters -  | Index:14 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:    atmpddet_15 /                         TwoRing_Pi0_Norm || With parameters -  | Index:15 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:    atmpddet_16 /                   Decay_Electron_Tagging || With parameters -  | Index:16 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:    atmpddet_17 /                  Cosmic_Muon_Subtraction || With parameters -  | Index:17 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:    atmpddet_18 /                Up_Down_Asym_Energy_Scale || With parameters -  | Index:18 | Nominal:   0.00000 | Sigma:   1.00000 | IndivStepScale:   0.10000 |
+Created ATMPDDetSyst object:    atmpddet_19 /                             Energy_Scale || With parameters -  | Index:19 | Nominal:   1.00000 | Sigma:   1.00000 | IndivStepScale:   1.00000 |
+============================================================
+                         Parameter: | Step scale:
+                         atmpddet_0 |     0.10000
+                         atmpddet_1 |     0.10000
+                         atmpddet_2 |     0.10000
+                         atmpddet_3 |     0.10000
+                         atmpddet_4 |     0.10000
+                         atmpddet_5 |     0.10000
+                         atmpddet_6 |     0.10000
+                         atmpddet_7 |     0.10000
+                         atmpddet_8 |     0.10000
+                         atmpddet_9 |     0.10000
+                        atmpddet_10 |     0.10000
+                        atmpddet_11 |     0.10000
+                        atmpddet_12 |     0.10000
+                        atmpddet_13 |     0.10000
+                        atmpddet_14 |     0.10000
+                        atmpddet_15 |     0.10000
+                        atmpddet_16 |     0.10000
+                        atmpddet_17 |     0.10000
+                        atmpddet_18 |     0.10000
+                        atmpddet_19 |     1.00000
+============================================================
+Created ATMPDDet systematics
+---------------------------------------
+Setting FC_Reduction to 0.00000
+Setting PC_Reduction to 0.00000
+Setting FC_PC_Separation to 0.00000
+Setting PC_Stopping_ThruGoing_Separation to 0.00000
+Setting Cosmic_Ray_Background to 0.00000
+Setting Flasher_Background to 0.00000
+Setting Fiducial_Volume to 0.00000
+Setting Upmu_Reduction to 0.00000
+Setting Upmu_Stopping_ThruGoing_Separation to 0.00000
+Setting Upmu_EnergyCut to 0.00000
+Setting Upmu_Path_LengthCut to 0.00000
+Setting Upmu_Separation to 0.00000
+Setting Upmu_Stopping_Background to 0.00000
+Setting Upmu_ThruGoing_NonShowering_Background to 0.00000
+Setting Upmu_ThruGoing_Showering_Background to 0.00000
+Setting TwoRing_Pi0_Norm to 0.00000
+Setting Decay_Electron_Tagging to 0.00000
+Setting Cosmic_Muon_Subtraction to 0.00000
+Setting Up_Down_Asym_Energy_Scale to 0.00000
+Setting Energy_Scale to 1.00000
+*** NOTE: xsec_cov inputs/xsec_covariance_2020a_IncAtmosphericModel_v4.root
+    Principal component analysis but given the threshold for the principal components to be less than 0, or greater than (or equal to) 1. This will not work!
+    Please specify a number between 0 and 1
+    You specified: -1
+    Am instead calling the usual non-PCA constructor...
+Created covariance matrix named: xsec_cov
+from file: inputs/xsec_covariance_2020a_IncAtmosphericModel_v4.root
+Had to shift diagonal 0 time(s) to allow the covariance matrix to be decomposed
+============================================================
+                         Parameter: | Step scale:
+                             xsec_0 |     2.00000
+                             xsec_1 |     2.00000
+                             xsec_2 |     2.00000
+                             xsec_3 |     4.00000
+                             xsec_4 |     0.50000
+                             xsec_5 |     0.70000
+                             xsec_6 |     2.00000
+                             xsec_7 |     2.00000
+                             xsec_8 |     2.00000
+                             xsec_9 |     2.00000
+                            xsec_10 |     3.00000
+                            xsec_11 |     3.00000
+                            xsec_12 |     3.00000
+                            xsec_13 |     3.00000
+                            xsec_14 |     3.00000
+                            xsec_15 |     3.00000
+                            xsec_16 |     3.00000
+                            xsec_17 |     3.00000
+                            xsec_18 |     3.00000
+                            xsec_19 |     6.00000
+                            xsec_20 |     3.00000
+                            xsec_21 |     6.00000
+                            xsec_22 |     3.00000
+                            xsec_23 |     4.00000
+                            xsec_24 |     4.00000
+                            xsec_25 |     3.00000
+                            xsec_26 |     4.00000
+                            xsec_27 |     4.00000
+                            xsec_28 |     4.00000
+                            xsec_29 |     4.00000
+                            xsec_30 |     5.00000
+                            xsec_31 |     5.00000
+                            xsec_32 |     5.00000
+                            xsec_33 |     5.00000
+                            xsec_34 |     5.00000
+                            xsec_35 |     5.00000
+                            xsec_36 |     4.00000
+                            xsec_37 |     4.00000
+                            xsec_38 |     4.00000
+                            xsec_39 |     4.00000
+                            xsec_40 |     4.00000
+                            xsec_41 |     4.00000
+                            xsec_42 |     2.00000
+                            xsec_43 |     2.00000
+                            xsec_44 |     2.00000
+                            xsec_45 |     2.00000
+                            xsec_46 |     2.00000
+                            xsec_47 |     3.00000
+                            xsec_48 |     3.00000
+                            xsec_49 |     3.00000
+                            xsec_50 |     2.00000
+                            xsec_51 |     0.70000
+                            xsec_52 |     3.00000
+                            xsec_53 |     4.00000
+                            xsec_54 |     3.00000
+                            xsec_55 |     2.00000
+                            xsec_56 |     2.00000
+                            xsec_57 |     2.00000
+                            xsec_58 |     2.00000
+                            xsec_59 |     2.00000
+                            xsec_60 |     3.00000
+                            xsec_61 |     3.00000
+                            xsec_62 |     3.00000
+                            xsec_63 |     3.00000
+                            xsec_64 |     3.00000
+                            xsec_65 |     3.00000
+                            xsec_66 |     3.00000
+                            xsec_67 |     3.00000
+                            xsec_68 |     3.00000
+                            xsec_69 |     3.00000
+                            xsec_70 |     3.00000
+                            xsec_71 |     3.00000
+                            xsec_72 |     3.00000
+                            xsec_73 |     7.50000
+                            xsec_74 |     7.50000
+                            xsec_75 |     7.50000
+                            xsec_76 |     7.50000
+                            xsec_77 |     7.50000
+                            xsec_78 |     7.50000
+                            xsec_79 |     7.50000
+                            xsec_80 |     7.50000
+                            xsec_81 |     7.50000
+                            xsec_82 |     7.50000
+                            xsec_83 |     7.50000
+                            xsec_84 |     7.50000
+                            xsec_85 |     7.50000
+                            xsec_86 |     7.50000
+                            xsec_87 |     7.50000
+                            xsec_88 |     7.50000
+                            xsec_89 |     7.50000
+                            xsec_90 |     7.50000
+                            xsec_91 |     7.50000
+                            xsec_92 |     7.50000
+                            xsec_93 |     7.50000
+                            xsec_94 |     7.50000
+                            xsec_95 |     7.50000
+                            xsec_96 |     7.50000
+                            xsec_97 |     7.50000
+                            xsec_98 |     7.50000
+                            xsec_99 |     7.50000
+                           xsec_100 |     7.50000
+                           xsec_101 |     7.50000
+                           xsec_102 |     7.50000
+                           xsec_103 |     7.50000
+                           xsec_104 |     7.50000
+                           xsec_105 |     7.50000
+                           xsec_106 |     7.50000
+                           xsec_107 |     7.50000
+                           xsec_108 |     7.50000
+                           xsec_109 |     7.50000
+                           xsec_110 |     7.50000
+                           xsec_111 |     7.50000
+                           xsec_112 |     7.50000
+                           xsec_113 |     7.50000
+                           xsec_114 |     7.50000
+                           xsec_115 |     7.50000
+                           xsec_116 |     7.50000
+                           xsec_117 |     7.50000
+                           xsec_118 |     7.50000
+                           xsec_119 |     7.50000
+                           xsec_120 |     7.50000
+                           xsec_121 |     7.50000
+                           xsec_122 |     7.50000
+                           xsec_123 |     7.50000
+                           xsec_124 |     7.50000
+                           xsec_125 |     7.50000
+                           xsec_126 |     7.50000
+                           xsec_127 |     7.50000
+                           xsec_128 |     7.50000
+                           xsec_129 |     7.50000
+                           xsec_130 |     7.50000
+                           xsec_131 |     7.50000
+                           xsec_132 |     7.50000
+                           xsec_133 |     7.50000
+                           xsec_134 |     7.50000
+                           xsec_135 |     7.50000
+                           xsec_136 |     7.50000
+                           xsec_137 |     7.50000
+                           xsec_138 |     7.50000
+                           xsec_139 |     7.50000
+                           xsec_140 |     7.50000
+                           xsec_141 |     7.50000
+                           xsec_142 |     7.50000
+                           xsec_143 |     7.50000
+                           xsec_144 |     7.50000
+                           xsec_145 |     7.50000
+                           xsec_146 |     7.50000
+                           xsec_147 |     7.50000
+                           xsec_148 |     7.50000
+                           xsec_149 |     7.50000
+                           xsec_150 |     7.50000
+                           xsec_151 |     7.50000
+                           xsec_152 |     7.50000
+                           xsec_153 |     7.50000
+                           xsec_154 |     7.50000
+                           xsec_155 |     7.50000
+                           xsec_156 |     7.50000
+                           xsec_157 |     7.50000
+                           xsec_158 |     7.50000
+                           xsec_159 |     7.50000
+                           xsec_160 |     7.50000
+                           xsec_161 |     7.50000
+                           xsec_162 |     7.50000
+                           xsec_163 |     7.50000
+                           xsec_164 |     7.50000
+                           xsec_165 |     7.50000
+                           xsec_166 |     7.50000
+                           xsec_167 |     7.50000
+                           xsec_168 |     7.50000
+                           xsec_169 |     7.50000
+                           xsec_170 |     7.50000
+                           xsec_171 |     7.50000
+                           xsec_172 |     7.50000
+============================================================
+#################################################
+Printing covarianceXsec:
+Number of parameters: 173
+
+Global parameter map:
+#    | Name                     | Nom.      | Prior     | Error          | Lower     | Upper     |IndivStepScale
+0    | MAQE                     | 1.210     | 1.030     | +/- 0.060      | 0.000     | 9999.000  |2.000
+1    | 2p2h_norm_nu             | 1.000     | 1.000     | +/- 1.000      | 0.000     | 9999.000  |2.000
+2    | 2p2h_norm_nubar          | 1.000     | 1.000     | +/- 1.000      | 0.000     | 9999.000  |2.000
+3    | 2p2h_normCtoO            | 1.000     | 1.000     | +/- 0.200      | 0.000     | 9999.000  |4.000
+4    | 2p2h_shape_C             | 0.000     | 0.000     | +/- 3.000      | -1.000    | 1.000     |0.500
+5    | 2p2h_shape_O             | 0.000     | 0.000     | +/- 3.000      | -1.000    | 1.000     |0.700
+6    | 2p2h_Edep_lowEnu         | 1.000     | 1.000     | +/- 1.000      | 0.000     | 1.000     |2.000
+7    | 2p2h_Edep_highEnu        | 1.000     | 1.000     | +/- 1.000      | 0.000     | 1.000     |2.000
+8    | 2p2h_Edep_lowEnubar      | 1.000     | 1.000     | +/- 1.000      | 0.000     | 1.000     |2.000
+9    | 2p2h_Edep_highEnubar     | 1.000     | 1.000     | +/- 1.000      | 0.000     | 1.000     |2.000
+10   | Q2_norm_0                | 1.000     | 0.495     | +/- 0.165      | 0.000     | 999.000   |3.000
+11   | Q2_norm_1                | 1.000     | 0.695     | +/- 0.145      | 0.000     | 999.000   |3.000
+12   | Q2_norm_2                | 1.000     | 0.780     | +/- 0.130      | 0.000     | 999.000   |3.000
+13   | Q2_norm_3                | 1.000     | 0.890     | +/- 0.150      | 0.000     | 999.000   |3.000
+14   | Q2_norm_4                | 1.000     | 0.930     | +/- 0.160      | 0.000     | 999.000   |3.000
+15   | Q2_norm_5                | 1.000     | 1.000     | +/- 0.110      | 0.000     | 999.000   |3.000
+16   | Q2_norm_6                | 1.000     | 1.000     | +/- 0.180      | 0.000     | 999.000   |3.000
+17   | Q2_norm_7                | 1.000     | 1.000     | +/- 0.400      | 0.000     | 999.000   |3.000
+18   | EB_dial_C_nu             | 0.000     | 2.000     | +/- 6.000      | -10.000   | 15.000    |3.000
+19   | EB_dial_C_nubar          | 0.000     | 0.000     | +/- 6.000      | -10.000   | 15.000    |6.000
+20   | EB_dial_O_nu             | 0.000     | 4.000     | +/- 6.000      | -10.000   | 15.000    |3.000
+21   | EB_dial_O_nubar          | 0.000     | 0.000     | +/- 6.000      | -10.000   | 15.000    |6.000
+22   | CA5                      | 1.010     | 0.960     | +/- 0.150      | 0.000     | 9999.000  |3.000
+23   | MARES                    | 0.950     | 1.070     | +/- 0.150      | 0.000     | 9999.000  |4.000
+24   | ISO_BKG_LowPPi           | 1.300     | 0.960     | +/- 1.300      | 0.000     | 9999.000  |4.000
+25   | ISO_BKG                  | 1.300     | 0.960     | +/- 0.400      | 0.000     | 9999.000  |3.000
+26   | CC_norm_nu               | 1.000     | 1.000     | +/- 0.020      | 0.000     | 9999.000  |4.000
+27   | CC_norm_nubar            | 1.000     | 1.000     | +/- 0.010      | 0.000     | 9999.000  |4.000
+28   | nue_numu                 | 1.000     | 1.000     | +/- 0.028      | 0.000     | 9999.000  |4.000
+29   | nuebar_numubar           | 1.000     | 1.000     | +/- 0.028      | 0.000     | 9999.000  |4.000
+30   | CC_BY_DIS                | 0.000     | 0.000     | +/- 1.000      | -9999.000 | 9999.000  |5.000
+31   | CC_BY_MPi                | 0.000     | 0.000     | +/- 1.000      | -9999.000 | 9999.000  |5.000
+32   | CC_AGKY_Mult             | 0.000     | 0.000     | +/- 1.000      | -9999.000 | 9999.000  |5.000
+33   | CC_Misc                  | 1.000     | 1.000     | +/- 1.000      | 0.000     | 9999.000  |5.000
+34   | CC_DIS_MultPi_Norm_Nu    | 1.000     | 1.000     | +/- 0.035      | 0.000     | 9999.000  |5.000
+35   | CC_DIS_MultPi_Norm_Nubar | 1.000     | 1.000     | +/- 0.065      | 0.000     | 9999.000  |5.000
+36   | CC_Coh_C                 | 1.000     | 1.000     | +/- 0.300      | 0.000     | 9999.000  |4.000
+37   | CC_Coh_O                 | 1.000     | 1.000     | +/- 0.300      | 0.000     | 9999.000  |4.000
+38   | NC_Coh                   | 1.000     | 1.000     | +/- 0.300      | 0.000     | 9999.000  |4.000
+39   | NC_1gamma                | 1.000     | 1.000     | +/- 1.000      | 0.000     | 9999.000  |4.000
+40   | NC_other_near            | 1.000     | 1.000     | +/- 0.300      | 0.000     | 9999.000  |4.000
+41   | NC_other_far             | 1.000     | 1.000     | +/- 0.300      | 0.000     | 9999.000  |4.000
+42   | FEFQE                    | 1.069     | 1.069     | +/- 0.313      | -9999.000 | 9999.000  |2.000
+43   | FEFQEH                   | 1.824     | 1.824     | +/- 0.859      | -9999.000 | 9999.000  |2.000
+44   | FEFINEL                  | 1.002     | 1.002     | +/- 1.101      | -9999.000 | 9999.000  |2.000
+45   | FEFABS                   | 1.404     | 1.404     | +/- 0.432      | -9999.000 | 9999.000  |2.000
+46   | FEFCX                    | 0.697     | 0.697     | +/- 0.305      | -9999.000 | 9999.000  |2.000
+47   | Q2_norm_5_HighEnergy     | 1.000     | 1.000     | +/- 0.110      | 0.000     | 999.000   |3.000
+48   | Q2_norm_6_HighEnergy     | 1.000     | 1.000     | +/- 0.180      | 0.000     | 999.000   |3.000
+49   | Q2_norm_7_HighEnergy     | 1.000     | 1.000     | +/- 0.400      | 0.000     | 999.000   |3.000
+50   | 2p2h_norm_HighEnergy     | 1.000     | 1.000     | +/- 1.000      | 0.000     | 9999.000  |2.000
+51   | 2p2h_shape_O_HighEnergy  | 0.000     | 0.000     | +/- 3.000      | -1.000    | 1.000     |0.700
+52   | CA5HighEnergy            | 1.010     | 0.960     | +/- 0.150      | 0.000     | 9999.000  |3.000
+53   | MARESHighEnergy          | 0.950     | 1.070     | +/- 0.150      | 0.000     | 9999.000  |4.000
+54   | ISO_BKGHighEnergy        | 1.300     | 0.960     | +/- 0.400      | 0.000     | 9999.000  |3.000
+55   | FEFQEHighEnergy          | 1.069     | 1.069     | +/- 0.313      | -9999.000 | 9999.000  |2.000
+56   | FEFQEHHighEnergy         | 1.824     | 1.824     | +/- 0.859      | -9999.000 | 9999.000  |2.000
+57   | FEFINELHighEnergy        | 1.002     | 1.002     | +/- 1.101      | -9999.000 | 9999.000  |2.000
+58   | FEFABSHighEnergy         | 1.404     | 1.404     | +/- 0.432      | -9999.000 | 9999.000  |2.000
+59   | FEFCXHighEnergy          | 0.697     | 0.697     | +/- 0.305      | -9999.000 | 9999.000  |2.000
+60   | pi0_qpi_ratio            | 0.000     | 0.000     | +/- 1.000      | -999.000  | 999.000   |3.000
+61   | nubar_nu_1pi_ratio       | 0.000     | 0.000     | +/- 1.000      | -999.000  | 999.000   |3.000
+62   | coherent_pi_xsec         | 0.000     | 0.000     | +/- 1.000      | -999.000  | 999.000   |3.000
+63   | DIS_model_difference     | 0.000     | 0.000     | +/- 1.000      | -999.000  | 999.000   |3.000
+64   | DIS_xsec                 | 0.000     | 0.000     | +/- 1.000      | -999.000  | 999.000   |3.000
+65   | DIS_q2_vec_low_W         | 0.000     | 0.000     | +/- 1.000      | -999.000  | 999.000   |3.000
+66   | DIS_q2_axi_low_W         | 0.000     | 0.000     | +/- 1.000      | -999.000  | 999.000   |3.000
+67   | DIS_norm_low_W           | 1.000     | 1.000     | +/- 0.015      | 0.000     | 999.000   |3.000
+68   | DIS_had_mult             | 0.000     | 0.000     | +/- 1.000      | -999.000  | 999.000   |3.000
+69   | DIS_q2_high_W            | 0.000     | 0.000     | +/- 1.000      | -999.000  | 999.000   |3.000
+70   | NC_CC_ratio              | 1.000     | 1.000     | +/- 0.100      | 0.000     | 999.000   |3.000
+71   | CC_nutau_xsec            | 1.000     | 1.000     | +/- 0.125      | 0.000     | 999.000   |3.000
+72   | Yp_Dial                  | 0.468     | 0.468     | +/- 0.029      | 0.000     | 999.000   |3.000
+73   | b_0                      | 1.000     | 1.000     | +/- 0.066      | 0.000     | 9999.000  |7.500
+74   | b_1                      | 1.000     | 1.000     | +/- 0.056      | 0.000     | 9999.000  |7.500
+75   | b_2                      | 1.000     | 1.000     | +/- 0.053      | 0.000     | 9999.000  |7.500
+76   | b_3                      | 1.000     | 1.000     | +/- 0.047      | 0.000     | 9999.000  |7.500
+77   | b_4                      | 1.000     | 1.000     | +/- 0.070      | 0.000     | 9999.000  |7.500
+78   | b_5                      | 1.000     | 1.000     | +/- 0.084      | 0.000     | 9999.000  |7.500
+79   | b_6                      | 1.000     | 1.000     | +/- 0.061      | 0.000     | 9999.000  |7.500
+80   | b_7                      | 1.000     | 1.000     | +/- 0.063      | 0.000     | 9999.000  |7.500
+81   | b_8                      | 1.000     | 1.000     | +/- 0.082      | 0.000     | 9999.000  |7.500
+82   | b_9                      | 1.000     | 1.000     | +/- 0.101      | 0.000     | 9999.000  |7.500
+83   | b_10                     | 1.000     | 1.000     | +/- 0.118      | 0.000     | 9999.000  |7.500
+84   | b_11                     | 1.000     | 1.000     | +/- 0.099      | 0.000     | 9999.000  |7.500
+85   | b_12                     | 1.000     | 1.000     | +/- 0.071      | 0.000     | 9999.000  |7.500
+86   | b_13                     | 1.000     | 1.000     | +/- 0.067      | 0.000     | 9999.000  |7.500
+87   | b_14                     | 1.000     | 1.000     | +/- 0.076      | 0.000     | 9999.000  |7.500
+88   | b_15                     | 1.000     | 1.000     | +/- 0.073      | 0.000     | 9999.000  |7.500
+89   | b_16                     | 1.000     | 1.000     | +/- 0.056      | 0.000     | 9999.000  |7.500
+90   | b_17                     | 1.000     | 1.000     | +/- 0.055      | 0.000     | 9999.000  |7.500
+91   | b_18                     | 1.000     | 1.000     | +/- 0.052      | 0.000     | 9999.000  |7.500
+92   | b_19                     | 1.000     | 1.000     | +/- 0.060      | 0.000     | 9999.000  |7.500
+93   | b_20                     | 1.000     | 1.000     | +/- 0.083      | 0.000     | 9999.000  |7.500
+94   | b_21                     | 1.000     | 1.000     | +/- 0.085      | 0.000     | 9999.000  |7.500
+95   | b_22                     | 1.000     | 1.000     | +/- 0.096      | 0.000     | 9999.000  |7.500
+96   | b_23                     | 1.000     | 1.000     | +/- 0.099      | 0.000     | 9999.000  |7.500
+97   | b_24                     | 1.000     | 1.000     | +/- 0.143      | 0.000     | 9999.000  |7.500
+98   | b_25                     | 1.000     | 1.000     | +/- 0.092      | 0.000     | 9999.000  |7.500
+99   | b_26                     | 1.000     | 1.000     | +/- 0.067      | 0.000     | 9999.000  |7.500
+100  | b_27                     | 1.000     | 1.000     | +/- 0.065      | 0.000     | 9999.000  |7.500
+101  | b_28                     | 1.000     | 1.000     | +/- 0.070      | 0.000     | 9999.000  |7.500
+102  | b_29                     | 1.000     | 1.000     | +/- 0.068      | 0.000     | 9999.000  |7.500
+103  | b_30                     | 1.000     | 1.000     | +/- 0.067      | 0.000     | 9999.000  |7.500
+104  | b_31                     | 1.000     | 1.000     | +/- 0.057      | 0.000     | 9999.000  |7.500
+105  | b_32                     | 1.000     | 1.000     | +/- 0.052      | 0.000     | 9999.000  |7.500
+106  | b_33                     | 1.000     | 1.000     | +/- 0.050      | 0.000     | 9999.000  |7.500
+107  | b_34                     | 1.000     | 1.000     | +/- 0.074      | 0.000     | 9999.000  |7.500
+108  | b_35                     | 1.000     | 1.000     | +/- 0.080      | 0.000     | 9999.000  |7.500
+109  | b_36                     | 1.000     | 1.000     | +/- 0.061      | 0.000     | 9999.000  |7.500
+110  | b_37                     | 1.000     | 1.000     | +/- 0.059      | 0.000     | 9999.000  |7.500
+111  | b_38                     | 1.000     | 1.000     | +/- 0.088      | 0.000     | 9999.000  |7.500
+112  | b_39                     | 1.000     | 1.000     | +/- 0.086      | 0.000     | 9999.000  |7.500
+113  | b_40                     | 1.000     | 1.000     | +/- 0.135      | 0.000     | 9999.000  |7.500
+114  | b_41                     | 1.000     | 1.000     | +/- 0.093      | 0.000     | 9999.000  |7.500
+115  | b_42                     | 1.000     | 1.000     | +/- 0.087      | 0.000     | 9999.000  |7.500
+116  | b_43                     | 1.000     | 1.000     | +/- 0.058      | 0.000     | 9999.000  |7.500
+117  | b_44                     | 1.000     | 1.000     | +/- 0.054      | 0.000     | 9999.000  |7.500
+118  | b_45                     | 1.000     | 1.000     | +/- 0.058      | 0.000     | 9999.000  |7.500
+119  | b_46                     | 1.000     | 1.000     | +/- 0.057      | 0.000     | 9999.000  |7.500
+120  | b_47                     | 1.000     | 1.000     | +/- 0.078      | 0.000     | 9999.000  |7.500
+121  | b_48                     | 1.000     | 1.000     | +/- 0.091      | 0.000     | 9999.000  |7.500
+122  | b_49                     | 1.000     | 1.000     | +/- 0.146      | 0.000     | 9999.000  |7.500
+123  | b_50                     | 1.000     | 1.000     | +/- 0.067      | 0.000     | 9999.000  |7.500
+124  | b_51                     | 1.000     | 1.000     | +/- 0.057      | 0.000     | 9999.000  |7.500
+125  | b_52                     | 1.000     | 1.000     | +/- 0.053      | 0.000     | 9999.000  |7.500
+126  | b_53                     | 1.000     | 1.000     | +/- 0.047      | 0.000     | 9999.000  |7.500
+127  | b_54                     | 1.000     | 1.000     | +/- 0.074      | 0.000     | 9999.000  |7.500
+128  | b_55                     | 1.000     | 1.000     | +/- 0.070      | 0.000     | 9999.000  |7.500
+129  | b_56                     | 1.000     | 1.000     | +/- 0.062      | 0.000     | 9999.000  |7.500
+130  | b_57                     | 1.000     | 1.000     | +/- 0.074      | 0.000     | 9999.000  |7.500
+131  | b_58                     | 1.000     | 1.000     | +/- 0.089      | 0.000     | 9999.000  |7.500
+132  | b_59                     | 1.000     | 1.000     | +/- 0.102      | 0.000     | 9999.000  |7.500
+133  | b_60                     | 1.000     | 1.000     | +/- 0.117      | 0.000     | 9999.000  |7.500
+134  | b_61                     | 1.000     | 1.000     | +/- 0.093      | 0.000     | 9999.000  |7.500
+135  | b_62                     | 1.000     | 1.000     | +/- 0.062      | 0.000     | 9999.000  |7.500
+136  | b_63                     | 1.000     | 1.000     | +/- 0.074      | 0.000     | 9999.000  |7.500
+137  | b_64                     | 1.000     | 1.000     | +/- 0.080      | 0.000     | 9999.000  |7.500
+138  | b_65                     | 1.000     | 1.000     | +/- 0.079      | 0.000     | 9999.000  |7.500
+139  | b_66                     | 1.000     | 1.000     | +/- 0.057      | 0.000     | 9999.000  |7.500
+140  | b_67                     | 1.000     | 1.000     | +/- 0.054      | 0.000     | 9999.000  |7.500
+141  | b_68                     | 1.000     | 1.000     | +/- 0.052      | 0.000     | 9999.000  |7.500
+142  | b_69                     | 1.000     | 1.000     | +/- 0.059      | 0.000     | 9999.000  |7.500
+143  | b_70                     | 1.000     | 1.000     | +/- 0.082      | 0.000     | 9999.000  |7.500
+144  | b_71                     | 1.000     | 1.000     | +/- 0.086      | 0.000     | 9999.000  |7.500
+145  | b_72                     | 1.000     | 1.000     | +/- 0.095      | 0.000     | 9999.000  |7.500
+146  | b_73                     | 1.000     | 1.000     | +/- 0.098      | 0.000     | 9999.000  |7.500
+147  | b_74                     | 1.000     | 1.000     | +/- 0.132      | 0.000     | 9999.000  |7.500
+148  | b_75                     | 1.000     | 1.000     | +/- 0.086      | 0.000     | 9999.000  |7.500
+149  | b_76                     | 1.000     | 1.000     | +/- 0.065      | 0.000     | 9999.000  |7.500
+150  | b_77                     | 1.000     | 1.000     | +/- 0.061      | 0.000     | 9999.000  |7.500
+151  | b_78                     | 1.000     | 1.000     | +/- 0.068      | 0.000     | 9999.000  |7.500
+152  | b_79                     | 1.000     | 1.000     | +/- 0.069      | 0.000     | 9999.000  |7.500
+153  | b_80                     | 1.000     | 1.000     | +/- 0.068      | 0.000     | 9999.000  |7.500
+154  | b_81                     | 1.000     | 1.000     | +/- 0.059      | 0.000     | 9999.000  |7.500
+155  | b_82                     | 1.000     | 1.000     | +/- 0.057      | 0.000     | 9999.000  |7.500
+156  | b_83                     | 1.000     | 1.000     | +/- 0.047      | 0.000     | 9999.000  |7.500
+157  | b_84                     | 1.000     | 1.000     | +/- 0.079      | 0.000     | 9999.000  |7.500
+158  | b_85                     | 1.000     | 1.000     | +/- 0.079      | 0.000     | 9999.000  |7.500
+159  | b_86                     | 1.000     | 1.000     | +/- 0.063      | 0.000     | 9999.000  |7.500
+160  | b_87                     | 1.000     | 1.000     | +/- 0.066      | 0.000     | 9999.000  |7.500
+161  | b_88                     | 1.000     | 1.000     | +/- 0.090      | 0.000     | 9999.000  |7.500
+162  | b_89                     | 1.000     | 1.000     | +/- 0.086      | 0.000     | 9999.000  |7.500
+163  | b_90                     | 1.000     | 1.000     | +/- 0.119      | 0.000     | 9999.000  |7.500
+164  | b_91                     | 1.000     | 1.000     | +/- 0.091      | 0.000     | 9999.000  |7.500
+165  | b_92                     | 1.000     | 1.000     | +/- 0.085      | 0.000     | 9999.000  |7.500
+166  | b_93                     | 1.000     | 1.000     | +/- 0.058      | 0.000     | 9999.000  |7.500
+167  | b_94                     | 1.000     | 1.000     | +/- 0.054      | 0.000     | 9999.000  |7.500
+168  | b_95                     | 1.000     | 1.000     | +/- 0.056      | 0.000     | 9999.000  |7.500
+169  | b_96                     | 1.000     | 1.000     | +/- 0.057      | 0.000     | 9999.000  |7.500
+170  | b_97                     | 1.000     | 1.000     | +/- 0.080      | 0.000     | 9999.000  |7.500
+171  | b_98                     | 1.000     | 1.000     | +/- 0.090      | 0.000     | 9999.000  |7.500
+172  | b_99                     | 1.000     | 1.000     | +/- 0.152      | 0.000     | 9999.000  |7.500
+
+Normalisation parameters:73
+#   | Global #  | Name                | Int. mode | Target    | Type
+0   | 1         | 2p2h_norm_nu        | 9          |  -1 12 16 |  12 14 16
+1   | 2         | 2p2h_norm_nubar     | 9          |  -1 12 16 |  -12 -14 -16
+2   | 3         | 2p2h_normCtoO       | 9          |  16 |
+3   | 10        | Q2_norm_0           | 0          |  -1 12 16 |
+4   | 11        | Q2_norm_1           | 0          |  -1 12 16 |
+5   | 12        | Q2_norm_2           | 0          |  -1 12 16 |
+6   | 13        | Q2_norm_3           | 0          |  -1 12 16 |
+7   | 14        | Q2_norm_4           | 0          |  -1 12 16 |
+8   | 15        | Q2_norm_5           | 0          |  -1 12 16 |
+9   | 16        | Q2_norm_6           | 0          |  -1 12 16 |
+10  | 17        | Q2_norm_7           | 0          |  -1 12 16 |
+11  | 26        | CC_norm_nu          | 0          1 2 3 4 9 11 14 |  12 16 |  12 14 16
+12  | 27        | CC_norm_nubar       | 0          1 2 3 4 9 11 14 |  12 16 |  -12 -14 -16
+13  | 28        | nue_numu            | 0          1 2 3 4 9 11 14 |  |  12
+14  | 29        | nuebar_numubar      | 0          1 2 3 4 9 11 14 |  |  -12
+15  | 33        | CC_Misc             | 11         |  12 16 |
+16  | 34        | CC_DIS_MultPi_Norm_Nu| 3          4 |  12 16 |  12 14 16
+17  | 35        | CC_DIS_MultPi_Norm_Nubar| 3          4 |  12 16 |  -12 -14 -16
+18  | 36        | CC_Coh_C            | 2          |  12 |
+19  | 37        | CC_Coh_O            | 2          |  16 |
+20  | 38        | NC_Coh              | 7          |  |
+21  | 39        | NC_1gamma           | 10         |  |
+22  | 40        | NC_other_near       | 8          12 13 |  |
+23  | 73        | b_0                 | |  |
+24  | 74        | b_1                 | |  |
+25  | 75        | b_2                 | |  |
+26  | 76        | b_3                 | |  |
+27  | 77        | b_4                 | |  |
+28  | 78        | b_5                 | |  |
+29  | 79        | b_6                 | |  |
+30  | 80        | b_7                 | |  |
+31  | 81        | b_8                 | |  |
+32  | 82        | b_9                 | |  |
+33  | 83        | b_10                | |  |
+34  | 84        | b_11                | |  |
+35  | 85        | b_12                | |  |
+36  | 86        | b_13                | |  |
+37  | 87        | b_14                | |  |
+38  | 88        | b_15                | |  |
+39  | 89        | b_16                | |  |
+40  | 90        | b_17                | |  |
+41  | 91        | b_18                | |  |
+42  | 92        | b_19                | |  |
+43  | 93        | b_20                | |  |
+44  | 94        | b_21                | |  |
+45  | 95        | b_22                | |  |
+46  | 96        | b_23                | |  |
+47  | 97        | b_24                | |  |
+48  | 98        | b_25                | |  |
+49  | 99        | b_26                | |  |
+50  | 100       | b_27                | |  |
+51  | 101       | b_28                | |  |
+52  | 102       | b_29                | |  |
+53  | 103       | b_30                | |  |
+54  | 104       | b_31                | |  |
+55  | 105       | b_32                | |  |
+56  | 106       | b_33                | |  |
+57  | 107       | b_34                | |  |
+58  | 108       | b_35                | |  |
+59  | 109       | b_36                | |  |
+60  | 110       | b_37                | |  |
+61  | 111       | b_38                | |  |
+62  | 112       | b_39                | |  |
+63  | 113       | b_40                | |  |
+64  | 114       | b_41                | |  |
+65  | 115       | b_42                | |  |
+66  | 116       | b_43                | |  |
+67  | 117       | b_44                | |  |
+68  | 118       | b_45                | |  |
+69  | 119       | b_46                | |  |
+70  | 120       | b_47                | |  |
+71  | 121       | b_48                | |  |
+72  | 122       | b_49                | |  |
+
+
+SK spline parameters: 18
+#   | Global #  | Name
+0   | 0         | MAQE
+1   | 5         | 2p2h_shape_O
+2   | 6         | 2p2h_Edep_lowEnu
+3   | 7         | 2p2h_Edep_highEnu
+4   | 8         | 2p2h_Edep_lowEnubar
+5   | 9         | 2p2h_Edep_highEnubar
+6   | 22        | CA5
+7   | 23        | MARES
+8   | 24        | ISO_BKG_LowPPi
+9   | 25        | ISO_BKG
+10  | 30        | CC_BY_DIS
+11  | 31        | CC_BY_MPi
+12  | 32        | CC_AGKY_Mult
+13  | 42        | FEFQE
+14  | 43        | FEFQEH
+15  | 44        | FEFINEL
+16  | 45        | FEFABS
+17  | 46        | FEFCX
+
+Spline Mode Mapping: (Event Mode/Spline Mode Selected)
+| CCQE/CCQE | CC1pipm/CC1pipm | CCcoh/CCcoh | CCMpi/CCMpi | CCDIS/CCDIS | NC1pi0/NC1pi0 | NC1pipm/NC1pipm | NCcoh/NCcoh | NCoth/NCoth | 2p2h/2p2h | NC1gam/NC1gam | CCMisc/CCMisc | NCMpi/NCoth | NCDIS/NCoth | CC1pi0/CC1pipm |
+
+SK functional parameters: 2
+#   | Global #  | Name
+0   | 20        | EB_dial_O_nu
+1   | 21        | EB_dial_O_nubar
+
+SK normalisation parameters: 72
+#   | Global #  | Name                | Int. mode | Target    | Type
+0   | 1         | 2p2h_norm_nu        | 9          |  -1 12 16 |  12 14 16
+1   | 2         | 2p2h_norm_nubar     | 9          |  -1 12 16 |  -12 -14 -16
+2   | 3         | 2p2h_normCtoO       | 9          |  16 |
+3   | 10        | Q2_norm_0           | 0          |  -1 12 16 |
+4   | 11        | Q2_norm_1           | 0          |  -1 12 16 |
+5   | 12        | Q2_norm_2           | 0          |  -1 12 16 |
+6   | 13        | Q2_norm_3           | 0          |  -1 12 16 |
+7   | 14        | Q2_norm_4           | 0          |  -1 12 16 |
+8   | 15        | Q2_norm_5           | 0          |  -1 12 16 |
+9   | 16        | Q2_norm_6           | 0          |  -1 12 16 |
+10  | 17        | Q2_norm_7           | 0          |  -1 12 16 |
+11  | 26        | CC_norm_nu          | 0          1 2 3 4 9 11 14 |  12 16 |  12 14 16
+12  | 27        | CC_norm_nubar       | 0          1 2 3 4 9 11 14 |  12 16 |  -12 -14 -16
+13  | 28        | nue_numu            | 0          1 2 3 4 9 11 14 |  |  12
+14  | 29        | nuebar_numubar      | 0          1 2 3 4 9 11 14 |  |  -12
+15  | 33        | CC_Misc             | 11         |  12 16 |
+16  | 34        | CC_DIS_MultPi_Norm_Nu| 3          4 |  12 16 |  12 14 16
+17  | 35        | CC_DIS_MultPi_Norm_Nubar| 3          4 |  12 16 |  -12 -14 -16
+18  | 37        | CC_Coh_O            | 2          |  16 |
+19  | 38        | NC_Coh              | 7          |  |
+20  | 39        | NC_1gamma           | 10         |  |
+21  | 41        | NC_other_far        | 8          12 13 |  |
+22  | 123       | b_50                | |  |
+23  | 124       | b_51                | |  |
+24  | 125       | b_52                | |  |
+25  | 126       | b_53                | |  |
+26  | 127       | b_54                | |  |
+27  | 128       | b_55                | |  |
+28  | 129       | b_56                | |  |
+29  | 130       | b_57                | |  |
+30  | 131       | b_58                | |  |
+31  | 132       | b_59                | |  |
+32  | 133       | b_60                | |  |
+33  | 134       | b_61                | |  |
+34  | 135       | b_62                | |  |
+35  | 136       | b_63                | |  |
+36  | 137       | b_64                | |  |
+37  | 138       | b_65                | |  |
+38  | 139       | b_66                | |  |
+39  | 140       | b_67                | |  |
+40  | 141       | b_68                | |  |
+41  | 142       | b_69                | |  |
+42  | 143       | b_70                | |  |
+43  | 144       | b_71                | |  |
+44  | 145       | b_72                | |  |
+45  | 146       | b_73                | |  |
+46  | 147       | b_74                | |  |
+47  | 148       | b_75                | |  |
+48  | 149       | b_76                | |  |
+49  | 150       | b_77                | |  |
+50  | 151       | b_78                | |  |
+51  | 152       | b_79                | |  |
+52  | 153       | b_80                | |  |
+53  | 154       | b_81                | |  |
+54  | 155       | b_82                | |  |
+55  | 156       | b_83                | |  |
+56  | 157       | b_84                | |  |
+57  | 158       | b_85                | |  |
+58  | 159       | b_86                | |  |
+59  | 160       | b_87                | |  |
+60  | 161       | b_88                | |  |
+61  | 162       | b_89                | |  |
+62  | 163       | b_90                | |  |
+63  | 164       | b_91                | |  |
+64  | 165       | b_92                | |  |
+65  | 166       | b_93                | |  |
+66  | 167       | b_94                | |  |
+67  | 168       | b_95                | |  |
+68  | 169       | b_96                | |  |
+69  | 170       | b_97                | |  |
+70  | 171       | b_98                | |  |
+71  | 172       | b_99                | |  |
+
+ND280 Affecting Spline parameters: 19
+#   | Global #  | Name
+0   | 0         | MAQE
+1   | 4         | 2p2h_shape_C
+2   | 5         | 2p2h_shape_O
+3   | 6         | 2p2h_Edep_lowEnu
+4   | 7         | 2p2h_Edep_highEnu
+5   | 8         | 2p2h_Edep_lowEnubar
+6   | 9         | 2p2h_Edep_highEnubar
+7   | 22        | CA5
+8   | 23        | MARES
+9   | 24        | ISO_BKG_LowPPi
+10  | 25        | ISO_BKG
+11  | 30        | CC_BY_DIS
+12  | 31        | CC_BY_MPi
+13  | 32        | CC_AGKY_Mult
+14  | 42        | FEFQE
+15  | 43        | FEFQEH
+16  | 44        | FEFINEL
+17  | 45        | FEFABS
+18  | 46        | FEFCX
+
+Unique spline parameters: 19
+#   | Global #  | Name
+0   | 0         | MAQE
+1   | 4         | 2p2h_shape_C
+2   | 5         | 2p2h_shape_O
+3   | 6         | 2p2h_Edep_lowEnu
+4   | 7         | 2p2h_Edep_highEnu
+5   | 8         | 2p2h_Edep_lowEnubar
+6   | 9         | 2p2h_Edep_highEnubar
+7   | 22        | CA5
+8   | 23        | MARES
+9   | 24        | ISO_BKG_LowPPi
+10  | 25        | ISO_BKG
+11  | 30        | CC_BY_DIS
+12  | 31        | CC_BY_MPi
+13  | 32        | CC_AGKY_Mult
+14  | 42        | FEFQE
+15  | 43        | FEFQEH
+16  | 44        | FEFINEL
+17  | 45        | FEFABS
+18  | 46        | FEFCX
+
+What spline parameter uses what spline?
+Spline #  Uses unique #  | Param Name          Uses Name
+0         0              | MAQE                MAQE
+1         1              | 2p2h_shape_C        2p2h_shape_C
+2         2              | 2p2h_shape_O        2p2h_shape_O
+3         3              | 2p2h_Edep_lowEnu    2p2h_Edep_lowEnu
+4         4              | 2p2h_Edep_highEnu   2p2h_Edep_highEnu
+5         5              | 2p2h_Edep_lowEnubar 2p2h_Edep_lowEnubar
+6         6              | 2p2h_Edep_highEnubar2p2h_Edep_highEnubar
+7         7              | CA5                 CA5
+8         8              | MARES               MARES
+9         9              | ISO_BKG_LowPPi      ISO_BKG_LowPPi
+10        10             | ISO_BKG             ISO_BKG
+11        11             | CC_BY_DIS           CC_BY_DIS
+12        12             | CC_BY_MPi           CC_BY_MPi
+13        13             | CC_AGKY_Mult        CC_AGKY_Mult
+14        14             | FEFQE               FEFQE
+15        15             | FEFQEH              FEFQEH
+16        16             | FEFINEL             FEFINEL
+17        17             | FEFABS              FEFABS
+18        18             | FEFCX               FEFCX
+
+ND280 affecting Functional parameters: 4
+#   | Global #  | Name
+0   | 18        | EB_dial_C_nu
+1   | 19        | EB_dial_C_nubar
+2   | 20        | EB_dial_O_nu
+3   | 21        | EB_dial_O_nubar
+
+Done printing covarianceXsec
+#################################################
+Setting 2p2h_norm_nu (parameter 1) to flat prior
+Setting 2p2h_norm_nubar (parameter 2) to flat prior
+Setting 2p2h_Edep_lowEnu (parameter 6) to flat prior
+Setting 2p2h_Edep_highEnu (parameter 7) to flat prior
+Setting 2p2h_Edep_lowEnubar (parameter 8) to flat prior
+Setting 2p2h_Edep_highEnubar (parameter 9) to flat prior
+Setting Q2_norm_0 (parameter 10) to flat prior
+Setting Q2_norm_1 (parameter 11) to flat prior
+Setting Q2_norm_2 (parameter 12) to flat prior
+Setting Q2_norm_3 (parameter 13) to flat prior
+Setting Q2_norm_4 (parameter 14) to flat prior
+xsec_cov setStepScale() = 0.01000
+Setting Pre-BANFF Tune..
+Printing parameters for xsec_cov
+Name                               Nominal                            Init                               Current                            Proposed
+MAQE                               1.03000                            1.03000                            1.03000                            1.03000
+2p2h_norm_nu                       1.00000                            1.00000                            1.00000                            1.00000
+2p2h_norm_nubar                    1.00000                            1.00000                            1.00000                            1.00000
+2p2h_normCtoO                      1.00000                            1.00000                            1.00000                            1.00000
+2p2h_shape_C                       0.00000                            0.00000                            0.00000                            0.00000
+2p2h_shape_O                       0.00000                            0.00000                            0.00000                            0.00000
+2p2h_Edep_lowEnu                   1.00000                            1.00000                            1.00000                            1.00000
+2p2h_Edep_highEnu                  1.00000                            1.00000                            1.00000                            1.00000
+2p2h_Edep_lowEnubar                1.00000                            1.00000                            1.00000                            1.00000
+2p2h_Edep_highEnubar               1.00000                            1.00000                            1.00000                            1.00000
+Q2_norm_0                          0.49500                            0.49500                            0.49500                            0.49500
+Q2_norm_1                          0.69500                            0.69500                            0.69500                            0.69500
+Q2_norm_2                          0.78000                            0.78000                            0.78000                            0.78000
+Q2_norm_3                          0.89000                            0.89000                            0.89000                            0.89000
+Q2_norm_4                          0.93000                            0.93000                            0.93000                            0.93000
+Q2_norm_5                          1.00000                            1.00000                            1.00000                            1.00000
+Q2_norm_6                          1.00000                            1.00000                            1.00000                            1.00000
+Q2_norm_7                          1.00000                            1.00000                            1.00000                            1.00000
+EB_dial_C_nu                       2.00000                            2.00000                            2.00000                            2.00000
+EB_dial_C_nubar                    0.00000                            0.00000                            0.00000                            0.00000
+EB_dial_O_nu                       4.00000                            4.00000                            4.00000                            4.00000
+EB_dial_O_nubar                    0.00000                            0.00000                            0.00000                            0.00000
+CA5                                0.96000                            0.96000                            0.96000                            0.96000
+MARES                              1.07000                            1.07000                            1.07000                            1.07000
+ISO_BKG_LowPPi                     0.96000                            0.96000                            0.96000                            0.96000
+ISO_BKG                            0.96000                            0.96000                            0.96000                            0.96000
+CC_norm_nu                         1.00000                            1.00000                            1.00000                            1.00000
+CC_norm_nubar                      1.00000                            1.00000                            1.00000                            1.00000
+nue_numu                           1.00000                            1.00000                            1.00000                            1.00000
+nuebar_numubar                     1.00000                            1.00000                            1.00000                            1.00000
+CC_BY_DIS                          0.00000                            0.00000                            0.00000                            0.00000
+CC_BY_MPi                          0.00000                            0.00000                            0.00000                            0.00000
+CC_AGKY_Mult                       0.00000                            0.00000                            0.00000                            0.00000
+CC_Misc                            1.00000                            1.00000                            1.00000                            1.00000
+CC_DIS_MultPi_Norm_Nu              1.00000                            1.00000                            1.00000                            1.00000
+CC_DIS_MultPi_Norm_Nubar           1.00000                            1.00000                            1.00000                            1.00000
+CC_Coh_C                           1.00000                            1.00000                            1.00000                            1.00000
+CC_Coh_O                           1.00000                            1.00000                            1.00000                            1.00000
+NC_Coh                             1.00000                            1.00000                            1.00000                            1.00000
+NC_1gamma                          1.00000                            1.00000                            1.00000                            1.00000
+NC_other_near                      1.00000                            1.00000                            1.00000                            1.00000
+NC_other_far                       1.00000                            1.00000                            1.00000                            1.00000
+FEFQE                              1.06900                            1.06900                            1.06900                            1.06900
+FEFQEH                             1.82400                            1.82400                            1.82400                            1.82400
+FEFINEL                            1.00200                            1.00200                            1.00200                            1.00200
+FEFABS                             1.40400                            1.40400                            1.40400                            1.40400
+FEFCX                              0.69700                            0.69700                            0.69700                            0.69700
+Q2_norm_5_HighEnergy               1.00000                            1.00000                            1.00000                            1.00000
+Q2_norm_6_HighEnergy               1.00000                            1.00000                            1.00000                            1.00000
+Q2_norm_7_HighEnergy               1.00000                            1.00000                            1.00000                            1.00000
+2p2h_norm_HighEnergy               1.00000                            1.00000                            1.00000                            1.00000
+2p2h_shape_O_HighEnergy            0.00000                            0.00000                            0.00000                            0.00000
+CA5HighEnergy                      0.96000                            0.96000                            0.96000                            0.96000
+MARESHighEnergy                    1.07000                            1.07000                            1.07000                            1.07000
+ISO_BKGHighEnergy                  0.96000                            0.96000                            0.96000                            0.96000
+FEFQEHighEnergy                    1.06900                            1.06900                            1.06900                            1.06900
+FEFQEHHighEnergy                   1.82400                            1.82400                            1.82400                            1.82400
+FEFINELHighEnergy                  1.00200                            1.00200                            1.00200                            1.00200
+FEFABSHighEnergy                   1.40400                            1.40400                            1.40400                            1.40400
+FEFCXHighEnergy                    0.69700                            0.69700                            0.69700                            0.69700
+pi0_qpi_ratio                      0.00000                            0.00000                            0.00000                            0.00000
+nubar_nu_1pi_ratio                 0.00000                            0.00000                            0.00000                            0.00000
+coherent_pi_xsec                   0.00000                            0.00000                            0.00000                            0.00000
+DIS_model_difference               0.00000                            0.00000                            0.00000                            0.00000
+DIS_xsec                           0.00000                            0.00000                            0.00000                            0.00000
+DIS_q2_vec_low_W                   0.00000                            0.00000                            0.00000                            0.00000
+DIS_q2_axi_low_W                   0.00000                            0.00000                            0.00000                            0.00000
+DIS_norm_low_W                     1.00000                            1.00000                            1.00000                            1.00000
+DIS_had_mult                       0.00000                            0.00000                            0.00000                            0.00000
+DIS_q2_high_W                      0.00000                            0.00000                            0.00000                            0.00000
+NC_CC_ratio                        1.00000                            1.00000                            1.00000                            1.00000
+CC_nutau_xsec                      1.00000                            1.00000                            1.00000                            1.00000
+Yp_Dial                            0.46800                            0.46800                            0.46800                            0.46800
+b_0                                1.00000                            1.00000                            1.00000                            1.00000
+b_1                                1.00000                            1.00000                            1.00000                            1.00000
+b_2                                1.00000                            1.00000                            1.00000                            1.00000
+b_3                                1.00000                            1.00000                            1.00000                            1.00000
+b_4                                1.00000                            1.00000                            1.00000                            1.00000
+b_5                                1.00000                            1.00000                            1.00000                            1.00000
+b_6                                1.00000                            1.00000                            1.00000                            1.00000
+b_7                                1.00000                            1.00000                            1.00000                            1.00000
+b_8                                1.00000                            1.00000                            1.00000                            1.00000
+b_9                                1.00000                            1.00000                            1.00000                            1.00000
+b_10                               1.00000                            1.00000                            1.00000                            1.00000
+b_11                               1.00000                            1.00000                            1.00000                            1.00000
+b_12                               1.00000                            1.00000                            1.00000                            1.00000
+b_13                               1.00000                            1.00000                            1.00000                            1.00000
+b_14                               1.00000                            1.00000                            1.00000                            1.00000
+b_15                               1.00000                            1.00000                            1.00000                            1.00000
+b_16                               1.00000                            1.00000                            1.00000                            1.00000
+b_17                               1.00000                            1.00000                            1.00000                            1.00000
+b_18                               1.00000                            1.00000                            1.00000                            1.00000
+b_19                               1.00000                            1.00000                            1.00000                            1.00000
+b_20                               1.00000                            1.00000                            1.00000                            1.00000
+b_21                               1.00000                            1.00000                            1.00000                            1.00000
+b_22                               1.00000                            1.00000                            1.00000                            1.00000
+b_23                               1.00000                            1.00000                            1.00000                            1.00000
+b_24                               1.00000                            1.00000                            1.00000                            1.00000
+b_25                               1.00000                            1.00000                            1.00000                            1.00000
+b_26                               1.00000                            1.00000                            1.00000                            1.00000
+b_27                               1.00000                            1.00000                            1.00000                            1.00000
+b_28                               1.00000                            1.00000                            1.00000                            1.00000
+b_29                               1.00000                            1.00000                            1.00000                            1.00000
+b_30                               1.00000                            1.00000                            1.00000                            1.00000
+b_31                               1.00000                            1.00000                            1.00000                            1.00000
+b_32                               1.00000                            1.00000                            1.00000                            1.00000
+b_33                               1.00000                            1.00000                            1.00000                            1.00000
+b_34                               1.00000                            1.00000                            1.00000                            1.00000
+b_35                               1.00000                            1.00000                            1.00000                            1.00000
+b_36                               1.00000                            1.00000                            1.00000                            1.00000
+b_37                               1.00000                            1.00000                            1.00000                            1.00000
+b_38                               1.00000                            1.00000                            1.00000                            1.00000
+b_39                               1.00000                            1.00000                            1.00000                            1.00000
+b_40                               1.00000                            1.00000                            1.00000                            1.00000
+b_41                               1.00000                            1.00000                            1.00000                            1.00000
+b_42                               1.00000                            1.00000                            1.00000                            1.00000
+b_43                               1.00000                            1.00000                            1.00000                            1.00000
+b_44                               1.00000                            1.00000                            1.00000                            1.00000
+b_45                               1.00000                            1.00000                            1.00000                            1.00000
+b_46                               1.00000                            1.00000                            1.00000                            1.00000
+b_47                               1.00000                            1.00000                            1.00000                            1.00000
+b_48                               1.00000                            1.00000                            1.00000                            1.00000
+b_49                               1.00000                            1.00000                            1.00000                            1.00000
+b_50                               1.00000                            1.00000                            1.00000                            1.00000
+b_51                               1.00000                            1.00000                            1.00000                            1.00000
+b_52                               1.00000                            1.00000                            1.00000                            1.00000
+b_53                               1.00000                            1.00000                            1.00000                            1.00000
+b_54                               1.00000                            1.00000                            1.00000                            1.00000
+b_55                               1.00000                            1.00000                            1.00000                            1.00000
+b_56                               1.00000                            1.00000                            1.00000                            1.00000
+b_57                               1.00000                            1.00000                            1.00000                            1.00000
+b_58                               1.00000                            1.00000                            1.00000                            1.00000
+b_59                               1.00000                            1.00000                            1.00000                            1.00000
+b_60                               1.00000                            1.00000                            1.00000                            1.00000
+b_61                               1.00000                            1.00000                            1.00000                            1.00000
+b_62                               1.00000                            1.00000                            1.00000                            1.00000
+b_63                               1.00000                            1.00000                            1.00000                            1.00000
+b_64                               1.00000                            1.00000                            1.00000                            1.00000
+b_65                               1.00000                            1.00000                            1.00000                            1.00000
+b_66                               1.00000                            1.00000                            1.00000                            1.00000
+b_67                               1.00000                            1.00000                            1.00000                            1.00000
+b_68                               1.00000                            1.00000                            1.00000                            1.00000
+b_69                               1.00000                            1.00000                            1.00000                            1.00000
+b_70                               1.00000                            1.00000                            1.00000                            1.00000
+b_71                               1.00000                            1.00000                            1.00000                            1.00000
+b_72                               1.00000                            1.00000                            1.00000                            1.00000
+b_73                               1.00000                            1.00000                            1.00000                            1.00000
+b_74                               1.00000                            1.00000                            1.00000                            1.00000
+b_75                               1.00000                            1.00000                            1.00000                            1.00000
+b_76                               1.00000                            1.00000                            1.00000                            1.00000
+b_77                               1.00000                            1.00000                            1.00000                            1.00000
+b_78                               1.00000                            1.00000                            1.00000                            1.00000
+b_79                               1.00000                            1.00000                            1.00000                            1.00000
+b_80                               1.00000                            1.00000                            1.00000                            1.00000
+b_81                               1.00000                            1.00000                            1.00000                            1.00000
+b_82                               1.00000                            1.00000                            1.00000                            1.00000
+b_83                               1.00000                            1.00000                            1.00000                            1.00000
+b_84                               1.00000                            1.00000                            1.00000                            1.00000
+b_85                               1.00000                            1.00000                            1.00000                            1.00000
+b_86                               1.00000                            1.00000                            1.00000                            1.00000
+b_87                               1.00000                            1.00000                            1.00000                            1.00000
+b_88                               1.00000                            1.00000                            1.00000                            1.00000
+b_89                               1.00000                            1.00000                            1.00000                            1.00000
+b_90                               1.00000                            1.00000                            1.00000                            1.00000
+b_91                               1.00000                            1.00000                            1.00000                            1.00000
+b_92                               1.00000                            1.00000                            1.00000                            1.00000
+b_93                               1.00000                            1.00000                            1.00000                            1.00000
+b_94                               1.00000                            1.00000                            1.00000                            1.00000
+b_95                               1.00000                            1.00000                            1.00000                            1.00000
+b_96                               1.00000                            1.00000                            1.00000                            1.00000
+b_97                               1.00000                            1.00000                            1.00000                            1.00000
+b_98                               1.00000                            1.00000                            1.00000                            1.00000
+b_99                               1.00000                            1.00000                            1.00000                            1.00000
+-------------------------------------------------------------------
+Creating samplePDFSKBase object..
+
+- Using SK sample config in this file configs/AtmosphericConfigs/AtmSample_1.cfg
+- Using non doubled angles for oscillation parameters
+
+Setting up atmospheric sample..
+- Binning option: 4
+- Number of oscillation channels: 12
+- maqeh rweighting: 1
+- SampleDetID: 192
+- isFiTQun: 1
+- iselike: 1
+- LepMomLowBound: 100.00000
+- LepMomUpBound: 1585.00000
+- AtmSampleGroup: 1
+- Production Height (km): 25.00000
+Cutting on momentum:
+- LepMomLowBound: 100.00000
+- LepMomUpBound: 1585.00000
+Not cutting on energy loss
+- samplename: SubGeV-elike-0dcy
+- samplenumber: 0
+- sampleID: SG_elike_0dcy
+-------------------------------------------------------------------
+Setting up SK MC..
+
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel1.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel1_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel1.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+nue-x-nue Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel7.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel7_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel7.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+nueb-x-nueb Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel5.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel5_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel5.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+numu-x-numu Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel11.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel11_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel11.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+numub-x-numub Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel2.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel2_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel2.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+nue-x-numu Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel8.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel8_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel8.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+nueb-x-numub Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel4.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel4_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel4.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+numu-x-nue Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel10.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel10_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel10.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+numub-x-nueb Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel3.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel3_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel3.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+nue-x-nutau Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel9.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel9_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel9.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+nueb-x-nutaub Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel6.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel6_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel6.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+numu-x-nutau Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel12.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel12_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel12.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+numub-x-nutaub Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+Filling spline bins and setting 1D and 2D binning..
+
+Using cosz-lepmom splines
+Filled spline bins
+
+RECO COS THETA BINNING FROM CFG: -1.00000 -0.80000 -0.60000 -0.40000 -0.20000 0.00000 0.20000 0.40000 0.60000 0.80000 1.00100
+LEPTON MOMENTUM BINNING FROM CFG: 100.00000 251.20000 398.10000 631.00000 1000.00000 1585.00000
+--------------------------------
+Total Entries: 751989
+Sample OK: SubGeV-elike-0dcy
+-------------------------------------------------------------------
+Set Oscillator
+-----------------------------
+Setting Xsec covariance object..
+-----------------------------
+Setting AtmFlux covariance object..
+-----------------------------
+Setting ATMPD Detector covariance object..
+-----------------------------
+Created Atm pdf with config:configs/AtmosphericConfigs/AtmSample_1.cfg
+Atmospheric Sample: 0 | Name: SubGeV-elike-0dcy = OK
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+Creating samplePDFSKBase object..
+
+- Using SK sample config in this file configs/AtmosphericConfigs/AtmSample_4.cfg
+- Using non doubled angles for oscillation parameters
+
+Setting up atmospheric sample..
+- Binning option: 4
+- Number of oscillation channels: 12
+- maqeh rweighting: 1
+- SampleDetID: 192
+- isFiTQun: 1
+- iselike: 0
+- LepMomLowBound: 100.00000
+- LepMomUpBound: 1585.00000
+- AtmSampleGroup: 6
+- Production Height (km): 25.00000
+Cutting on momentum:
+- LepMomLowBound: 100.00000
+- LepMomUpBound: 1585.00000
+Not cutting on energy loss
+- samplename: SubGeV-mulike-0dcy
+- samplenumber: 3
+- sampleID: SG_mulike_0dcy
+-------------------------------------------------------------------
+Setting up SK MC..
+
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel1.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel1_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel1.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+nue-x-nue Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel7.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel7_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel7.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+nueb-x-nueb Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel5.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel5_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel5.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+numu-x-numu Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel11.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel11_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel11.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+numub-x-numub Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel2.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel2_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel2.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+nue-x-numu Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel8.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel8_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel8.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+nueb-x-numub Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel4.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel4_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel4.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+numu-x-nue Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel10.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel10_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel10.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+numub-x-nueb Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel3.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel3_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel3.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+nue-x-nutau Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel9.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel9_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel9.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+nueb-x-nutaub Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel6.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel6_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel6.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+numu-x-nutau Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+input file: ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel12.root
+input spline file: ./inputs/skatm/SKMCSplines/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel12_XsecResponse_Splines.root
+Found tree in ./inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample4_Channel12.root
+Using 2020 splines
+Creating splineSKBase
+Creating Etrue-Cosz-LepMom atmospheric splines
+Using reduced TSpline3 splines!
+Number of spline params set to 18
+Using atmospheric binning
+Setting up atmospheric binning
+###########################
+USING TSPLINE3 RED !!!!!
+###########################
+Sample set up OK
+numub-x-nutaub Sample is OK
+--------------------------------
+-------------------------------------------------------------------
+Filling spline bins and setting 1D and 2D binning..
+
+Using cosz-lepmom splines
+Filled spline bins
+
+RECO COS THETA BINNING FROM CFG: -1.00000 -0.80000 -0.60000 -0.40000 -0.20000 0.00000 0.20000 0.40000 0.60000 0.80000 1.00100
+LEPTON MOMENTUM BINNING FROM CFG: 100.00000 251.20000 398.10000 631.00000 1000.00000 1585.00000
+--------------------------------
+Total Entries: 183316
+Sample OK: SubGeV-mulike-0dcy
+-------------------------------------------------------------------
+Set Oscillator
+-----------------------------
+Setting Xsec covariance object..
+-----------------------------
+Setting AtmFlux covariance object..
+-----------------------------
+Setting ATMPD Detector covariance object..
+-----------------------------
+Created Atm pdf with config:configs/AtmosphericConfigs/AtmSample_4.cfg
+Atmospheric Sample: 1 | Name: SubGeV-mulike-0dcy = OK
+-------------------------------------------------------------------
+2 Atmospheric samples loaded up
+Number of MC Events loaded:935305
+-------------------------------------------------------------------
+Moving onto analysis.. (For now this is just a test bed)
+
+
+ERROR in TPDF::Open: Cannot open file:./plots/2DEventRateHistograms/LepMom_Cosz_UnOsc.pdf
+-------------------------------------------------------------------
+Reweighting to UnOscillated Spectra
+Printing parameters for osc_cov
+Name                               Nominal                            Init                               Current                            Proposed
+sin2th_12                          0.30700                            0.30700                            0.00000                            0.00000
+sin2th_23                          0.52800                            0.52800                            0.00000                            0.00000
+sin2th_13                          0.02180                            0.02180                            0.00000                            0.00000
+delm2_12                           0.00008                            0.00008                            0.00008                            0.00008
+delm2_23                           0.00251                            0.00251                            0.00251                            0.00251
+delta_cp                           -1.60100                           -1.60100                           -1.60100                           -1.60100
+-------------------------------------------------
+Integral breakdown for sample: SubGeV-elike-0dcy
+
+Mode:          nue-x-nue      nueb-x-nueb    numu-x-numu    numub-x-numub  nue-x-numu     nueb-x-numub   numu-x-nue     numub-x-nueb   nue-x-nutau    nueb-x-nutaub  numu-x-nutau   numub-x-nutaub Total:
+CCQE           2880.85900     936.86024      28.91496       11.65935       0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        3858.29355
+CC1pipm        459.72830      141.57893      7.09955        2.30339        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        610.71017
+CCcoh          4.40738        9.75018        0.10391        0.05338        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        14.31485
+CCMpi          36.86515       8.48329        1.76107        0.13766        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        47.24717
+CCDIS          0.93831        0.08660        0.22132        0.01717        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        1.26340
+NC1pi0         35.44634       10.21742       76.57759       28.01301       0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        150.25436
+NC1pipm        3.40512        1.15105        7.72859        3.07060        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        15.35536
+NCcoh          3.01568        3.09933        7.26623        6.78695        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        20.16819
+NCoth          1.75709        0.64496        3.63702        1.25549        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        7.29456
+2p2h           494.10380      168.00134      5.19868        2.21105        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        669.51487
+NC1gam         4.16572        1.89805        9.89104        4.42554        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        20.38035
+CCMisc         2.95219        0.60955        0.27830        0.05217        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        3.89221
+NCMpi          4.73495        1.27610        10.83645       3.43455        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        20.28205
+NCDIS          0.90966        0.19085        2.12135        0.60062        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        3.82248
+CC1pi0         93.48919       16.63188       3.37925        0.52514        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        114.02545
+Total:         4026.77788     1300.47976     165.01532      64.54607       0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        5556.81903
+-------------------------------------------------
+
+Info in <TCanvas::Print>: Current canvas added to pdf file ./plots/2DEventRateHistograms/LepMom_Cosz_UnOsc.pdf
+-------------------------------------------------
+Integral breakdown for sample: SubGeV-mulike-0dcy
+
+Mode:          nue-x-nue      nueb-x-nueb    numu-x-numu    numub-x-numub  nue-x-numu     nueb-x-numub   numu-x-nue     numub-x-nueb   nue-x-nutau    nueb-x-nutaub  numu-x-nutau   numub-x-nutaub Total:
+CCQE           5.94796        2.87352        797.03825      135.30312      0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        941.16285
+CC1pipm        0.86998        0.08579        124.90064      23.12684       0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        148.98324
+CCcoh          0.00000        0.03666        0.59246        1.10348        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        1.73260
+CCMpi          0.12124        0.01822        10.00273       1.61736        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        11.75956
+CCDIS          0.00000        0.00000        0.05080        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.05080
+NC1pi0         2.18951        0.79974        4.61234        1.24728        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        8.84886
+NC1pipm        13.27294       3.70736        26.31563       8.50000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        51.79593
+NCcoh          0.00000        0.01763        0.00000        0.01790        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.03552
+NCoth          3.97897        0.81157        8.55355        2.28723        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        15.63131
+2p2h           1.18286        0.41771        141.59432      25.56292       0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        168.75782
+NC1gam         0.00000        0.00000        0.00000        0.03505        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.03505
+CCMisc         0.01743        0.00000        1.13902        0.24003        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        1.39647
+NCMpi          2.18263        0.65883        6.15414        2.05631        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        11.05192
+NCDIS          0.15296        0.03454        0.56025        0.06865        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.81639
+CC1pi0         0.10087        0.00000        27.10342       3.00156        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        30.20584
+Total:         30.01735       9.46156        1148.61755     204.16771      0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        1392.26416
+-------------------------------------------------
+
+Info in <TCanvas::Print>: Current canvas added to pdf file ./plots/2DEventRateHistograms/LepMom_Cosz_UnOsc.pdf
+Info in <TCanvas::Print>: Current canvas added to pdf file ./plots/2DEventRateHistograms/LepMom_Cosz_UnOsc.pdf
+ERROR in TPDF::Open: Cannot open file:./plots/2DEventRateHistograms/LepMom_Cosz_Osc.pdf
+-------------------------------------------------------------------
+Reweighting to Oscillated Spectra
+Printing parameters for osc_cov
+Name                               Nominal                            Init                               Current                            Proposed
+sin2th_12                          0.30700                            0.30700                            0.30700                            0.30700
+sin2th_23                          0.52800                            0.52800                            0.52800                            0.52800
+sin2th_13                          0.02180                            0.02180                            0.02180                            0.02180
+delm2_12                           0.00008                            0.00008                            0.00008                            0.00008
+delm2_23                           0.00251                            0.00251                            0.00251                            0.00251
+delta_cp                           -1.60100                           -1.60100                           -1.60100                           -1.60100
+-------------------------------------------------
+Integral breakdown for sample: SubGeV-elike-0dcy
+
+Mode:          nue-x-nue      nueb-x-nueb    numu-x-numu    numub-x-numub  nue-x-numu     nueb-x-numub   numu-x-nue     numub-x-nueb   nue-x-nutau    nueb-x-nutaub  numu-x-nutau   numub-x-nutaub Total:
+CCQE           2519.41315     851.81534      18.32589       7.16629        0.42907        0.18569        399.82805      80.02838       0.09170        0.00323        1.00039        0.56499        3878.85217
+CC1pipm        431.34738      135.59217      4.90006        1.47597        0.08243        0.02301        33.71797       5.63282        0.01911        0.00022        0.12582        0.13084        613.04778
+CCcoh          4.08669        9.23100        0.06948        0.05182        0.00165        0.00004        0.37852        0.49479        0.00000        0.00000        0.00000        0.00000        14.31399
+CCMpi          35.08644       8.23489        1.25875        0.10292        0.01813        0.00049        2.21641        0.23287        0.00350        0.00008        0.02903        0.00785        47.19136
+CCDIS          0.89115        0.08440        0.17882        0.01715        0.00338        0.00000        0.06070        0.00248        0.00000        0.00004        0.00003        0.01685        1.25502
+NC1pi0         35.44634       10.21742       76.57759       28.01301       0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        150.25436
+NC1pipm        3.40512        1.15105        7.72859        3.07060        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        15.35536
+NCcoh          3.01568        3.09933        7.26623        6.78695        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        20.16819
+NCoth          1.75709        0.64496        3.63702        1.25549        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        7.29456
+2p2h           446.92315      157.12136      3.25925        1.46197        0.07367        0.03065        53.19305       10.24261       0.00000        0.00000        0.00000        0.00000        672.30572
+NC1gam         4.16572        1.89805        9.89104        4.42554        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        20.38035
+CCMisc         2.84208        0.58542        0.15089        0.04446        0.00266        0.00014        0.13102        0.02668        0.00215        0.00000        0.00535        0.01651        3.80736
+NCMpi          4.73495        1.27610        10.83645       3.43455        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        20.28205
+NCDIS          0.90966        0.19085        2.12135        0.60062        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        3.82248
+CC1pi0         87.77819       15.94771       2.12411        0.34353        0.04114        0.00556        6.72615        0.64738        0.00138        0.00008        0.02846        0.01350        113.65719
+Total:         3581.80280     1197.09005     148.32553      58.25086       0.65213        0.24557        496.25187      97.30801       0.11784        0.00365        1.18908        0.75054        5581.98794
+-------------------------------------------------
+
+Info in <TCanvas::Print>: Current canvas added to pdf file ./plots/2DEventRateHistograms/LepMom_Cosz_Osc.pdf
+-------------------------------------------------
+Integral breakdown for sample: SubGeV-mulike-0dcy
+
+Mode:          nue-x-nue      nueb-x-nueb    numu-x-numu    numub-x-numub  nue-x-numu     nueb-x-numub   numu-x-nue     numub-x-nueb   nue-x-nutau    nueb-x-nutaub  numu-x-nutau   numub-x-nutaub Total:
+CCQE           4.72652        2.25405        502.59259      87.37067       14.02926       1.85958        1.31135        0.59446        0.02250        0.00032        0.17729        0.07084        615.00943
+CC1pipm        0.79042        0.08048        83.81306       15.74379       1.30840        0.19176        0.09931        0.00593        0.00605        0.00004        0.05105        0.01403        102.10432
+CCcoh          0.00000        0.03218        0.39657        0.64819        0.00582        0.01255        0.00000        0.00506        0.00000        0.00000        0.00000        0.00000        1.10036
+CCMpi          0.11202        0.01820        6.87269        1.12726        0.09034        0.01050        0.01046        0.00002        0.00016        0.00000        0.00175        0.00000        8.24340
+CCDIS          0.00000        0.00000        0.04367        0.00000        0.00031        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.04398
+NC1pi0         2.18951        0.79974        4.61234        1.24728        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        8.84886
+NC1pipm        13.27294       3.70736        26.31563       8.50000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        51.79593
+NCcoh          0.00000        0.01763        0.00000        0.01790        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.03552
+NCoth          3.97897        0.81157        8.55355        2.28723        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        15.63131
+2p2h           0.97314        0.35289        92.35265       17.02094       2.00070        0.27467        0.21625        0.06333        0.00000        0.00000        0.00000        0.00000        113.25457
+NC1gam         0.00000        0.00000        0.00000        0.03505        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.03505
+CCMisc         0.01635        0.00000        0.80004        0.16600        0.00879        0.00111        0.00074        0.00000        0.00000        0.00000        0.00000        0.00000        0.99303
+NCMpi          2.18263        0.65883        6.15414        2.05631        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        11.05192
+NCDIS          0.15296        0.03454        0.56025        0.06865        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.00000        0.81639
+CC1pi0         0.08534        0.00000        18.58127       1.97241        0.28765        0.02376        0.01580        0.00000        0.00033        0.00000        0.01250        0.00000        20.97905
+Total:         28.48078       8.76746        751.64846      138.26166      17.73127       2.37394        1.65391        0.66880        0.02903        0.00036        0.24259        0.08487        949.94312
+-------------------------------------------------
+
+Info in <TCanvas::Print>: Current canvas added to pdf file ./plots/2DEventRateHistograms/LepMom_Cosz_Osc.pdf
+Info in <TCanvas::Print>: Current canvas added to pdf file ./plots/2DEventRateHistograms/LepMom_Cosz_Osc.pdf
