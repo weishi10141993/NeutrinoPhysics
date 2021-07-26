@@ -92,5 +92,3 @@ Now run the following (AtmConfig.cfg is the fit config),
 ```
 
 The output is in ```PrintEventRate_output.txt```. Compare printed event rates to https://docs.google.com/spreadsheets/d/1z2AsWpKUhx113r9PGo1S-7_k5MQGmvfo-kTUhl3MhzE/edit?usp=sharing
-
-```
