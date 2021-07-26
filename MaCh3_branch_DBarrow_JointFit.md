@@ -91,4 +91,4 @@ Now run the following (AtmConfig.cfg is the fit config),
 ./AtmJointFit_Bin/PrintEventRate configs/AtmosphericConfigs/AtmConfig.cfg  
 ```
 
-The output is in ```PrintEventRate_output.txt```. Compare printed event rates to https://docs.google.com/spreadsheets/d/1z2AsWpKUhx113r9PGo1S-7_k5MQGmvfo-kTUhl3MhzE/edit?usp=sharing
+The output is in ```PrintEventRate_output.txt``` [here](https://github.com/weishi10141993/NeutrinoPhysics/blob/main/PrintEventRate_output.txt). Compare printed event rates to https://docs.google.com/spreadsheets/d/1z2AsWpKUhx113r9PGo1S-7_k5MQGmvfo-kTUhl3MhzE/edit?usp=sharing
