@@ -21,6 +21,8 @@ else
   exit 1
 fi
 
+echo "Success ran setupFDEffTarBall-grid.sh"
+
 # Go back to the top-level directory since we know that's writable
 cd ${_CONDOR_JOB_IWD}
 
@@ -31,6 +33,7 @@ ls ${_CONDOR_DIR_INPUT}
 
 # Symlink the desired fcl to the current directory
 ln -s ${INPUT_TAR_DIR_LOCAL}/FDEffTarBall/localProducts*/myntuples/v09_22_02/fcl/MyEnergyAnalysis.fcl .
+echo "Did the symlink"
 
 # Set some other very useful environment variables for xrootd and IFDH
 export IFDH_CP_MAXRETRIES=2
@@ -48,17 +51,25 @@ if [ $? -ne 0 ]; then
   ifdh mkdir_p $OUTDIR || { echo "Error creating or checking $OUTDIR"; exit 2; }
 fi
 
+echo "Finished checking outdir"
+
 # Get the xrootd URL for the input file. Not necessary for SAM inputs when using ifdh_art, etc.
 myinfile=$(samweb get-file-access-url --schema=root nu_dune10kt_1x2x6_13009312_0_20181104T221530_gen_g4_detsim_reco.root)
+
+echo "Got xrootd url"
 
 # Now we should be in the work dir if setupFDEffTarBall-grid.sh worked
 lar -c MyEnergyAnalysis.fcl -n -1 $myinfile
 LAR_RESULT=$?   # check the exit status!!!
 
+echo "Issued lar command"
+
 if [ $LAR_RESULT -ne 0 ]; then
   echo "lar exited with abnormal status $LAR_RESULT. See error outputs."
   exit $LAR_RESULT
 fi
+
+echo "Have output"
 
 if [ -f myntuple.root ]; then
 
