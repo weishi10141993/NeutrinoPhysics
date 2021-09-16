@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIRECTORY=FDEffTarBall
+DIRECTORY=FDEff
 # we cannot rely on "whoami" in a grid job. We have no idea what the local username will be.
 # Use the GRID_USER environment variable instead (set automatically by jobsub).
 USERNAME=${GRID_USER}
@@ -15,8 +15,6 @@ fi
 
 echo "Started set up grid"
 source ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/localProducts*/setup-grid
-echo "Finished set up grid, now set env"
-mrbsetenv # need this to setup a development environment
-echo "Finished env setting"
+echo "Finished set up grid, now mrbslp"
 mrbslp    # setup all products installed in localProducts*
 echo "Done mrbslp"

@@ -32,7 +32,7 @@ echo "And _CONDOR_DIR_INPUT"
 ls ${_CONDOR_DIR_INPUT}
 
 # Symlink the desired fcl to the current directory
-ln -s ${INPUT_TAR_DIR_LOCAL}/FDEffTarBall/localProducts*/myntuples/v09_22_02/fcl/MyEnergyAnalysis.fcl .
+ln -s ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/srcs/myntuples/myntuples/MyEnergyAnalysis/MyEnergyAnalysis.fcl .
 echo "Did the symlink"
 
 # Set some other very useful environment variables for xrootd and IFDH
@@ -51,12 +51,12 @@ if [ $? -ne 0 ]; then
   ifdh mkdir_p $OUTDIR || { echo "Error creating or checking $OUTDIR"; exit 2; }
 fi
 
-echo "Finished checking outdir"
+echo "Finished checking outdir: $OUTDIR"
 
 # Get the xrootd URL for the input file. Not necessary for SAM inputs when using ifdh_art, etc.
 myinfile=$(samweb get-file-access-url --schema=root nu_dune10kt_1x2x6_13009312_0_20181104T221530_gen_g4_detsim_reco.root)
 
-echo "Got xrootd url"
+echo "Got xrootd url: $myinfile"
 
 # Now we should be in the work dir if setupFDEffTarBall-grid.sh worked
 lar -c MyEnergyAnalysis.fcl -n -1 $myinfile
