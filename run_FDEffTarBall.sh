@@ -51,7 +51,7 @@ fi
 # Get the xrootd URL for the input file. Not necessary for SAM inputs when using ifdh_art, etc.
 myinfile=$(samweb get-file-access-url --schema=root nu_dune10kt_1x2x6_13009312_0_20181104T221530_gen_g4_detsim_reco.root)
 
-# Now we should be in the work dir if setupgrid.sh worked
+# Now we should be in the work dir if setupFDEffTarBall-grid.sh worked
 lar -c MyEnergyAnalysis.fcl -n -1 $myinfile
 LAR_RESULT=$?   # check the exit status!!!
 
