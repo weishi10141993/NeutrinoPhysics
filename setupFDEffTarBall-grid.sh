@@ -11,7 +11,6 @@ if [ ! -d "$WORKDIR" ]; then
   export WORKDIR=`echo ~`
 fi
 
-#cd $WORKDIR/$DIRECTORY
 source ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/localProducts*/setup-grid
 mrbsetenv # need this to setup a development environment
 mrbslp    # setup all products installed in localProducts*

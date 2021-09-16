@@ -51,7 +51,8 @@ make clean
 make
 ```
 
-Make sure the following is in the code:
+Check the following,
+
 ```
 bool useT2K = false;          # don't run on T2K beam
 bool useSKCalibration = true; # only for the systematic you want to test

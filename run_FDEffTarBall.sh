@@ -30,7 +30,7 @@ echo "And _CONDOR_DIR_INPUT"
 ls ${_CONDOR_DIR_INPUT}
 
 # Symlink the desired fcl to the current directory
-ln -s ${INPUT_TAR_DIR_LOCAL}/FDEffTarBall/work/MyEnergyAnalysis.fcl .
+ln -s ${INPUT_TAR_DIR_LOCAL}/FDEffTarBall/localProducts*/myntuples/v09_22_02/fcl/MyEnergyAnalysis.fcl .
 
 # Set some other very useful environment variables for xrootd and IFDH
 export IFDH_CP_MAXRETRIES=2
