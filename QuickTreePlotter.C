@@ -1,17 +1,42 @@
 //------------------------------------------------------------------
 // Plot a branch for all channels in each SK atm subGeV sample
+// Run this macro:
+// root -l -b -q QuickTreePlotter.C
 //------------------------------------------------------------------
 
-#include "TChain.h"
-#include "TFile.h"
-#include "TTree.h"
-#include "TH1.h"
-#include "TH2.h"
-#include "TCanvas.h"
-#include "TMath.h"
-#include "TGraph.h"
-#include "stdio.h"
-#include "math.h"
+// ROOT includes
+#include <TFile.h>
+#include <TTree.h>
+#include <TString.h>
+#include <TH1.h>
+#include <TH2.h>
+#include <TF1.h>
+#include <TH3.h>
+#include <TCut.h>
+#include <TGraph.h>
+#include <TGraphErrors.h>
+#include <TLegend.h>
+#include <TCanvas.h>
+#include <TStyle.h>
+#include <TPaveStats.h>
+#include <THStack.h>
+#include <TFitResultPtr.h>
+#include <TChain.h>
+#include <TChainElement.h>
+#include <TEfficiency.h>
+#include <TMath.h>
+#include "TLorentzVector.h"
+#include <TRandom3.h>
+#include "TSystem.h"
+#include "TROOT.h"
+// C++ includes
+#include <iostream>
+#include <iomanip>
+using namespace std;
+#include <string>
+#include <algorithm>
+#include <stdlib.h>
+#include <math.h>
 #include <vector>
 
 void QuickTreePlotter()
@@ -75,32 +100,32 @@ void QuickTreePlotter()
 
   for ( int ievt = 0; ievt < nentries1; ievt++ ) {
     mySKatmSample1->GetEntry(ievt);
-    dNll1->Fill(fq1rnll1[0][1]-fq1rnll1[0][3], fq1rnll1[0][1]-fq1rnll1[0][2]);
+    dNll1->Fill((*fq1rnll1)[0][1]-(*fq1rnll1)[0][3], (*fq1rnll1)[0][1]-(*fq1rnll1)[0][2]);
   }
 
   for ( int ievt = 0; ievt < nentries2; ievt++ ) {
     mySKatmSample2->GetEntry(ievt);
-    dNll2->Fill(fq1rnll2[0][1]-fq1rnll2[0][3], fq1rnll2[0][1]-fq1rnll2[0][2]);
+    dNll2->Fill((*fq1rnll2)[0][1]-(*fq1rnll2)[0][3], (*fq1rnll2)[0][1]-(*fq1rnll2)[0][2]);
   }
 
   for ( int ievt = 0; ievt < nentries4; ievt++ ) {
     mySKatmSample4->GetEntry(ievt);
-    dNll4->Fill(fq1rnll4[0][1]-fq1rnll4[0][3], fq1rnll4[0][1]-fq1rnll4[0][2]);
+    dNll4->Fill((*fq1rnll4)[0][1]-(*fq1rnll4)[0][3], (*fq1rnll4)[0][1]-(*fq1rnll4)[0][2]);
   }
 
   for ( int ievt = 0; ievt < nentries5; ievt++ ) {
     mySKatmSample5->GetEntry(ievt);
-    dNll5->Fill(fq1rnll5[0][1]-fq1rnll5[0][3], fq1rnll5[0][1]-fq1rnll5[0][2]);
+    dNll5->Fill((*fq1rnll5)[0][1]-(*fq1rnll5)[0][3], (*fq1rnll5)[0][1]-(*fq1rnll5)[0][2]);
   }
 
   for ( int ievt = 0; ievt < nentries6; ievt++ ) {
     mySKatmSample6->GetEntry(ievt);
-    dNll6->Fill(fq1rnll6[0][1]-fq1rnll6[0][3], fq1rnll6[0][1]-fq1rnll6[0][2]);
+    dNll6->Fill((*fq1rnll6)[0][1]-(*fq1rnll6)[0][3], (*fq1rnll6)[0][1]-(*fq1rnll6)[0][2]);
   }
 
   for ( int ievt = 0; ievt < nentries7; ievt++ ) {
     mySKatmSample7->GetEntry(ievt);
-    dNll7->Fill(fq1rnll7[0][1]-fq1rnll7[0][3], fq1rnll7[0][1]-fq1rnll7[0][2]);
+    dNll7->Fill((*fq1rnll7)[0][1]-(*fq1rnll7)[0][3], (*fq1rnll7)[0][1]-(*fq1rnll7)[0][2]);
   }
 
   // print correlation factor
@@ -112,7 +137,7 @@ void QuickTreePlotter()
   std::cout << "dNll7 correlation factor: " << dNll7->GetCorrelationFactor() << std::endl;
 
   // write plots to output
-  TFile * outFile = new TFile("out_QuickTreePlotter.root", "RECREATE");
+  TFile outFile = new TFile("out_QuickTreePlotter.root", "RECREATE");
   TCanvas *c_dNll1 = new TCanvas("c_dNll1", "c_dNll1", 700, 500);
   TCanvas *c_dNll2 = new TCanvas("c_dNll2", "c_dNll2", 700, 500);
   TCanvas *c_dNll4 = new TCanvas("c_dNll4", "c_dNll4", 700, 500);
