@@ -66,6 +66,8 @@ void QuickTreePlotter()
   if ( debug ) std::cout << "initialize" << std::endl;
 
   // initialize variable
+  gSystem->Exec("rm -f AutoDict*vector*vector*float*"); // Remove old dictionary if exists
+  gInterpreter->GenerateDictionary("vector<vector<float> >", "vector");// Generate new dictionary
   vector<vector<float>> *fq1rnll1 = 0;
   vector<vector<float>> *fq1rnll2 = 0;
   vector<vector<float>> *fq1rnll4 = 0;
