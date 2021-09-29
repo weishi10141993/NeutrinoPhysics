@@ -41,6 +41,9 @@ using namespace std;
 
 void QuickTreePlotter()
 {
+  bool debug = true; // Print out for debug purpose
+
+  if ( debug ) std::cout << "set input" << std::endl;
   // set input file dir
   TChain *mySKatmSample1 = new TChain("atm_minituple");
   mySKatmSample1->Add("/gpfs/projects/McGrewGroup/weishi/MaCh3/MaCh3/inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample1_Channel5.root");
@@ -60,6 +63,8 @@ void QuickTreePlotter()
   TChain *mySKatmSample7 = new TChain("atm_minituple");
   mySKatmSample7->Add("/gpfs/projects/McGrewGroup/weishi/MaCh3/MaCh3/inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample7_Channel5.root");
 
+  if ( debug ) std::cout << "initialize" << std::endl;
+
   // initialize variable
   vector<vector<float>> *fq1rnll1 = 0;
   vector<vector<float>> *fq1rnll2 = 0;
@@ -74,6 +79,8 @@ void QuickTreePlotter()
   int nentries6 = 0;
   int nentries7 = 0;
 
+  if ( debug ) std::cout << "read branch" << std::endl;
+
   // read branch
   mySKatmSample1->SetBranchAddress("fq1rnll", &fq1rnll1);
   mySKatmSample2->SetBranchAddress("fq1rnll", &fq1rnll2);
@@ -82,6 +89,8 @@ void QuickTreePlotter()
   mySKatmSample6->SetBranchAddress("fq1rnll", &fq1rnll6);
   mySKatmSample7->SetBranchAddress("fq1rnll", &fq1rnll7);
 
+  if ( debug ) std::cout << "plots initialize" << std::endl;
+
   // initialize plots
   TH2F *dNll1 = new TH2F();
   TH2F *dNll2 = new TH2F();
@@ -89,6 +98,8 @@ void QuickTreePlotter()
   TH2F *dNll5 = new TH2F();
   TH2F *dNll6 = new TH2F();
   TH2F *dNll7 = new TH2F();
+
+  if ( debug ) std::cout << "reading events" << std::endl;
 
   // read events and fill histograms
   nentries1 = mySKatmSample1->GetEntries();
@@ -135,6 +146,8 @@ void QuickTreePlotter()
   std::cout << "dNll5 correlation factor: " << dNll5->GetCorrelationFactor() << std::endl;
   std::cout << "dNll6 correlation factor: " << dNll6->GetCorrelationFactor() << std::endl;
   std::cout << "dNll7 correlation factor: " << dNll7->GetCorrelationFactor() << std::endl;
+
+  if ( debug ) std::cout << "write output" << std::endl;
 
   // write plots to output
   TFile outFile = new TFile("out_QuickTreePlotter.root", "RECREATE");
