@@ -37,9 +37,14 @@ module load anaconda
 
 ## Install MaCh3 for joint analysis code development
 
+[First time only]
+
 Check out the joint fit code,
 
 ```
+cd /gpfs/projects/McGrewGroup/weishi
+mkdir MaCh3
+cd MaCh3
 git clone git@github.com:weishi10141993/MaCh3.git
 cd MaCh3
 git checkout DBarrow_JointFit
