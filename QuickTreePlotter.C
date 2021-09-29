@@ -99,7 +99,7 @@ void QuickTreePlotter()
   TH2F *dNll6 = new TH2F();
   TH2F *dNll7 = new TH2F();
 
-  if ( debug ) std::cout << "reading events" << std::endl;
+  if ( debug ) std::cout << "get tot entries" << std::endl;
 
   // read events and fill histograms
   nentries1 = mySKatmSample1->GetEntries();
@@ -109,10 +109,14 @@ void QuickTreePlotter()
   nentries6 = mySKatmSample6->GetEntries();
   nentries7 = mySKatmSample7->GetEntries();
 
+  if ( debug ) std::cout << "start 1st loop, tot events: " << nentries1 << std::endl;
+
   for ( int ievt = 0; ievt < nentries1; ievt++ ) {
     mySKatmSample1->GetEntry(ievt);
     dNll1->Fill((*fq1rnll1)[0][1]-(*fq1rnll1)[0][3], (*fq1rnll1)[0][1]-(*fq1rnll1)[0][2]);
   }
+
+  if ( debug ) std::cout << "end 1st sample loop" << std::endl;
 
   for ( int ievt = 0; ievt < nentries2; ievt++ ) {
     mySKatmSample2->GetEntry(ievt);
