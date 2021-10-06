@@ -17,7 +17,7 @@ double LinearInterpolate(TH1D *h, int bin0, int binx, int bin1) {
 void Plot1DChiSqScan_XSecFluxNomComp() {
 	TCanvas *c = new TCanvas("c", "c", 800, 600);
 	TFile *f = new TFile(
-			"/home/hasnipl/DP_DATA/CAFv7PRISMScans/PRISMScan_ssth23_Total_FluxXSecComb_26Jul21.root");
+			"/dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/ssth23_1D_fit.root");
 	TLegend *leg = new TLegend(0.58,0.67,0.85,0.87);
   	leg->SetHeader("Included Systematics");
 
@@ -27,11 +27,11 @@ void Plot1DChiSqScan_XSecFluxNomComp() {
 	}
 
 	f->cd();
-	TH1D *hnosyst = (TH1D*)gDirectory->Get("/ssth23_nom/Chi2_Total1DFit"); // /dmsq32_nom/FD_nu_numu/Chi2_Total1DFit
+	TH1D *hnosyst = (TH1D*)gDirectory->Get("/ssth23_nom/h_dChi2_Total"); // /dmsq32_nom/FD_nu_numu/Chi2_Total1DFit
         hnosyst->SetDirectory(nullptr);
-	TH1D *hflux = (TH1D*)gDirectory->Get("/ssth23_flux/Chi2_Total1DFit"); // /dmsq32_flux/FD_nu_numu/Chi2_Total1DFit
+	TH1D *hflux = (TH1D*)gDirectory->Get("/ssth23_flux/h_dChi2_Total"); // /dmsq32_flux/FD_nu_numu/Chi2_Total1DFit
 	hflux->SetDirectory(nullptr);
-	TH1D *hfluxxsec = (TH1D*)gDirectory->Get("/ssth23_all/Chi2_Total1DFit"); // /dmsq32_all/FD_nu_numu/Chi2_Total1DFit
+	TH1D *hfluxxsec = (TH1D*)gDirectory->Get("/ssth23_all/h_dChi2_Total"); // /dmsq32_all/FD_nu_numu/Chi2_Total1DFit
 	hfluxxsec->SetDirectory(nullptr);
 
 	bool fix_point(true);
