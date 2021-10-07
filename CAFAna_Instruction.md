@@ -23,38 +23,36 @@ cd CAFAna
 1. The script ```PRISM/app/MakePRISMPredInterps``` loads the MC files and puts the MC data into histograms CAFAna can use to do an oscillation analysis. To run the script,
 
 ```
-cd /dune/app/users/weishi/lblpwgtools/CAFAna
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
 source build/Linux/CAFAnaEnv.sh                                 # set up the environment
 # Ignore the error of can't find the example directory
 
 cd PRISM/app
 # For usage: MakePRISMPredInterps --help
-MakePRISMPredInterps -o test.root -N-nu /dune/data/users/erea/CombinedNDCAFs/CAFv7Full_3E20OnAxis_PRISM_Feb21_FHC.root --bin-descriptor uniform --syst-descriptor "nosyst" --no-fakedata-dials -A ETrue --UseSelection
+MakePRISMPredInterps -o test.root -N-nu /dune/data/users/erea/CombinedNDCAFs/CAFv7Full_3E20OnAxis_PRISM_Feb21_FHC.root --bin-descriptor default --syst-descriptor "nosyst" --no-fakedata-dials -A EVisReco --UseSelection
 
-# Run with systematics
-# All systematics (nuisance parameters) are in: lblpwgtools/CAFAna/fcl/PRISM/NuisanceParameters.fcl
-MakePRISMPredInterps -o test_with_sys.root -N-nu /dune/data/users/erea/CombinedNDCAFs/CAFv7Full_3E20OnAxis_PRISM_Feb21_FHC.root -F-nu /dune/data/users/erea/FDCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/erea/FDCAFs/FD_FHC_nueswap.root --bin-descriptor uniform --no-fakedata-dials -A ETrue --UseSelection --syst-descriptor list:MaCCQE:MaCCRES
+# Run with systematics, all systematics (nuisance parameters) are in: CAFAna/fcl/PRISM/NuisanceParameters.fcl
+MakePRISMPredInterps -o test_with_sys_fullMC.root -N-nu /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ND_FHC_v7Full_6E20OnAxis_absxPOT_Apr21.root -F-nu /dune/data/users/erea/FDCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/erea/FDCAFs/FD_FHC_nueswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:MaCCQE:MaCCRES
 
-# Running with 2-3 systematics/time usually takes a day, if have 50 systematics, run 50 times, each time with 1 nuisance parameter, get 50 output files, then combine into one file using /PRISM/scripts/hadd_state.C to add 50 systematics correctly. (run as executable hadd_state outfile file1 file2...)
+# Running with many systematics can be submitted to FermiGrid, run each job with 1 systematic parameter
+cd PRISM/scripts/FermiGridPRISMScripts/
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCQE
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCRES
+# Need to write a bash script to do this for many systematics
 
-# the 50 runs can be submitted to FermiGrid using /PRISM/scripts/FermiGridPRISMScripts/FarmBuildPRISMInterps.sh, run 50 times, each with 1 systematic parameter.
+# To check job status
+jobsub_q --user weishi
+# Job output in /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/
+jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
 
-# need to use ifdh cp -D for file transfer,
+# Combine into one file (run as executable hadd_state outfile file1 file2...)
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts
+hadd_state -h
+hadd_state <PoI> out.root <input root files>
+# e.g., hadd_state hadd_state_file.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ND_FHC.State.*.root
 ```
 
-The above command can be put into a shell script,
-
-```
-#!/bin/bash
-INPUTDIR=/dune/data/users/erea
-LOS="nosyst"
-MakePRISMPredInterps -o /dune/data/users/erea/PRISMPredInterps/v7fullMC_NDnumutoNDnue_withSel_noEhadVeto_20210811.root \
-        -N-nu ${INPUTDIR}/CombinedNDCAFs/CAFv7Full_3E20OnAxis_PRISM_Feb21_FHC.root \
-        -F-nu ${INPUTDIR}/FDCAFs/FD_FHC_nonswap.root \
-        -Fe-nu ${INPUTDIR}/FDCAFs/FD_FHC_nueswap.root \
-        --bin-descriptor uniform --syst-descriptor ${LOS} --no-fakedata-dials \
-        -A ETrue --UseSelection
-```
+The above command can also be put into a shell script.
 
 In this first script, ```auto PRISM``` holds everything. It is an instance of ```PredictionPRISM``` class. ```AddNDDataLoader``` loads the ND data (this is actually MC but we treat it as if it is real ND data), this data remain unchanged. ```AddNDMCLoader``` loads the ND MC used to predict ND background. This background needs to be subtracted from ND data. ```AddFDMCLoader``` loads FD MC used to predict background at FD. This background will be added to the ND data once ND bkg is subtracted. And will finally be compared to FD data (where is this loaded???).
 
@@ -91,7 +89,7 @@ The basic config file is ```fcl/PRISM/PRISMOscScan_Grid.fcl```. Modify state fil
 ```
 cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
 source build/Linux/CAFAnaEnv.sh                                 # set up the environment
-# To recompile:
+# To recompile/rebuild before submit grid job:
 ./standalone_configure_and_build.sh --use-PRISM -u --rdb -f
 # Ignore the error of can't find the example directory
 
@@ -104,13 +102,26 @@ kx509
 export ROLE=Analysis
 voms-proxy-init -rfc -noregen -voms=dune:/dune/Role=$ROLE -valid 120:00
 
+# Running interactively before submtting grid job
+cd PRISM/app
+PRISM_NumuDisp_dChi2Scan /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/build/Linux/fcl/PRISM/Ssth23_1DScan/PRISMOscScan_Grid_bin1.fcl
 
+# If the above runs well, submit grid job
 cd PRISM/scripts/FermiGridPRISMScripts
 # if necessary: chmod a+x FarmCAFPRISMNodeScript.sh
 ./FarmCAFPRISMNodeScript.sh -c Ssth23ScanCommands.cmd
 
-# to check job status
+# To check job status
 jobsub_q --user weishi
-# job output in /pnfs/dune/persistent/users/weishi/
+# Job output in /pnfs/dune/persistent/users/weishi/CAFAnaOutputs/MyOutput/
 jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
+
+# Plot the final best fit contour
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts
+hadd_fits <PoI> out.root <input root files>
+# e.g., hadd_fits ssth23 ssth23_1D_fit.root /pnfs/dune/persistent/users/weishi/CAFAnaOutputs/MyOutput/PRISMScan_ssth23_bin*.root
+
+# Subtract the min Chi2 to get dChi2 plot use a simple macro
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/Plot1DChiSqScan_XSecFluxNomComp.C --no-check-certificate
+root -l Plot1DChiSqScan_XSecFluxNomComp.C # this produce a canvas remotely
 ```
