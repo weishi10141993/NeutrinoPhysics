@@ -6,6 +6,8 @@
 [First time only]
 
 ```
+kinit -f weishi@FNAL.GOV                 # use your FNAL kerberos password
+ssh -X weishi@dunegpvm03.fnal.gov        
 cd /dune/app/users/weishi
 mkdir PRISMAnalysis
 cd PRISMAnalysis
@@ -15,10 +17,49 @@ git checkout feature/PRISM
 cd CAFAna
 # Build the code, the -u option rely on relevant dependencies from FNAL scisoft
 ./standalone_configure_and_build.sh --use-PRISM -u --rdb
-# To recompile:
-./standalone_configure_and_build.sh --use-PRISM -u --rdb -f
+# To recompile: ./standalone_configure_and_build.sh --use-PRISM -u --rdb -f
 # May need to set export GSL_LIB=/usr/lib64
 ```
+
+### Systematics impact study
+
+1. We first look at just one cross section systematic parameter, ```MaCCQE```. First we need to produce the state files with this systematic.
+
+```
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
+source build/Linux/CAFAnaEnv.sh                                 # set up the environment
+# Ignore the error of can't find the example directory
+
+# Submit the production jobs FermiGrid
+cd PRISM/scripts/FermiGridPRISMScripts/
+./FarmBuildPRISMInterps.sh -h
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCQE -N -u  # run ND FHC only
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCQE -F -u  # run FD FHC only
+
+# Need to merge FD and ND into 1 job
+# Need to write a bash script to do this for all flux + xsec systematics, refer to the finished jobs memory usage
+
+# To check job status: jobsub_q --user weishi
+# Job log: jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
+
+# Add ND and FD state files
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts
+# Check function help: hadd_state -h
+hadd_state <output root file> <input root files>
+# e.g., hadd_state hadd_state_file_MaCCQE.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/*.root
+mv hadd_state_file_MaCCQE.root /pnfs/dune/persistent/users/weishi/StateFiles
+
+# Produce event rate plots using PRISMPrediction
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/fcl/PRISM
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/Basic_NumuDisp.fcl --no-check-certificate
+# To recompile:
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
+./standalone_configure_and_build.sh --use-PRISM -u --rdb -f
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/app
+PRISMPrediction ../../fcl/PRISM/Basic_NumuDisp.fcl
+```
+
+### Starter task
 
 1. The script ```PRISM/app/MakePRISMPredInterps``` loads the MC files and puts the MC data into histograms CAFAna can use to do an oscillation analysis. To run the script,
 
@@ -36,20 +77,24 @@ MakePRISMPredInterps -o test_with_sys_fullMC.root -N-nu /pnfs/dune/persistent/us
 
 # Running with many systematics can be submitted to FermiGrid, run each job with 1 systematic parameter
 cd PRISM/scripts/FermiGridPRISMScripts/
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCQE
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCRES
-# Need to write a bash script to do this for many systematics
+./FarmBuildPRISMInterps.sh -h
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCQE -N -u  # run ND FHC only
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCQE -F -u  # run FD FHC only
+
+# Need to write a bash script to do this for all flux+xsec systematics, refer to the finished jobs memory usage
 
 # To check job status
 jobsub_q --user weishi
 # Job output in /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/
 jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
 
-# Combine into one file (run as executable hadd_state outfile file1 file2...)
+# Add ND and FD state files
 cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts
 hadd_state -h
-hadd_state <PoI> out.root <input root files>
+hadd_state <output root file> <input root files>
 # e.g., hadd_state hadd_state_file.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ND_FHC.State.*.root
+
+# Run over PRISMPrediction
 ```
 
 The above command can also be put into a shell script.

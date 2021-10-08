@@ -6,8 +6,8 @@
 
 
 BasicPred: {
-	output_file: [/dune/data/users/chasnip/NewCode/PRISMPredictions/PRISMPred_EVisReco_Sel_tauswap_NDPOT_15Sep21.root, "UPDATE"]
-	state_file: /dune/data/users/chasnip/NewCode/PredInterps/PRISMState_4Flavour_EVisReco_Sel_tauswap_15Sep21.root
+	output_file: [/dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/app/PRISMPred_EVisReco_MaCCQE.root, "UPDATE"]
+	state_file: /pnfs/dune/persistent/users/weishi/StateFiles/hadd_state_file_MaCCQE.root
 
 	# Variable are you using
 	projection_name: EVisReco
@@ -41,7 +41,7 @@ BasicPred: {
 		write_debug: true
 
                 reg_factor_extrap: 1e-30 #1E-30
-	}                                                                                                
+	}
 	samples: @local::FitChannels.Numu_disp
 }
 
@@ -53,7 +53,66 @@ predictions: [
 		output_dir: "numu_EvMatch_nom"
 	},
 
-]	
+	{
+		@table::BasicPred
+		output_dir: "numu_EvMatch_MaCCQE_-3"
+		syst: {
+		        shifts: [
+						        [MaCCQE, -3],
+						]
+		}
+	},
+
+	{
+		@table::BasicPred
+		output_dir: "numu_EvMatch_MaCCQE_-2"
+		syst: {
+		        shifts: [
+						        [MaCCQE, -2],
+						]
+		}
+	},
+
+	{
+		@table::BasicPred
+		output_dir: "numu_EvMatch_MaCCQE_-1"
+		syst: {
+		        shifts: [
+						        [MaCCQE, -1],
+						]
+		}
+	},
+
+	{
+		@table::BasicPred
+		output_dir: "numu_EvMatch_MaCCQE_1"
+		syst: {
+		        shifts: [
+						        [MaCCQE, 1],
+						]
+		}
+	},
+
+	{
+		@table::BasicPred
+		output_dir: "numu_EvMatch_MaCCQE_2"
+		syst: {
+		        shifts: [
+						        [MaCCQE, 2],
+						]
+		}
+	},
+
+	{
+		@table::BasicPred
+		output_dir: "numu_EvMatch_MaCCQE_3"
+		syst: {
+		        shifts: [
+						        [MaCCQE, 3],
+						]
+		}
+	},
+
+]
 
 predictions[0].output_file[1]: "RECREATE"
-
