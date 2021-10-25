@@ -30,14 +30,18 @@ cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
 source build/Linux/CAFAnaEnv.sh                                 # set up the environment
 # Ignore the error of can't find the example directory
 
-# Submit the production jobs FermiGrid
+# Example of submit the state file production jobs to FermiGrid with a single systematic
 cd PRISM/scripts/FermiGridPRISMScripts/
 ./FarmBuildPRISMInterps.sh -h
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCQE -N -u  # run ND FHC only
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCQE -F -u  # run FD FHC only
-
 # Need to merge FD and ND into 1 job
-# Need to write a bash script to do this for all flux + xsec systematics, refer to the finished jobs memory usage
+
+# A bash script to submit for all flux + xsec systematics
+cd PRISM/scripts/FermiGridPRISMScripts/
+wget
+chmod a+x StateFileManySystSubmit.sh
+./StateFileManySystSubmit.sh
 
 # To check job status: jobsub_q --user weishi
 # Job log: jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
@@ -49,7 +53,9 @@ hadd_state <output root file> <input root files>
 # e.g., hadd_state hadd_state_file_MaCCQE.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/*.root
 mv hadd_state_file_MaCCQE.root /pnfs/dune/persistent/users/weishi/StateFiles
 
+#
 # Produce event rate plots using PRISMPrediction
+#
 cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/fcl/PRISM
 wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/Basic_NumuDisp.fcl --no-check-certificate
 # To recompile:

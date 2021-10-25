@@ -70,11 +70,14 @@ Set the samples to run in ```configs/AtmosphericConfigs/AtmConfig.cfg```.
 ATMPDFS = [1,2,4,5,6,8,9]
 ```
 
-Link For SK atmospheric minituples and splines,
+Link T2K beam and SK atmospheric minituples and splines,
 
 ```
+ln -s /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/SK_19b_13av7_fitqun20 ./inputs/SK_19b_13av7_fitqun20
+ln -s /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/SK_19b_13av7_splines20 ./inputs/SK_19b_13av7_splines20
 ln -s /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/skatm/SKMC ./inputs/skatm/SKMC
 ln -s /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/skatm/SKMCSplines ./inputs/skatm/SKMCSplines
+# If want unlink symlink: unlink SKMCSplines   (do not use rm!!!)
 ```
 
 Create sample configs for all the ATMPD sample with the relevant sample bools, values and binning information,
@@ -85,6 +88,13 @@ python makeConfigs.py
 ```
 
 Then run the executables.
+
+```
+./AtmJointFit_Bin/PrintEventRate configs/AtmosphericConfigs/AtmConfig.cfg
+./AtmJointFit_Bin/CreateRCTables configs/AtmosphericConfigs/AtmConfig.cfg  # Generate new RC tables with updated evt topology
+./AtmJointFit_Bin/MakeAtmDetHists configs/AtmosphericConfigs/AtmConfig.cfg
+#./AtmJointFit_Bin/PlotAtmByMode configs/AtmosphericConfigs/AtmConfig.cfg 27
+```
 
 The file (provided by Roger) that stores event-by-event weight for SK systematics on NextCloud is: ```/T2KSK/atm_minituples/SF.2021/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr.sysfriend.root```.
 
@@ -154,8 +164,8 @@ ln -s /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/skatm/SKMCSplines
 For T2K beam minituples and splines,
 
 ```
-/gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/SK_19b_13av7_fitqun20
-/gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/SK_19b_13av7_splines20
+ln -s /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/SK_19b_13av7_fitqun20 ./inputs/SK_19b_13av7_fitqun20
+ln -s /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/SK_19b_13av7_splines20 ./inputs/SK_19b_13av7_splines20
 ```
 
 Create sample configs for all the ATMPD sample with the relevant sample bools, values and binning information,
