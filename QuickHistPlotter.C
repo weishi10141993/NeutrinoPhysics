@@ -46,9 +46,9 @@ void QuickHistPlotter()
 
   if ( debug ) std::cout << "set input" << std::endl;
 
+  TString systname = "MaCCQE";
   TFile *file0 = TFile::Open("/dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/app/PRISMPred_EVisReco_MaCCQE.root");
 
-  TString systname = "MaCCQE";
   vector<TString> histnames;
 	histnames.clear();
 	histnames.push_back("NDData_FDExtrap");
@@ -60,193 +60,14 @@ void QuickHistPlotter()
 
   if ( debug ) std::cout << "clone plots" << std::endl;
 
-  //
-  // Here is an overall comparison
-  //
-
-  TH1F *NDDataCorr_FDExtrap_nom = (TH1F*)file0->Get("numu_EvMatch_nom/FD_nu_numu/NDDataCorr_FDExtrap")->Clone("NDDataCorr_FDExtrap_nom");
-  TH1F *FDOscPred_nom = (TH1F*)file0->Get("numu_EvMatch_nom/FD_nu_numu/FDOscPred")->Clone("FDOscPred_nom");
+  // Use unosc FD evt rate as normalization
   TH1F *FDUnOscPred_nom = (TH1F*)file0->Get("numu_EvMatch_nom/FD_nu_numu/FDUnOscPred")->Clone("FDUnOscPred_nom");
-
-  TH1F *NDDataCorr_FDExtrap_MaCCQE_n3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-3/FD_nu_numu/NDDataCorr_FDExtrap")->Clone("NDDataCorr_FDExtrap_MaCCQE_n3");
-  TH1F *NDDataCorr_FDExtrap_MaCCQE_n1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-1/FD_nu_numu/NDDataCorr_FDExtrap")->Clone("NDDataCorr_FDExtrap_MaCCQE_n1");
-  TH1F *NDDataCorr_FDExtrap_MaCCQE_p1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_1/FD_nu_numu/NDDataCorr_FDExtrap")->Clone("NDDataCorr_FDExtrap_MaCCQE_p1");
-  TH1F *NDDataCorr_FDExtrap_MaCCQE_p3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_3/FD_nu_numu/NDDataCorr_FDExtrap")->Clone("NDDataCorr_FDExtrap_MaCCQE_p3");
-
-  TH1F *FDOscPred_MaCCQE_n3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-3/FD_nu_numu/FDOscPred")->Clone("FDOscPred_MaCCQE_n3");
-  TH1F *FDOscPred_MaCCQE_n1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-1/FD_nu_numu/FDOscPred")->Clone("FDOscPred_MaCCQE_n1");
-  TH1F *FDOscPred_MaCCQE_p1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_1/FD_nu_numu/FDOscPred")->Clone("FDOscPred_MaCCQE_p1");
-  TH1F *FDOscPred_MaCCQE_p3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_3/FD_nu_numu/FDOscPred")->Clone("FDOscPred_MaCCQE_p3");
-
-  //
-  // Compare each component
-  //
-
-  // NDData_FDExtrap
-  TH1F *NDData_FDExtrap_nom = (TH1F*)file0->Get("numu_EvMatch_nom/FD_nu_numu/NDData_FDExtrap")->Clone("NDData_FDExtrap_nom");
-  TH1F *NDData_FDExtrap_MaCCQE_n3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-3/FD_nu_numu/NDData_FDExtrap")->Clone("NDData_FDExtrap_MaCCQE_n3");
-  TH1F *NDData_FDExtrap_MaCCQE_n1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-1/FD_nu_numu/NDData_FDExtrap")->Clone("NDData_FDExtrap_MaCCQE_n1");
-  TH1F *NDData_FDExtrap_MaCCQE_p1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_1/FD_nu_numu/NDData_FDExtrap")->Clone("NDData_FDExtrap_MaCCQE_p1");
-  TH1F *NDData_FDExtrap_MaCCQE_p3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_3/FD_nu_numu/NDData_FDExtrap")->Clone("NDData_FDExtrap_MaCCQE_p3");
-
-  // FDFluxCorr
-  TH1F *FDFluxCorr_nom = (TH1F*)file0->Get("numu_EvMatch_nom/FD_nu_numu/FDFluxCorr")->Clone("FDFluxCorr_nom");
-  TH1F *FDFluxCorr_MaCCQE_n3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-3/FD_nu_numu/FDFluxCorr")->Clone("FDFluxCorr_MaCCQE_n3");
-  TH1F *FDFluxCorr_MaCCQE_n1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-1/FD_nu_numu/FDFluxCorr")->Clone("FDFluxCorr_MaCCQE_n1");
-  TH1F *FDFluxCorr_MaCCQE_p1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_1/FD_nu_numu/FDFluxCorr")->Clone("FDFluxCorr_MaCCQE_p1");
-  TH1F *FDFluxCorr_MaCCQE_p3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_3/FD_nu_numu/FDFluxCorr")->Clone("FDFluxCorr_MaCCQE_p3");
-
-  // FDNuTauCCBkg
-  TH1F *FDNuTauCCBkg_nom = (TH1F*)file0->Get("numu_EvMatch_nom/FD_nu_numu/FDNuTauCCBkg")->Clone("FDNuTauCCBkg_nom");
-  TH1F *FDNuTauCCBkg_MaCCQE_n3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-3/FD_nu_numu/FDNuTauCCBkg")->Clone("FDNuTauCCBkg_MaCCQE_n3");
-  TH1F *FDNuTauCCBkg_MaCCQE_n1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-1/FD_nu_numu/FDNuTauCCBkg")->Clone("FDNuTauCCBkg_MaCCQE_n1");
-  TH1F *FDNuTauCCBkg_MaCCQE_p1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_1/FD_nu_numu/FDNuTauCCBkg")->Clone("FDNuTauCCBkg_MaCCQE_p1");
-  TH1F *FDNuTauCCBkg_MaCCQE_p3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_3/FD_nu_numu/FDNuTauCCBkg")->Clone("FDNuTauCCBkg_MaCCQE_p3");
-
-  // FDWrongLepBkg
-  TH1F *FDWrongLepBkg_nom = (TH1F*)file0->Get("numu_EvMatch_nom/FD_nu_numu/FDWrongLepBkg")->Clone("FDWrongLepBkg_nom");
-  TH1F *FDWrongLepBkg_MaCCQE_n3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-3/FD_nu_numu/FDWrongLepBkg")->Clone("FDWrongLepBkg_MaCCQE_n3");
-  TH1F *FDWrongLepBkg_MaCCQE_n1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-1/FD_nu_numu/FDWrongLepBkg")->Clone("FDWrongLepBkg_MaCCQE_n1");
-  TH1F *FDWrongLepBkg_MaCCQE_p1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_1/FD_nu_numu/FDWrongLepBkg")->Clone("FDWrongLepBkg_MaCCQE_p1");
-  TH1F *FDWrongLepBkg_MaCCQE_p3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_3/FD_nu_numu/FDWrongLepBkg")->Clone("FDWrongLepBkg_MaCCQE_p3");
-
-  // FDNCBkg
-  TH1F *FDNCBkg_nom = (TH1F*)file0->Get("numu_EvMatch_nom/FD_nu_numu/FDNCBkg")->Clone("FDNCBkg_nom");
-  TH1F *FDNCBkg_MaCCQE_n3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-3/FD_nu_numu/FDNCBkg")->Clone("FDNCBkg_MaCCQE_n3");
-  TH1F *FDNCBkg_MaCCQE_n1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-1/FD_nu_numu/FDNCBkg")->Clone("FDNCBkg_MaCCQE_n1");
-  TH1F *FDNCBkg_MaCCQE_p1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_1/FD_nu_numu/FDNCBkg")->Clone("FDNCBkg_MaCCQE_p1");
-  TH1F *FDNCBkg_MaCCQE_p3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_3/FD_nu_numu/FDNCBkg")->Clone("FDNCBkg_MaCCQE_p3");
-
-  // FDWSBkg
-  TH1F *FDWSBkg_nom = (TH1F*)file0->Get("numu_EvMatch_nom/FD_nu_numu/FDWSBkg")->Clone("FDWSBkg_nom");
-  TH1F *FDWSBkg_MaCCQE_n3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-3/FD_nu_numu/FDWSBkg")->Clone("FDWSBkg_MaCCQE_n3");
-  TH1F *FDWSBkg_MaCCQE_n1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_-1/FD_nu_numu/FDWSBkg")->Clone("FDWSBkg_MaCCQE_n1");
-  TH1F *FDWSBkg_MaCCQE_p1 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_1/FD_nu_numu/FDWSBkg")->Clone("FDWSBkg_MaCCQE_p1");
-  TH1F *FDWSBkg_MaCCQE_p3 = (TH1F*)file0->Get("numu_EvMatch_MaCCQE_3/FD_nu_numu/FDWSBkg")->Clone("FDWSBkg_MaCCQE_p3");
-
-  //
-  // Calculation
-  //
-
-  if ( debug ) std::cout << "manipulate" << std::endl;
-
-  // (ND@Nsigma - ND@nom)/Unosc FD numu (nom)
-  NDDataCorr_FDExtrap_MaCCQE_n3->Add(NDDataCorr_FDExtrap_nom, -1); NDDataCorr_FDExtrap_MaCCQE_n3->Divide(FDUnOscPred_nom);
-  NDDataCorr_FDExtrap_MaCCQE_n1->Add(NDDataCorr_FDExtrap_nom, -1); NDDataCorr_FDExtrap_MaCCQE_n1->Divide(FDUnOscPred_nom);
-  NDDataCorr_FDExtrap_MaCCQE_p1->Add(NDDataCorr_FDExtrap_nom, -1); NDDataCorr_FDExtrap_MaCCQE_p1->Divide(FDUnOscPred_nom);
-  NDDataCorr_FDExtrap_MaCCQE_p3->Add(NDDataCorr_FDExtrap_nom, -1); NDDataCorr_FDExtrap_MaCCQE_p3->Divide(FDUnOscPred_nom);
-
-  // (FD@Nsigma - FD@nom)/Unosc FD numu (nom)
-  FDOscPred_MaCCQE_n3->Add(FDOscPred_nom, -1); FDOscPred_MaCCQE_n3->Divide(FDUnOscPred_nom);
-  FDOscPred_MaCCQE_n1->Add(FDOscPred_nom, -1); FDOscPred_MaCCQE_n1->Divide(FDUnOscPred_nom);
-  FDOscPred_MaCCQE_p1->Add(FDOscPred_nom, -1); FDOscPred_MaCCQE_p1->Divide(FDUnOscPred_nom);
-  FDOscPred_MaCCQE_p3->Add(FDOscPred_nom, -1); FDOscPred_MaCCQE_p3->Divide(FDUnOscPred_nom);
-
-  //
-  // Plotting and output
-  //
 
   if ( debug ) std::cout << "output" << std::endl;
 
   TFile myPlot("Overlay.root","RECREATE");
 
-  if ( debug ) std::cout << "Create canvas" << std::endl;
-
-  TCanvas *C1=new TCanvas("C1", "C1", 700, 500);
-
-  // Draw overall plot
-  C1->Clear();
-  // Create two pads
-  TPad *uppadC1 = new TPad("uppadC1", "uppadC1", 0, 0.3, 1, 1.0); // xlow, ylow, xup, yup
-  uppadC1->SetBottomMargin(0); uppadC1->SetGridx(); uppadC1->SetGridy(); uppadC1->Draw();
-  TPad *dnpadC1 = new TPad("dnpadC1", "uppadC1", 0, 0.0, 1, 0.29);
-  dnpadC1->SetTopMargin(0); dnpadC1->SetBottomMargin(0.3); dnpadC1->SetGridx(); dnpadC1->SetGridy(); dnpadC1->Draw();
-
-  uppadC1->cd();
-
-  NDDataCorr_FDExtrap_MaCCQE_n3->SetTitle("#nu_{#mu} #rightarrow #nu_{#mu}: MaCCQE");
-  NDDataCorr_FDExtrap_MaCCQE_n3->SetMinimum(-0.2);
-  NDDataCorr_FDExtrap_MaCCQE_n3->SetMaximum(0.2);
-  NDDataCorr_FDExtrap_MaCCQE_n3->SetStats(0);
-  NDDataCorr_FDExtrap_MaCCQE_n3->GetYaxis()->SetTitle("(N_{varied} - N_{nom})/N_{FD, unosc}");
-  NDDataCorr_FDExtrap_MaCCQE_n3->GetYaxis()->SetTitleSize(0.05);
-  NDDataCorr_FDExtrap_MaCCQE_n3->GetYaxis()->SetTitleOffset(0.6);
-
-  NDDataCorr_FDExtrap_MaCCQE_n3->SetLineColor(kRed+3); NDDataCorr_FDExtrap_MaCCQE_n3->SetLineStyle(1); NDDataCorr_FDExtrap_MaCCQE_n3->SetLineWidth(2);
-  NDDataCorr_FDExtrap_MaCCQE_n1->SetLineColor(kRed+1); NDDataCorr_FDExtrap_MaCCQE_n1->SetLineStyle(1); NDDataCorr_FDExtrap_MaCCQE_n1->SetLineWidth(2);
-  NDDataCorr_FDExtrap_MaCCQE_p1->SetLineColor(kBlue+1); NDDataCorr_FDExtrap_MaCCQE_p1->SetLineStyle(1); NDDataCorr_FDExtrap_MaCCQE_p1->SetLineWidth(2);
-  NDDataCorr_FDExtrap_MaCCQE_p3->SetLineColor(kBlue+3); NDDataCorr_FDExtrap_MaCCQE_p3->SetLineStyle(1); NDDataCorr_FDExtrap_MaCCQE_p3->SetLineWidth(2);
-
-  FDOscPred_MaCCQE_n3->SetLineColor(kRed+3); FDOscPred_MaCCQE_n3->SetLineStyle(2); FDOscPred_MaCCQE_n3->SetLineWidth(2);
-  FDOscPred_MaCCQE_n1->SetLineColor(kRed+1); FDOscPred_MaCCQE_n1->SetLineStyle(2); FDOscPred_MaCCQE_n1->SetLineWidth(2);
-  FDOscPred_MaCCQE_p1->SetLineColor(kBlue+1); FDOscPred_MaCCQE_p1->SetLineStyle(2); FDOscPred_MaCCQE_p1->SetLineWidth(2);
-  FDOscPred_MaCCQE_p3->SetLineColor(kBlue+3); FDOscPred_MaCCQE_p3->SetLineStyle(2); FDOscPred_MaCCQE_p3->SetLineWidth(2);
-
-  NDDataCorr_FDExtrap_MaCCQE_n3->Draw("HIST");
-  FDOscPred_MaCCQE_n3->Draw("HISTSAME");
-  NDDataCorr_FDExtrap_MaCCQE_n1->Draw("HISTSAME");
-  FDOscPred_MaCCQE_n1->Draw("HISTSAME");
-  NDDataCorr_FDExtrap_MaCCQE_p1->Draw("HISTSAME");
-  FDOscPred_MaCCQE_p1->Draw("HISTSAME");
-  NDDataCorr_FDExtrap_MaCCQE_p3->Draw("HISTSAME");
-  FDOscPred_MaCCQE_p3->Draw("HISTSAME");
-
-  TLegend* L1 = new TLegend(0.5, 0.0, 0.9, 0.35);
-  L1->SetBorderSize(0); L1->SetFillStyle(0); L1->SetNColumns(2);
-  L1->AddEntry(NDDataCorr_FDExtrap_MaCCQE_n3, "NDDataCorr_FDExtrap: -3#sigma", "l");
-  L1->AddEntry(FDOscPred_MaCCQE_n3, "FDOscPred: -3#sigma", "l");
-  L1->AddEntry(NDDataCorr_FDExtrap_MaCCQE_n1, "NDDataCorr_FDExtrap: -1#sigma", "l");
-  L1->AddEntry(FDOscPred_MaCCQE_n1, "FDOscPred: -1#sigma", "l");
-  L1->AddEntry(NDDataCorr_FDExtrap_MaCCQE_p1, "NDDataCorr_FDExtrap: 1#sigma", "l");
-  L1->AddEntry(FDOscPred_MaCCQE_p1, "FDOscPred: 1#sigma", "l");
-  L1->AddEntry(NDDataCorr_FDExtrap_MaCCQE_p3, "NDDataCorr_FDExtrap: 3#sigma", "l");
-  L1->AddEntry(FDOscPred_MaCCQE_p3, "FDOscPred: 3#sigma", "l");
-  L1->Draw();
-
-  uppadC1->Update(); uppadC1->Modified();
-  gPad->RedrawAxis();
-  C1->cd(); C1->Update();
-
-  // (ND - FD) at each varied sigma
-  dnpadC1->cd();
-  // -3sigma
-  TH1F *NDMinusFD_MaCCQE_n3 = (TH1F*)NDDataCorr_FDExtrap_MaCCQE_n3->Clone("NDMinusFD_MaCCQE_n3"); // Clone to avoid changing the original hist
-  NDMinusFD_MaCCQE_n3->Add(FDOscPred_MaCCQE_n3, -1);
-  NDMinusFD_MaCCQE_n3->SetTitle("");
-  NDMinusFD_MaCCQE_n3->GetXaxis()->SetTitleSize(30);
-  NDMinusFD_MaCCQE_n3->GetXaxis()->SetTitleFont(43);
-  NDMinusFD_MaCCQE_n3->GetXaxis()->SetTitleOffset(4.0);
-  NDMinusFD_MaCCQE_n3->GetXaxis()->SetLabelSize(25);
-  NDMinusFD_MaCCQE_n3->GetXaxis()->SetLabelFont(43);
-  NDMinusFD_MaCCQE_n3->GetYaxis()->SetTitle("ND - FD");
-  NDMinusFD_MaCCQE_n3->GetYaxis()->CenterTitle();
-  NDMinusFD_MaCCQE_n3->GetYaxis()->SetTitleSize(30);
-  NDMinusFD_MaCCQE_n3->GetYaxis()->SetTitleFont(43);
-  NDMinusFD_MaCCQE_n3->GetYaxis()->SetTitleOffset(1.0);
-  NDMinusFD_MaCCQE_n3->GetYaxis()->SetLabelSize(20);
-  NDMinusFD_MaCCQE_n3->GetYaxis()->SetLabelFont(43);
-  NDMinusFD_MaCCQE_n3->SetMinimum(-0.2);
-  NDMinusFD_MaCCQE_n3->SetMaximum(0.2);
-  NDMinusFD_MaCCQE_n3->Draw();
-  // -1sigma
-  TH1F *NDMinusFD_MaCCQE_n1 = (TH1F*)NDDataCorr_FDExtrap_MaCCQE_n1->Clone("NDMinusFD_MaCCQE_n1");
-  NDMinusFD_MaCCQE_n1->Add(FDOscPred_MaCCQE_n1, -1);
-  NDMinusFD_MaCCQE_n1->SetTitle("");
-  NDMinusFD_MaCCQE_n1->Draw("SAME");
-  // 1sigma
-  TH1F *NDMinusFD_MaCCQE_p1 = (TH1F*)NDDataCorr_FDExtrap_MaCCQE_p1->Clone("NDMinusFD_MaCCQE_p1");
-  NDMinusFD_MaCCQE_p1->Add(FDOscPred_MaCCQE_p1, -1);
-  NDMinusFD_MaCCQE_p1->SetTitle("");
-  NDMinusFD_MaCCQE_p1->Draw("SAME");
-  // 3sigma
-  TH1F *NDMinusFD_MaCCQE_p3 = (TH1F*)NDDataCorr_FDExtrap_MaCCQE_p3->Clone("NDMinusFD_MaCCQE_p3");
-  NDMinusFD_MaCCQE_p3->Add(FDOscPred_MaCCQE_p3, -1);
-  NDMinusFD_MaCCQE_p3->SetTitle("");
-  NDMinusFD_MaCCQE_p3->Draw("SAME");
-  C1->Write();
-
-  // Draw for each component
-
+  // Draw each component
   for ( size_t i = 0; i < histnames.size(); i++ ) {
 
     //
@@ -282,8 +103,7 @@ void QuickHistPlotter()
     n3->SetMinimum(-0.1);
     n3->SetMaximum(0.1);
     n3->SetStats(0);
-    // Xtitle
-
+    n3->GetXaxis()->SetTitle("Reco E_{vis} (GeV)");
     n3->GetYaxis()->SetTitle("(N_{varied} - N_{nom})/N_{FD, unosc}");
     n3->GetYaxis()->SetTitleSize(0.05);
     n3->GetYaxis()->SetTitleOffset(0.9);
