@@ -21,7 +21,7 @@ cd CAFAna
 # May need to set export GSL_LIB=/usr/lib64
 ```
 
-### Systematics impact study
+### Study systematic impacts on DUNE PRISM event rates
 
 1. We first look at just one cross section systematic parameter, ```MaCCQE```. First we need to produce the state files with this systematic.
 
@@ -30,39 +30,67 @@ cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
 source build/Linux/CAFAnaEnv.sh                                 # set up the environment
 # Ignore the error of can't find the example directory
 
-# Example of submit the state file production jobs to FermiGrid with a single systematic
+#
+# For running over many systematics, skip to next block
+# Here is an example of submit a state file production job to FermiGrid with a single systematic
+#
 cd PRISM/scripts/FermiGridPRISMScripts/
 ./FarmBuildPRISMInterps.sh -h
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCQE -N -u  # run ND FHC only
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCQE -F -u  # run FD FHC only
 # Need to merge FD and ND into 1 job
 
-# A bash script to submit for all flux + xsec systematics
-cd PRISM/scripts/FermiGridPRISMScripts/
-wget
+#
+# A bash script to submit jobs for many systematics
+#
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
 chmod a+x StateFileManySystSubmit.sh
 ./StateFileManySystSubmit.sh
 
 # To check job status: jobsub_q --user weishi
-# Job log: jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
+# Fetch job logs: jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
+# To remove job: jobsub_rm --user weishi
+# More usage here: https://cdcvs.fnal.gov/redmine/projects/jobsub/wiki/Using_the_Client
 
-# Add ND and FD state files
+#
+# Add ND and FD state files using tmux
+#
 cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts
-# Check function help: hadd_state -h
-hadd_state <output root file> <input root files>
-# e.g., hadd_state hadd_state_file_MaCCQE.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/*.root
-mv hadd_state_file_MaCCQE.root /pnfs/dune/persistent/users/weishi/StateFiles
+tmux
+hadd_state -h
+hadd_state hadd_state_file_flux_xsec.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/*.root
+tmux detach
+tmux kill-ses -t mysession  # kill mysession
+# Need 24-48hrs to add 155 ND/FD files
+mv hadd_state_file_flux_xsec.root /pnfs/dune/persistent/users/weishi/StateFiles
+# A useful C++ debug tool gdb --args: https://root-forum.cern.ch/t/upper-limit-on-size-of-root-file-with-hadd/35069
+
+#
+# [You can skip this part]
+# Create fcl file for each systematic based on NuisanceSyst_Scan/Basic_NumuDisp_MaCCQE.fcl
+#
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
+chmod a+x FclFileSwapSystMany.sh
+./FclFileSwapSystMany.sh
+
+# Need to recompile with all modified fcl files
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
+./standalone_configure_and_build.sh --use-PRISM -u --rdb -f
 
 #
 # Produce event rate plots using PRISMPrediction
 #
-cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/fcl/PRISM
-wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/Basic_NumuDisp.fcl --no-check-certificate
-# To recompile:
-cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
-./standalone_configure_and_build.sh --use-PRISM -u --rdb -f
 cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/app
-PRISMPrediction ../../fcl/PRISM/Basic_NumuDisp.fcl
+PRISMPrediction ../../fcl/PRISM/NuisanceSyst_Scan/Basic_NumuDisp_MaCCQE.fcl
+PRISMPrediction ../../fcl/PRISM/NuisanceSyst_Scan/Basic_NumuDisp_MaCCRES.fcl
+# write a bash script for all
+
+#
+# Plot variations on event rates
+#
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts
+root -l -b -q QuickHistPlotter.C
+# write a bash script for all
 ```
 
 ### Starter task
@@ -97,8 +125,7 @@ jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
 # Add ND and FD state files
 cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts
 hadd_state -h
-hadd_state <output root file> <input root files>
-# e.g., hadd_state hadd_state_file.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ND_FHC.State.*.root
+hadd_state hadd_state_file.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ND_FHC.State.*.root
 
 # Run over PRISMPrediction
 ```
