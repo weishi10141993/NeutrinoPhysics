@@ -23,74 +23,168 @@ cd CAFAna
 
 ### Study systematic impacts on DUNE PRISM event rates
 
-1. We first look at just one cross section systematic parameter, ```MaCCQE```. First we need to produce the state files with this systematic.
+1. First produce the state files with systematics.
 
 ```
 cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
 source build/Linux/CAFAnaEnv.sh                                 # set up the environment
 # Ignore the error of can't find the example directory
+```
 
-#
-# For running over many systematics, skip to next block
-# Here is an example of submit a state file production job to FermiGrid with a single systematic
-#
+The full list of systematics are,
+
+```
+# Xsec systs (56 in tot)
+list:MaCCQE:VecFFCCQEshape:CCQEPauliSupViaKF:MaCCRES:MvCCRES:Theta_Delta2Npi:AhtBY:BhtBY:CV1uBY:CV2uBY:MaNCRES:MvNCRES:FrCEx_N:FrElas_N:FrInel_N:FrAbs_N:FrPiProd_N:FrCEx_pi:FrElas_pi:FrInel_pi:FrAbs_pi:FrPiProd_pi:BeRPA_A:BeRPA_B:BeRPA_D:C12ToAr40_2p2hScaling_nu:C12ToAr40_2p2hScaling_nubar:E2p2h_A_nu:E2p2h_B_nu:E2p2h_A_nubar:E2p2h_B_nubar:NR_nu_np_CC_1Pi:NR_nu_n_CC_2Pi:NR_nu_n_CC_3Pi:NR_nu_p_CC_2Pi:NR_nu_p_CC_3Pi:NR_nu_n_NC_1Pi:NR_nu_n_NC_2Pi:NR_nu_n_NC_3Pi:NR_nu_p_NC_1Pi:NR_nu_p_NC_2Pi:NR_nu_p_NC_3Pi:NR_nubar_n_CC_1Pi:NR_nubar_n_CC_2Pi:NR_nubar_n_CC_3Pi:NR_nubar_p_CC_1Pi:NR_nubar_p_CC_2Pi:NR_nubar_p_CC_3Pi:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi:nuenumu_xsec_ratio:nuenuebar_xsec_ratio
+
+# Flux systs (28 in tot, there are more flux PCA systs, but now just use first 15 PCA components: 13-27)
+list:flux_Nov17_0:flux_Nov17_1:flux_Nov17_2:flux_Nov17_3:flux_Nov17_4:flux_Nov17_5:flux_Nov17_6:flux_Nov17_7:flux_Nov17_8:flux_Nov17_9:flux_Nov17_10:flux_Nov17_11:flux_Nov17_12:flux_Nov17_13:flux_Nov17_14:flux_Nov17_15:flux_Nov17_16:flux_Nov17_17:flux_Nov17_18:flux_Nov17_19:flux_Nov17_20:flux_Nov17_21:flux_Nov17_22:flux_Nov17_23:flux_Nov17_24:flux_Nov17_25:flux_Nov17_26:flux_Nov17_27
+
+# Detector systs (39 in tot)
+list:FDRecoNumuSyst:FDRecoNueSyst:FVNumuFD:FVNueFD:RecoNCSyst:FVNumuND
+list:RecoEnergyScaleND:RecoEnergySqrtND:RecoEnergyInvSqrtND:EMRecoUncorrND:EMRecoUncorrSqrtND:EMRecoUncorrInvSqrtND:ChargedHadRecoUncorrND:ChargedHadRecoUncorrSqrtND:ChargedHadRecoUncorrInvSqrtND:ERecoScaleMuLArND:ERecoScaleMuLArSqrtND:ERecoScaleMuLArInvSqrtND:MuonRecoResND:EMRecoResND:ChargedHadRecoResND
+list:RecoEnergyScaleFD:RecoEnergySqrtFD:RecoEnergyInvSqrtFD:EMRecoUncorrFD:EMRecoUncorrSqrtFD:EMRecoUncorrInvSqrtFD:ChargedHadRecoUncorrFD:ChargedHadRecoUncorrSqrtFD:ChargedHadRecoUncorrInvSqrtFD:ERecoScaleMuLArFD:ERecoScaleMuLArSqrtFD:ERecoScaleMuLArInvSqrtFD:MuonRecoResFD:EMRecoResFD:ChargedHadRecoResFD
+list:NuOnECCBkgSyst:NuOnENCBkgSyst:NuOnERecoEffSyst
+```
+
+To run interactively with flux + cross section systematics,
+
+```
+# 1-year ND MC
+FHC: /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ND_FHC_v7Full_6E20OnAxis_absxPOT_Apr21.root
+RHC: /dune/data/users/chasnip/CombinedNDCAFs/ND_RHC_absxPOT_Sep21.root
+
+# 3.5-year ND MC
+FHC: /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/*.root
+RHC: /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC/*.root
+
+cd PRISM/app
+# For usage: MakePRISMPredInterps --help
+
+# Run w/ 3.5 yr ND MC
+MakePRISMPredInterps -o hadd_state_file_det_37_to_39.root -N-nu "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/*.root" -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root -N-nub "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC/*.root" -F-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nonswap.root -Fe-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nueswap.root -Ft-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NuOnECCBkgSyst:NuOnENCBkgSyst:NuOnERecoEffSyst
+
+# Can run in tmux sessions
+# no syst: ~4hr
+# 4 syst: ~16hr
+# 9 syst: ~19hr
+
+hadd_state_file_xsec_1_to_4.root list:MaCCQE:VecFFCCQEshape:CCQEPauliSupViaKF:MaCCRES
+hadd_state_file_xsec_5_to_10.root list:MvCCRES:Theta_Delta2Npi:AhtBY:BhtBY:CV1uBY:CV2uBY
+hadd_state_file_xsec_11_to_16.root list:MaNCRES:MvNCRES:FrCEx_N:FrElas_N:FrInel_N:FrAbs_N
+hadd_state_file_xsec_17_to_25.root list:FrPiProd_N:FrCEx_pi:FrElas_pi:FrInel_pi:FrAbs_pi:FrPiProd_pi:BeRPA_A:BeRPA_B:BeRPA_D
+hadd_state_file_xsec_26_to_31.root list:C12ToAr40_2p2hScaling_nu:C12ToAr40_2p2hScaling_nubar:E2p2h_A_nu:E2p2h_B_nu:E2p2h_A_nubar:E2p2h_B_nubar
+hadd_state_file_xsec_32_to_37.root list:NR_nu_np_CC_1Pi:NR_nu_n_CC_2Pi:NR_nu_n_CC_3Pi:NR_nu_p_CC_2Pi:NR_nu_p_CC_3Pi:NR_nu_n_NC_1Pi
+hadd_state_file_xsec_38_to_43.root list:NR_nu_n_NC_2Pi:NR_nu_n_NC_3Pi:NR_nu_p_NC_1Pi:NR_nu_p_NC_2Pi:NR_nu_p_NC_3Pi:NR_nubar_n_CC_1Pi
+hadd_state_file_xsec_44_to_49.root list:NR_nubar_n_CC_2Pi:NR_nubar_n_CC_3Pi:NR_nubar_p_CC_1Pi:NR_nubar_p_CC_2Pi:NR_nubar_p_CC_3Pi:NR_nubar_n_NC_1Pi
+hadd_state_file_xsec_50_to_56.root list:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi:nuenumu_xsec_ratio:nuenuebar_xsec_ratio
+
+hadd_state_file_flux_0_to_4.root list:flux_Nov17_0:flux_Nov17_1:flux_Nov17_2:flux_Nov17_3:flux_Nov17_4
+hadd_state_file_flux_5_to_9.root list:flux_Nov17_5:flux_Nov17_6:flux_Nov17_7:flux_Nov17_8:flux_Nov17_9
+hadd_state_file_flux_10_to_12.root list:flux_Nov17_10:flux_Nov17_11:flux_Nov17_12
+hadd_state_file_flux_13_to_17.root list:flux_Nov17_13:flux_Nov17_14:flux_Nov17_15:flux_Nov17_16:flux_Nov17_17
+hadd_state_file_flux_18_to_22.root list:flux_Nov17_18:flux_Nov17_19:flux_Nov17_20:flux_Nov17_21:flux_Nov17_22
+hadd_state_file_flux_23_to_27.root list:flux_Nov17_23:flux_Nov17_24:flux_Nov17_25:flux_Nov17_26:flux_Nov17_27
+
+hadd_state_file_det_1_to_6.root list:FDRecoNumuSyst:FDRecoNueSyst:FVNumuFD:FVNueFD:RecoNCSyst:FVNumuND
+hadd_state_file_det_7_to_12.root list:RecoEnergyScaleND:RecoEnergySqrtND:RecoEnergyInvSqrtND:EMRecoUncorrND:EMRecoUncorrSqrtND:EMRecoUncorrInvSqrtND
+hadd_state_file_det_13_to_18.root list:ChargedHadRecoUncorrND:ChargedHadRecoUncorrSqrtND:ChargedHadRecoUncorrInvSqrtND:ERecoScaleMuLArND:ERecoScaleMuLArSqrtND:ERecoScaleMuLArInvSqrtND
+hadd_state_file_det_19_to_24.root list:RecoEnergyScaleFD:RecoEnergySqrtFD:RecoEnergyInvSqrtFD:EMRecoUncorrFD:EMRecoUncorrSqrtFD:EMRecoUncorrInvSqrtFD
+hadd_state_file_det_25_to_30.root list:ChargedHadRecoUncorrFD:ChargedHadRecoUncorrSqrtFD:ChargedHadRecoUncorrInvSqrtFD:ERecoScaleMuLArFD:ERecoScaleMuLArSqrtFD:ERecoScaleMuLArInvSqrtFD
+hadd_state_file_det_31_to_36.root list:MuonRecoResND:EMRecoResND:ChargedHadRecoResND:MuonRecoResFD:EMRecoResFD:ChargedHadRecoResFD
+hadd_state_file_det_37_to_39.root list:NuOnECCBkgSyst:NuOnENCBkgSyst:NuOnERecoEffSyst
+```
+
+2. Create fcl file for each systematic based on the template ```NuisanceSyst_Scan/Basic_PRISMPred_PlaceHolder.fcl```, then run the script below to run ```PRISMPrediction```,
+
+```
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
+chmod a+x PRISMPredVary1Syst.sh
+./PRISMPredVary1Syst.sh
+```
+
+Now to apply the systematic shift to one specific step in the analysis, change ```(fVaryNDFDMCData ? shift : kNoShift))``` in following lines to ```kNoShift``` in ```PRISM/PredictionPRISM.cxx```,
+```
+L671/683: ND NC Bkg MC
+L696/707: ND WL Bkg MC
+L720/731: ND WS Bkg MC
+L759: Calculate LC coefficient
+```
+and change ```shift``` in following lines to ```kNoShift``` in ```PRISM/PRISMDetectorExtrapolation.cxx```,
+```
+L190: ND Unfold
+L192: FD Smear
+```
+and change ```syst``` in following lines to ```kNoShift``` in ```PRISM/PRISMMCEffCorrection.cxx```,
+```
+L87/89/111/113: ND Eff corr
+L127/130: FD Eff corr
+```
+
+I temporarily copy the changed files from another repo (no automatic script to do this in case there are future code updates).
+
+Then run the script below (it only shifts each step above by changing ```kNoShift``` to ```shift``` and recompile and re-run ```PRISMPrediction```),
+
+```
+chmod a+x PRISMPredShift1StepND.sh
+./PRISMPredShift1StepND.sh
+```
+
+3. Draw and plot,
+
+```
+# Do the above for all channels: FD_nu_numu, FD_nu_nue, FD_nub_numu, FD_nub_nue
+
+# This makes the sigma variation plots for various component in PRISM
+chmod a+x PlotManySysts.sh
+./PlotManySysts.sh
+
+# This puts many plots on one canvas and prints tables
+source /cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.24.02/x86_64-centos7-gcc48-opt/bin/thisroot.sh
+root -l -b -q MergeCanvas.C
+```
+
+#### Production with FermiGrid
+
+Below is an example of submit a state file production job to FermiGrid with a single systematic.
+
+```
 cd PRISM/scripts/FermiGridPRISMScripts/
 ./FarmBuildPRISMInterps.sh -h
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCQE -N -u  # run ND FHC only
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor list:MaCCQE -F -u  # run FD FHC only
 # Need to merge FD and ND into 1 job
+```
 
-#
-# A bash script to submit jobs for many systematics
-#
+Here is a bash script to submit jobs for many systematics,
+
+```
 cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
 chmod a+x StateFileManySystSubmit.sh
 ./StateFileManySystSubmit.sh
+```
 
-# To check job status: jobsub_q --user weishi
-# Fetch job logs: jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
-# To remove job: jobsub_rm --user weishi
-# More usage here: https://cdcvs.fnal.gov/redmine/projects/jobsub/wiki/Using_the_Client
+To check job status: ```jobsub_q --user weishi```
 
-#
-# Add ND and FD state files using tmux
-#
+Fetch job logs: ```jobsub_fetchlog --jobid=<id> --unzipdir=<dir>```
+
+To remove job: ```jobsub_rm --user weishi```
+
+More usage here: https://cdcvs.fnal.gov/redmine/projects/jobsub/wiki/Using_the_Client
+
+Once jobs are done, add ND and FD state files in tmux session as it takes a LONG time,
+
+```
 cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts
 tmux
 hadd_state -h
-hadd_state hadd_state_file_flux_xsec.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/*.root
+hadd_state hadd_state_file_flux_xsec.root root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/*.root
 tmux detach
-tmux kill-ses -t mysession  # kill mysession
+# To kill mysession
+tmux kill-ses -t mysession  
 # Need 24-48hrs to add 155 ND/FD files
 mv hadd_state_file_flux_xsec.root /pnfs/dune/persistent/users/weishi/StateFiles
 # A useful C++ debug tool gdb --args: https://root-forum.cern.ch/t/upper-limit-on-size-of-root-file-with-hadd/35069
-
-#
-# [You can skip this part]
-# Create fcl file for each systematic based on NuisanceSyst_Scan/Basic_NumuDisp_MaCCQE.fcl
-#
-cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
-chmod a+x FclFileSwapSystMany.sh
-./FclFileSwapSystMany.sh
-
-# Need to recompile with all modified fcl files
-cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
-./standalone_configure_and_build.sh --use-PRISM -u --rdb -f
-
-#
-# Produce event rate plots using PRISMPrediction
-#
-cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/app
-PRISMPrediction ../../fcl/PRISM/NuisanceSyst_Scan/Basic_NumuDisp_MaCCQE.fcl
-PRISMPrediction ../../fcl/PRISM/NuisanceSyst_Scan/Basic_NumuDisp_MaCCRES.fcl
-# write a bash script for all
-
-#
-# Plot variations on event rates
-#
-cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts
-root -l -b -q QuickHistPlotter.C
-# write a bash script for all
 ```
 
 ### Starter task

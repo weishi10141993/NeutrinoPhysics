@@ -57,9 +57,11 @@ git checkout DBarrow_JointFit
 ./setup_niwgreweight.sh
 ./setup_T2KSKTools.sh
 # Get a customized setup_psyche for SeaWulf
+rm setup_psyche.sh
 wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/setup_psyche.sh --no-check-certificate
+chmod a+x setup_psyche.sh
 ./setup_psyche.sh        # MaCh3 itself doesn't need this, but when fitting w/ ND stuff you will need it
-source setup.sh
+source setup.sh          # Need to do this if re-login
 make clean
 make
 ```
@@ -93,8 +95,12 @@ Then run the executables.
 To run MCMC diagnosis, first produce MCMC chain, need to run via slurm job on SeaWulf. It requires 20Gb of RAM and the step time is O(1s/step) so will require 24+ hours of running.
 
 ```
-./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
-./AtmJointFit_Bin/DiagMCMC MaCh3StepTune.root
+sbatch submitSlurmJob.sh  
+# Check job status: squeue --user=weishi2
+# Run the joint fit: ./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
+./AtmJointFit_Bin/DiagMCMC ./output/MaCh3-Atmospherics-MCMC.root
+# Dump autocorrelation plot into pdf
+root -l 'PlotAutoCorrelations.C("/gpfs/projects/McGrewGroup/weishi/MaCh3/MaCh3/output/MaCh3-Atmospherics-MCMC_MCMC_diag.root", "Auto_corr")'
 ```
 
 The file (provided by Roger) that stores event-by-event weight for SK systematics on NextCloud is: ```/T2KSK/atm_minituples/SF.2021/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr.sysfriend.root```.
