@@ -41,7 +41,7 @@ list:MaCCQE:VecFFCCQEshape:CCQEPauliSupViaKF:MaCCRES:MvCCRES:Theta_Delta2Npi:Aht
 list:flux_Nov17_0:flux_Nov17_1:flux_Nov17_2:flux_Nov17_3:flux_Nov17_4:flux_Nov17_5:flux_Nov17_6:flux_Nov17_7:flux_Nov17_8:flux_Nov17_9:flux_Nov17_10:flux_Nov17_11:flux_Nov17_12:flux_Nov17_13:flux_Nov17_14:flux_Nov17_15:flux_Nov17_16:flux_Nov17_17:flux_Nov17_18:flux_Nov17_19:flux_Nov17_20:flux_Nov17_21:flux_Nov17_22:flux_Nov17_23:flux_Nov17_24:flux_Nov17_25:flux_Nov17_26:flux_Nov17_27
 
 # Detector systs (39 in tot)
-list:FDRecoNumuSyst:FDRecoNueSyst:FVNumuFD:FVNueFD:RecoNCSyst:FVNumuND
+(!!! These 6 are not working for now !!!) list:FDRecoNumuSyst:FDRecoNueSyst:FVNumuFD:FVNueFD:RecoNCSyst:FVNumuND
 list:RecoEnergyScaleND:RecoEnergySqrtND:RecoEnergyInvSqrtND:EMRecoUncorrND:EMRecoUncorrSqrtND:EMRecoUncorrInvSqrtND:ChargedHadRecoUncorrND:ChargedHadRecoUncorrSqrtND:ChargedHadRecoUncorrInvSqrtND:ERecoScaleMuLArND:ERecoScaleMuLArSqrtND:ERecoScaleMuLArInvSqrtND:MuonRecoResND:EMRecoResND:ChargedHadRecoResND
 list:RecoEnergyScaleFD:RecoEnergySqrtFD:RecoEnergyInvSqrtFD:EMRecoUncorrFD:EMRecoUncorrSqrtFD:EMRecoUncorrInvSqrtFD:ChargedHadRecoUncorrFD:ChargedHadRecoUncorrSqrtFD:ChargedHadRecoUncorrInvSqrtFD:ERecoScaleMuLArFD:ERecoScaleMuLArSqrtFD:ERecoScaleMuLArInvSqrtFD:MuonRecoResFD:EMRecoResFD:ChargedHadRecoResFD
 list:NuOnECCBkgSyst:NuOnENCBkgSyst:NuOnERecoEffSyst
@@ -62,7 +62,7 @@ cd PRISM/app
 # For usage: MakePRISMPredInterps --help
 
 # Run w/ 3.5 yr ND MC
-MakePRISMPredInterps -o hadd_state_file_det_37_to_39.root -N-nu "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/*.root" -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root -N-nub "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC/*.root" -F-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nonswap.root -Fe-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nueswap.root -Ft-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NuOnECCBkgSyst:NuOnENCBkgSyst:NuOnERecoEffSyst
+MakePRISMPredInterps -o hadd_state_file_det_25_to_30.root -N-nu "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/*.root" -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root -N-nub "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC/*.root" -F-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nonswap.root -Fe-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nueswap.root -Ft-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:ChargedHadRecoUncorrFD:ChargedHadRecoUncorrSqrtFD:ChargedHadRecoUncorrInvSqrtFD:ERecoScaleMuLArFD:ERecoScaleMuLArSqrtFD:ERecoScaleMuLArInvSqrtFD
 
 # Can run in tmux sessions
 # no syst: ~4hr
@@ -86,7 +86,7 @@ hadd_state_file_flux_13_to_17.root list:flux_Nov17_13:flux_Nov17_14:flux_Nov17_1
 hadd_state_file_flux_18_to_22.root list:flux_Nov17_18:flux_Nov17_19:flux_Nov17_20:flux_Nov17_21:flux_Nov17_22
 hadd_state_file_flux_23_to_27.root list:flux_Nov17_23:flux_Nov17_24:flux_Nov17_25:flux_Nov17_26:flux_Nov17_27
 
-hadd_state_file_det_1_to_6.root list:FDRecoNumuSyst:FDRecoNueSyst:FVNumuFD:FVNueFD:RecoNCSyst:FVNumuND
+(!!! NOT USABLE !!!) hadd_state_file_det_1_to_6.root list:FDRecoNumuSyst:FDRecoNueSyst:FVNumuFD:FVNueFD:RecoNCSyst:FVNumuND
 hadd_state_file_det_7_to_12.root list:RecoEnergyScaleND:RecoEnergySqrtND:RecoEnergyInvSqrtND:EMRecoUncorrND:EMRecoUncorrSqrtND:EMRecoUncorrInvSqrtND
 hadd_state_file_det_13_to_18.root list:ChargedHadRecoUncorrND:ChargedHadRecoUncorrSqrtND:ChargedHadRecoUncorrInvSqrtND:ERecoScaleMuLArND:ERecoScaleMuLArSqrtND:ERecoScaleMuLArInvSqrtND
 hadd_state_file_det_19_to_24.root list:RecoEnergyScaleFD:RecoEnergySqrtFD:RecoEnergyInvSqrtFD:EMRecoUncorrFD:EMRecoUncorrSqrtFD:EMRecoUncorrInvSqrtFD
