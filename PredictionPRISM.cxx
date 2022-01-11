@@ -832,13 +832,13 @@ PredictionPRISM::PredictPRISMComponents(osc::IOscCalculator *calc,
   // Numu -> Nue x-section correction as a function of true energy.
   if (FDSigFlavor == Flavors::kNuMuToNuE) {
     Spectrum FD_nueapp_spectrum = FDNueSwapAppOscPrediction->PredictComponentSyst(
-        calc, (fVaryNDFDMCData ? kNoShift : shift), Flavors::kNuMuToNuE,
+        calc, kNoShift, Flavors::kNuMuToNuE,
         Current::kCC, NDSigSign);
     TH1D *FD_nueapp_h = FD_nueapp_spectrum.ToTH1(NDPOT);
 
     Spectrum FD_numusurv_apposc_spectrum =
         FDNonSwapAppOscPrediction
-            ->PredictComponentSyst(calc, (fVaryNDFDMCData ? kNoShift : shift),
+            ->PredictComponentSyst(calc, kNoShift,
                                    Flavors::kNuMuToNuE, Current::kCC, NDSigSign);
 
     Comps.emplace(kFD_NumuNueCorr_Nue, FD_nueapp_spectrum);

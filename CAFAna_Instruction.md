@@ -109,6 +109,7 @@ L671/683: ND NC Bkg MC
 L696/707: ND WL Bkg MC
 L720/731: ND WS Bkg MC
 L759: Calculate LC coefficient
+L835/841: numu nue xsec correction
 ```
 and change ```shift``` in following lines to ```kNoShift``` in ```PRISM/PRISMDetectorExtrapolation.cxx```,
 ```
