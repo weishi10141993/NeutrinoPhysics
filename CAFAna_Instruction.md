@@ -134,7 +134,7 @@ chmod a+x PRISMPredShift1StepND.sh
 3. Draw and plot,
 
 ```
-# Do the above for all channels: FD_nu_numu, FD_nu_nue, FD_nub_numu, FD_nub_nue
+# Do the following for all channels: FD_nu_numu, FD_nu_nue, FD_nub_numu, FD_nub_nue
 
 # This makes the sigma variation plots for various component in PRISM
 chmod a+x PlotManySysts.sh
