@@ -55,9 +55,6 @@ void QuickOverlay() {
   FD_FHC_Numu_total_3m->SetLineColor(4);
   FD_FHC_Numu_total_3m->Draw("HISTSAME");
 
-  // Write to output file
-  TFile myPlot("Overlay.root", "RECREATE");
-
   TLegend* legend = new TLegend(0.1, 0.7, 0.4, 0.9);
   legend->SetBorderSize(0); legend->SetFillStyle(0); legend->SetNColumns(1);
   legend->AddEntry(FD_FHC_Numu_total_1,  TString::Format("sin^{2}(#theta_{23}) = %.2f, #Delta m^{2}_{32} = %.2f #times 10^{-3}eV^{2}", ssth23[0], dmsq32[0]), "l");
@@ -67,6 +64,9 @@ void QuickOverlay() {
   legend->AddEntry(FD_FHC_Numu_total_3,  TString::Format("sin^{2}(#theta_{23}) = %.2f, #Delta m^{2}_{32} = %.2f #times 10^{-3}eV^{2}", ssth23[2], dmsq32[2]), "l");
   legend->AddEntry(FD_FHC_Numu_total_3m, TString::Format("sin^{2}(#theta_{23}) = %.2f, #Delta m^{2}_{32} = %.2f #times 10^{-3}eV^{2}, missing proton fake data", ssth23[2], dmsq32[2]), "l");
   legend->Draw();
+
+  // Write to output file
+  TFile myPlot("Overlay.root", "RECREATE");
 
   FD_FHC_Numu_total->Write();
   myPlot.Close();
