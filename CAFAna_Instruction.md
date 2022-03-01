@@ -28,16 +28,19 @@ cd scripts
 
 # Do these combinations (oct default to 1, th13?)
 index ssth23 dmsq32 (unit 10^-3 eV^2)  
-1     0.52   2.52                      
-2     0.55   2.38                      
-3     0.60   2.40                     
+1     0.55   2.45                      
+2     0.55   2.50                      
+3     0.60   2.55                     
 
-cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_1.root ndfd:48 1 ssth23:0.52,dmsq32:2.52
-cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_2.root ndfd:48 1 ssth23:0.55,dmsq32:2.38
-cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_3.root ndfd:48 1 ssth23:0.60,dmsq32:2.40
-cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_1_missing_proton.root ndfd:48 1 ssth23:0.52,dmsq32:2.52 MissingProtonFakeData_pos
-cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_2_missing_proton.root ndfd:48 1 ssth23:0.55,dmsq32:2.38 MissingProtonFakeData_pos
-cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_3_missing_proton.root ndfd:48 1 ssth23:0.60,dmsq32:2.40 MissingProtonFakeData_pos
+cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_1.root ndfd:48 1 ssth23:0.55,dmsq32:2.45
+cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_2.root ndfd:48 1 ssth23:0.55,dmsq32:2.50
+cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_3.root ndfd:48 1 ssth23:0.60,dmsq32:2.55
+cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_1_missing_proton.root ndfd:48 1 ssth23:0.55,dmsq32:2.45 MissingProtonFakeData_pos
+cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_2_missing_proton.root ndfd:48 1 ssth23:0.55,dmsq32:2.50 MissingProtonFakeData_pos
+cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_3_missing_proton.root ndfd:48 1 ssth23:0.60,dmsq32:2.55 MissingProtonFakeData_pos
+
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/QuickOverlay.C --no-check-certificate
+root -l -b -q QuickOverlay.C
 ```
 
 ## Install CAFAna Framework
