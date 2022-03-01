@@ -17,11 +17,13 @@ void QuickOverlay() {
   double ssth23[3] = {0.52, 0.55, 0.60};
   double dmsq32[3] = {2.38, 2.40, 2.50}; //unit 10^-3 eV^2
 
-  TCanvas *FD_FHC_Numu_total = new TCanvas("FD_FHC_Numu_total", "FD_FHC_Numu_total", 700, 500);
+  TCanvas *FD_FHC_Numu_total = new TCanvas("FD_FHC_Numu_total", "FD FHC Numu", 700, 500);
   FD_FHC_Numu_total->cd();
 
   TFile *file1 = TFile::Open("hists_index_1.root");
   TH1F *FD_FHC_Numu_total_1 = (TH1F*)file1->Get("FD_FHC_Numu_total");
+  FD_FHC_Numu_total_1->SetMaximum(300);
+  FD_FHC_Numu_total_1->GetXaxis()->SetTitle("Reco E_{vis.} (GeV)");
   FD_FHC_Numu_total_1->SetLineColor(1);
   FD_FHC_Numu_total_1->Draw("HIST");
 
