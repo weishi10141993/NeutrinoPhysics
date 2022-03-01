@@ -6,6 +6,16 @@ Make sure the ```~/.bashrc``` file contains these:
 # ROOT with MathMore for MaCh3
 source /gpfs/projects/McGrewGroup/yuewang/ROOT5/ROOT5/root/bin/thisroot.sh
 
+# Splines from Mo Jia
+t2ksoftware_dir=/gpfs/projects/McGrewGroup/mojia/t2ksoftware/t2kreweight
+source ${t2ksoftware_dir}/FSIFitter/setup_octave.sh
+source ${t2ksoftware_dir}/FSIFitter/setup.sh
+source ${t2ksoftware_dir}/GEANTReWeight/setup.sh
+
+source ${t2ksoftware_dir}/neut/build/Linux/setup.sh
+source ${t2ksoftware_dir}/NIWGReWeight/build/Linux/setup.sh
+source ${t2ksoftware_dir}/T2KReWeight/build/Linux/setup.sh
+
 # CMT                                                                                                                                                                        
 source /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/CMT/setup.sh
 
@@ -95,10 +105,13 @@ Then run the executables.
 To run MCMC diagnosis, first produce MCMC chain, need to run via slurm job on SeaWulf. It requires 20Gb of RAM and the step time is O(1s/step) so will require 24+ hours of running.
 
 ```
-sbatch submitSlurmJob.sh  
-# Check job status: squeue --user=weishi2
 # Run the joint fit: ./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
+sbatch SlurmRunMCMC.sh  
+# Check job status: squeue --user=weishi2
+
+# Diagnose
 ./AtmJointFit_Bin/DiagMCMC ./output/MaCh3-Atmospherics-MCMC.root
+
 # Dump autocorrelation plot into pdf
 root -l 'PlotAutoCorrelations.C("/gpfs/projects/McGrewGroup/weishi/MaCh3/MaCh3/output/MaCh3-Atmospherics-MCMC_MCMC_diag.root", "Auto_corr")'
 ```
@@ -113,6 +126,30 @@ curl -u T2KSKReader:qJzSN-L3Nic-xNP75-YmS4m-Ak58P https://nextcloud.nms.kcl.ac.u
 curl -u ASGReader:mkND3-2k6PP-dwyM2-8coi2-rnsRR https://nextcloud.nms.kcl.ac.uk/remote.php/dav/files/ASGReader/ASG/asg_backup/asg/asg2019oa/ND280/Splines/ -o .
 ```
 
+## Spline production
+
+Install the following softwares:
+NEUT: matrix dial
+niwgreweight: adler angle dial
+T2KReweight: interface
+OAGenWeightsApps: calc weight
+XsecResponse: prod spline
+
+```
+# Source Mo's setup on NEUT, niwgreweight, T2KReweight
+git clone git@github.com:t2k-software/OAGenWeightsApps.git -b DBarrow_JointFit
+cd OAGenWeightsApps
+mkdir build
+cd build
+cmake ../ -DUSE_SK=ON
+make
+make install
+cd Linux/bin/
+source ../setup.sh
+
+# Produce a weight file
+genWeights_T2KSKAtm_OA2020_AdlerAngle_MatrixElement_SIPN_CRPA -s /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample2_Channel1.root -o /gpfs/projects/McGrewGroup/weishi/test.root
+```
 
 ## Install MaCh3 for starter tasks
 
