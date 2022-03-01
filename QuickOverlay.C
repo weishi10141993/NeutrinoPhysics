@@ -1,3 +1,8 @@
+//
+// source /cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.24.02/x86_64-centos7-gcc48-opt/bin/thisroot.sh
+// root -l -b -q QuickOverlay.C
+//
+
 #include "TFile.h"
 #include "TSystem.h"
 #include "TChain.h"
@@ -11,8 +16,7 @@ void QuickOverlay() {
 
   double ssth23[3] = {0.52, 0.55, 0.60};
   double dmsq32[3] = {2.38, 2.40, 2.50}; //unit 10^-3 eV^2
-  //write to output file
-  TFile myPlot("Overlay.root", "RECREATE");
+
   TCanvas *FD_FHC_Numu_total = new TCanvas("FD_FHC_Numu_total", "FD_FHC_Numu_total", 700, 500);
   FD_FHC_Numu_total->cd();
 
@@ -48,6 +52,9 @@ void QuickOverlay() {
   FD_FHC_Numu_total_3m->SetLineStyle(7);
   FD_FHC_Numu_total_3m->SetLineColor(4);
   FD_FHC_Numu_total_3m->Draw("HISTSAME");
+
+  // Write to output file
+  TFile myPlot("Overlay.root", "RECREATE");
 
   TLegend* legend = new TLegend(0.1, 0.7, 0.4, 0.9);
   legend->SetBorderSize(0); legend->SetFillStyle(0); legend->SetNColumns(1);
