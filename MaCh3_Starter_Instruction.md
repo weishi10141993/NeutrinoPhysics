@@ -16,6 +16,9 @@ source ${t2ksoftware_dir}/neut/build/Linux/setup.sh
 source ${t2ksoftware_dir}/NIWGReWeight/build/Linux/setup.sh
 source ${t2ksoftware_dir}/T2KReWeight/build/Linux/setup.sh
 
+xsecDir=/gpfs/projects/McGrewGroup/weishi/XsecResponse
+export LD_LIBRARY_PATH=${xsecDir}/lib:$LD_LIBRARY_PATH
+
 # CMT                                                                                                                                                                        
 source /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/CMT/setup.sh
 
@@ -106,8 +109,10 @@ To run MCMC diagnosis, first produce MCMC chain, need to run via slurm job on Se
 
 ```
 # Run the joint fit: ./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
+# Recommend as much resource as possible: spline evaluation dominate resource and can't be done by GPU
 sbatch SlurmRunMCMC.sh  
 # Check job status: squeue --user=weishi2
+# Job output
 
 # Diagnose
 ./AtmJointFit_Bin/DiagMCMC ./output/MaCh3-Atmospherics-MCMC.root
@@ -147,8 +152,16 @@ make install
 cd Linux/bin/
 source ../setup.sh
 
-# Produce a weight file
+# Produce a weight file for a sample and a specific channel
 genWeights_T2KSKAtm_OA2020_AdlerAngle_MatrixElement_SIPN_CRPA -s /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample2_Channel1.root -o /gpfs/projects/McGrewGroup/weishi/test.root
+```
+
+```
+git clone git@github.com:t2k-software/XsecResponse.git -b DBarrow_JointFit
+cd XsecResponse
+make
+export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH
+bin/make_xsec_response_sk_2019_2d -w /gpfs/projects/McGrewGroup/weishi/test.root -m /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample2_Channel1.root -o /gpfs/projects/McGrewGroup/weishi/splines_test.root -s 2
 ```
 
 ## Install MaCh3 for starter tasks

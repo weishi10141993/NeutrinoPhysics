@@ -1,48 +1,5 @@
 # Instruction for DUNE-PRISM analysis setup from DUNE FNAL machines (dunegpvm*)
 
-## Plots4Chris
-
-Study 1: Distributions of FD numu reco spectra for different values of dm2 and ss2th23.  Possibly with a systematic shift (i.e. missing proton MD) applied as well.  One idea I have is showing two curves, which look nearly identical, but one has missing proton and the other has a shifted dm2.  This is not new work, but reviewers are really, really confused about PRISM and we need to try to make very simple plots. I can give you a script, but probably it will need to be modified somehow to add a syst bias.
-
-```
-git clone https://github.com/weishi10141993/lblpwgtools.git
-cd lblpwgtools
-git checkout energy_shift_studies
-cd CAFAna
-./standalone_configure_and_build.sh -u -r
-# To recompile: ./standalone_configure_and_build.sh -u -r -f
-
-cd /dune/app/users/weishi/Plots4Chris/lblpwgtools/CAFAna
-source build/Linux/CAFAnaEnv.sh
-cd scripts
-
-# Example command:
-# cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State test.root ndfd:48 1 ssth23:0.52,dmsq32:2.52 MissingProtonFakeData_pos
-# Here are what these arguments mean:
-#   1: input state file
-#   2: output plot file
-#   3: ndfd:48 <--> file:exposure  # 48 means 48kt-MW-yrs?
-#   4: 1 <--> normal mass hierarchy
-#   5: Asimov points/osc parameters: https://github.com/DUNE/lblpwgtools/blob/energy_shift_studies/CAFAna/Analysis/CalcsNuFit.cxx#L90
-#   6: Syst shift (fake/mock data): https://github.com/weishi10141993/lblpwgtools/blob/energy_shift_studies/CAFAna/Analysis/common_fit_definitions.cxx#L533
-
-# Do these combinations (oct default to 1, th13?)
-index ssth23 dmsq32 (unit 10^-3 eV^2)  
-1     0.55   2.45                      
-2     0.55   2.50                      
-3     0.60   2.55                     
-
-cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_1.root ndfd:48 1 ssth23:0.55,dmsq32:2.45
-cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_2.root ndfd:48 1 ssth23:0.55,dmsq32:2.50
-cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_3.root ndfd:48 1 ssth23:0.60,dmsq32:2.55
-cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_1_missing_proton.root ndfd:48 1 ssth23:0.55,dmsq32:2.45 MissingProtonFakeData_pos
-cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_2_missing_proton.root ndfd:48 1 ssth23:0.55,dmsq32:2.50 MissingProtonFakeData_pos
-cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_3_missing_proton.root ndfd:48 1 ssth23:0.60,dmsq32:2.55 MissingProtonFakeData_pos
-
-wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/QuickOverlay.C --no-check-certificate
-root -l -b -q QuickOverlay.C
-```
-
 ## Install CAFAna Framework
 
 [First time only]
@@ -89,6 +46,7 @@ export ROLE=Analysis
 voms-proxy-init -rfc -noregen -voms=dune:/dune/Role=$ROLE -valid 120:00
 
 # Running interactively to test
+# Use this state file: /pnfs/dune/persistent/users/chasnip/CAFAnaStateFiles/PRISMState_FHC_RHC_EVisReco_XSecDetFluxSyst2_1Mar22.root
 cd PRISM/app
 PRISM_4Flavour_dChi2Scan /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/build/Linux/fcl/PRISM/Dmsq32_1DScan/PRISMOscScan_Grid_bin1.fcl
 
@@ -111,6 +69,92 @@ hadd_fits <PoI> <output> <input>
 # Modify the PoI inside
 source /cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.24.02/x86_64-centos7-gcc48-opt/bin/thisroot.sh
 root -l -b -q Plot1DChiSqScan.C
+```
+
+## Plots4Chris
+
+### Study 2
+
+Plot dm2 resolution vs. exposure with the missing proton bias added in quadrature. Focus on short exposure.
+
+File to calculate: 1) dm2 resolution vs exposure; 2) resolution vs true dm:
+
+```
+/pnfs/dune/persistent/users/callumw/low_exposure_sensitivities/CAFAna_throws_ndfd_*ktMWyr_NH_th13.root (*: 6, 12, 24, 66, 100)
+```
+
+To access missing proton bias (a constant) for each exposure:
+```
+/pnfs/dune/persistent/users/callumw/dm2_asimovs_for_wei/asimov_dmsq32_ndfd*_allsyst_th13_asimov0_hie1_MissingProtonFakeData:1.root
+```
+
+Here is the macro to get the plots:
+```
+cd /dune/app/users/weishi/Plots4Chris/dm2resolution
+wget --no-check-certificate
+source /cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.24.02/x86_64-centos7-gcc48-opt/bin/thisroot.sh
+root -l -b -q dm2res.C
+```
+
+If want a comparison of the 1D asimovs, look at these nominal files:
+```
+/pnfs/dune/persistent/users/callumw/dm2_asimovs_for_wei/asimov_dmsq32_ndfd6_allsyst_th13_asimov0_hie1_nominal.root
+/pnfs/dune/persistent/users/callumw/dm2_asimovs_for_wei/asimov_dmsq32_ndfd12_allsyst_th13_asimov0_hie1_nominal.root
+/pnfs/dune/persistent/users/callumw/dm2_asimovs_for_wei/asimov_dmsq32_ndfd24_allsyst_th13_asimov0_hie1_nominal.root
+/pnfs/dune/persistent/users/callumw/dm2_asimovs_for_wei/asimov_dmsq32_ndfd66_allsyst_th13_asimov0_hie1_nominal.root
+/pnfs/dune/persistent/users/callumw/dm2_asimovs_for_wei/asimov_dmsq32_ndfd100_allsyst_th13_asimov0_hie1_nominal.root
+```
+
+### Study 1
+
+Plot distributions of FD numu reco spectra for different values of dm2 and ss2th23 with systematic shift applied.
+
+```
+git clone https://github.com/weishi10141993/lblpwgtools.git
+cd lblpwgtools
+git checkout energy_shift_studies
+cd CAFAna
+./standalone_configure_and_build.sh -u -r
+# To recompile: ./standalone_configure_and_build.sh -u -r -f
+
+cd /dune/app/users/weishi/Plots4Chris/lblpwgtools/CAFAna
+source build/Linux/CAFAnaEnv.sh
+cd scripts
+```
+
+Example command:
+```
+# cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State test.root ndfd:48 1 ssth23:0.52,dmsq32:2.52 MissingProtonFakeData_pos
+```
+
+Here are what these arguments mean:
+```
+#   1: input state file
+#   2: output plot file
+#   3: ndfd:48 <--> file:exposure  # 48 means 48kt-MW-yrs?
+#   4: 1 <--> normal mass hierarchy
+#   5: Asimov points/osc parameters: https://github.com/DUNE/lblpwgtools/blob/energy_shift_studies/CAFAna/Analysis/CalcsNuFit.cxx#L90
+#   6: Syst shift (fake/mock data): https://github.com/weishi10141993/lblpwgtools/blob/energy_shift_studies/CAFAna/Analysis/common_fit_definitions.cxx#L533
+```
+
+Do these combinations (oct default to 1, th13?):
+```
+index ssth23 dmsq32 (unit 10^-3 eV^2)  
+1     0.55   2.45                      
+2     0.55   2.50                      
+3     0.60   2.55                     
+```
+
+```
+cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_1.root ndfd:48 1 ssth23:0.55,dmsq32:2.45
+cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_2.root ndfd:48 1 ssth23:0.55,dmsq32:2.50
+cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_3.root ndfd:48 1 ssth23:0.60,dmsq32:2.55
+cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_1_missing_proton.root ndfd:48 1 ssth23:0.55,dmsq32:2.45 MissingProtonFakeData_pos
+cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_2_missing_proton.root ndfd:48 1 ssth23:0.55,dmsq32:2.50 MissingProtonFakeData_pos
+cafe -q -b spec_joint.C /dune/data/users/picker24/CAFAnaStateFiles/v4_all/State hists_index_3_missing_proton.root ndfd:48 1 ssth23:0.60,dmsq32:2.55 MissingProtonFakeData_pos
+
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/QuickOverlay.C --no-check-certificate
+root -l -b -q QuickOverlay.C
 ```
 
 ## State file production with FermiGrid
