@@ -114,6 +114,8 @@ sbatch SlurmRunMCMC.sh
 # Check job status: squeue --user=weishi2
 # Job output
 
+# Can run diagnosis while the chain is still running
+
 # Diagnose
 ./AtmJointFit_Bin/DiagMCMC ./output/MaCh3-Atmospherics-MCMC.root
 

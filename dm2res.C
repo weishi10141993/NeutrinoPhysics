@@ -16,10 +16,14 @@ void dm2res() {
 
   TString Dir = "/pnfs/dune/persistent/users/callumw/low_exposure_sensitivities";
   TString BiasDir = "/pnfs/dune/persistent/users/callumw/dm2_asimovs_for_wei";
-  std::vector<double> exposure = {6, 12, 24, 66, 100, 150, 197, 336, 646, 1104}; // unit: kt-MW-yr
-  TString exposureunit = "kt-MW-yrs";
+  bool drawPOT = true; // Draw POT on xaxis for the res plot, default is exposure
+  //std::vector<double> exposure = {6, 12, 24, 66, 100, 150, 197, 336, 646, 1104}; // unit: kt-MW-yr
+  std::vector<double> exposure = {6, 12, 24, 66, 100}; // unit: kt-MW-yr
 
-  std::vector<double> dm2resolution; // unit: 10^(-3) eV^2?
+  TString exposureunit = "kt-MW-yrs";
+  std::vector<double> PoT; // unit: 10^21
+  std::vector<double> xAxisVar;
+  std::vector<double> dm2resolution; // unit: 10^(-3) eV^2
   std::vector<double> dm2bias;
   std::vector<double> dm2reswithbias;
 
@@ -43,6 +47,9 @@ void dm2res() {
   for ( int iexposure = 0; iexposure < exposures; iexposure++ ) {
 
     std::cout << "Looking at exposure [kt-MW-yr]: " << exposure.at(iexposure) << std::endl;
+
+    // Convert exposure to POT: 24 kt-MW-yrs = 1.1E21 POT
+    PoT.push_back( exposure.at(iexposure)*1.1/24 );
 
     std::cout << "File check: " << TString::Format( "%s/CAFAna_throws_ndfd_%.0fktMWyr_NH_th13.root", Dir.Data(), exposure.at(iexposure) ) << std::endl;
 
@@ -130,28 +137,32 @@ void dm2res() {
   TCanvas *dm2res_exposure = new TCanvas("dm2res_exposure", "dm2res_exposure", 700, 500);
   dm2res_exposure->cd();
 
-  TGraph *g1 = new TGraph(exposures, &exposure[0], &dm2resolution[0]);
-  TGraph *g2 = new TGraph(exposures, &exposure[0], &dm2bias[0]);
-  TGraph *g3 = new TGraph(exposures, &exposure[0], &dm2reswithbias[0]);
+  if ( drawPOT ) xAxisVar = PoT;
+  else xAxisVar = exposure;
+
+  TGraph *g1 = new TGraph(exposures, &xAxisVar[0], &dm2resolution[0]);
+  TGraph *g2 = new TGraph(exposures, &xAxisVar[0], &dm2bias[0]);
+  TGraph *g3 = new TGraph(exposures, &xAxisVar[0], &dm2reswithbias[0]);
   g1->SetLineColor(1);
   g2->SetLineColor(2);
   g3->SetLineColor(4);
 
   TMultiGraph *mg = new TMultiGraph();
   mg->Add(g1);
-  mg->Add(g2);
+  //mg->Add(g2);
   mg->Add(g3);
-  mg->GetXaxis()->SetTitle( TString::Format( "Exposure (%s)", exposureunit.Data() ) );
+  if ( drawPOT ) mg->GetXaxis()->SetTitle( "POT (10^{21})" );
+  else mg->GetXaxis()->SetTitle( TString::Format( "Exposure (%s)", exposureunit.Data() ) );
   mg->GetYaxis()->SetTitle("#Delta m^{2}_{32} Resolution (10^{-3}eV^{2})");
   mg->SetTitle("DUNE Sensitivity (All Systematics)");
   mg->Draw("AL");
 
   TLegend* legend = new TLegend(0.67, 0.53, 0.88, 0.89);
   legend->SetBorderSize(0); legend->SetFillStyle(0); legend->SetNColumns(1);
-  legend->SetHeader("#splitline{Normal Ordering}{#theta_{13}}", "C");
-  legend->AddEntry(g1, "Nominal", "l");
-  legend->AddEntry(g2, "#splitline{Missing proton bias:}{best fit - true dm2}", "l");
-  legend->AddEntry(g3, "Nominal #oplus Bias", "l");
+  //legend->SetHeader("#splitline{Normal Ordering}{#theta_{13}}", "C");
+  legend->AddEntry(g1, "ND-LAr + TMS + PRISM", "l");
+  //legend->AddEntry(g2, "#splitline{Missing proton bias:}{best fit - true dm2}", "l");
+  legend->AddEntry(g3, "ND-LAr + TMS on-axis only", "l");
   legend->Draw();
 
   dm2res_exposure->Write();

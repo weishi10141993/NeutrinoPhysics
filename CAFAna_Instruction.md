@@ -20,6 +20,110 @@ cd CAFAna
 # May need to set export GSL_LIB=/usr/lib64
 ```
 
+## Group of systematics impact on fit contours
+
+The general objective is that user will specify a set of systematics of interest and remove them during the fit to study its impact on the sensitivity. Also the impact on each analysis step will be included.
+
+1. Let's say we want to check how the fit contour changes when n systematics (we use the two below for now, n=2) are excluded from all xsec ones,
+
+```
+NR_nu_n_CC_2Pi
+NR_nu_n_CC_3Pi
+```
+
+first send job submission for all xsec systs,
+
+```
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
+# To recompile/rebuild before submit grid job:
+./standalone_configure_and_build.sh -u -r --db -f
+source build/Linux/CAFAnaEnv.sh                                 # set up the environment
+
+# In addition to kerberos, you need to be in the DUNE Virtual Organization to access to global DUNE resources
+# If you are on the DUNE collaboration list and have a Fermilab ID you should have been added automatically to the DUNE VO.
+# Get a certificate from your kerberos ticket
+kx509
+
+# Need a proxy to access the grid resources. This is to be done once every 24 hours per login machine you’re using to identify yourself
+voms-proxy-init -rfc -noregen -voms=dune:/dune/Role=Analysis -valid 120:00
+
+[Optional: running interactively to test]
+# cd PRISM/app
+# PRISM_4Flavour_dChi2Scan /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/build/Linux/fcl/PRISM/SystGroup_Scan_Dmsq32/PRISMOscScan_Grid_bin1.fcl
+
+# If the above runs well, submit grid job
+cd PRISM/scripts/FermiGridPRISMScripts
+# If necessary: chmod a+x FarmCAFPRISMNodeScript.sh
+./FarmCAFPRISMNodeScript.sh -c SystGroupScanDmsq32Commands.cmd
+
+# To check job status
+jobsub_q --user weishi
+# Job output in /pnfs/dune/persistent/users/weishi/CAFAnaOutputs/MyOutput/
+jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
+```
+
+Next we exclude ```n``` systs, and only fit with ```N-n``` systs. The script will find the ```n``` systematics and put ```#``` in front of it in the fcl file. Then it will recompile and resubmit job.
+
+Next for the same ```N-n``` systs, only do syst shift at one of the following steps of the analysis, recompile and resubmit job.
+
+The relevant lines and file names for all analysis components are listed here:
+
+```
+Index   Step/component     File (.cxx)                  Line numbers
+1       FD Flux Corr       PredictionPRISM              720
+2       FD NuTauCC Bkg     PredictionPRISM              973
+3       FD Intrinsic Bkg   PredictionPRISM              1003
+4       FD WS Bkg          PredictionPRISM              988
+5       FD NC Bkg          PredictionPRISM              941
+6       FD WrongLep Bkg    PredictionPRISM              959
+7       ND WS Bkg MC       PredictionPRISM              695/706
+8       ND NC Bkg MC       PredictionPRISM              646/658
+9       ND WL Bkg MC       PredictionPRISM              671/682
+10      Calculate LCWgt    PredictionPRISM              732
+11      ND Unfold          PRISMDetectorExtrapolation   162
+12      ND Eff corr        PRISMMCEffCorrection         111/114/128/131
+13      FD Eff corr        PRISMMCEffCorrection         142/146
+14      FD Smear           PRISMDetectorExtrapolation   165
+15      numu-e xsec corr   PredictionPRISM              797/802         # only for appearance analysis
+```
+
+Now to apply the systematic shift to one specific step in the analysis, we need to first switch off systematic shifts in all analysis components.
+
+Change ```(fVaryNDFDMCData ? kNoShift : shift)``` to ```kNoShift``` in ```PRISM/PredictionPRISM.cxx```,
+and change ```shift``` in following lines to ```kNoShift``` in ```PRISM/PRISMDetectorExtrapolation.cxx```,
+and change ```syst``` in following lines to ```kNoShift``` in ```PRISM/PRISMMCEffCorrection.cxx```, I temporarily copy the changed files from another repo (no automatic script to do this since the code is changing quite often).
+
+Then run the script below (it only shifts each step above by changing ```kNoShift``` to ```shift```).
+
+Change job output folder name
+
+```
+chmod a+x FitExludeSystGroup.sh
+./FitExludeSystGroup.sh
+```
+
+2. Plot the fitted result.
+
+Plot the fit Chi2.
+```
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts
+hadd_fits <PoI> <output> <input>
+# e.g., hadd_fits dmsq32 dmsq32_1D_Chi2_xsec_all.root /pnfs/dune/persistent/users/weishi/CAFAnaOutputs/MyOutput/PRISMScan_dmsq32_bin*.root
+```
+
+Subtract the min Chi2 to get dChi2 plot use a simple macro.
+```
+# Modify the PoI inside
+source /cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.24.02/x86_64-centos7-gcc48-opt/bin/thisroot.sh
+root -l -b -q Plot1DChiSqScan.C
+```
+
+The dChi2 plot contains two TH1D curves: ```hallsyst``` and ```hnosyst```.
+
+3. Once all fitted curves are available, summarize them into one canvas. Overlay ```hallsyst``` from N-syst fit and from N-n-syst for total comparison and each step.
+
+
+
 ## Produce fit contours
 
 Newest state file with all xsec systs: ```/dune/app/users/weishi/StateFiles/PRISMState_FHC_RHC_XSecSysts_NewBin_6Feb22.root```.
