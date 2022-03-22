@@ -30,4 +30,86 @@ setup sam_web_client
 samweb locate-file np02_pds_run012454_0000_20220228T094438.hdf5
 ```
 
+To analyze the file, do the following setup (adapted from [DUNE DAQ](https://github.com/DUNE-DAQ/minidaqapp/wiki/Instructions-for-setting-up-a-v2.9.0-development-environment)):
+
+```
+ssh -X weishi@dunegpvm03.fnal.gov        
+cd /dune/app/users/weishi
+mkdir DAQ
+cd DAQ
+
+source /cvmfs/dunedaq.opensciencegrid.org/setup_dunedaq.sh
+setup_dbt dunedaq-v2.9.0
+dbt-create.sh -c dunedaq-v2.9.0 workdir
+cd workdir
+
+# Clone needed packages
+cd sourcecode
+git clone https://github.com/DUNE-DAQ/hdf5libs.git -b develop
+git clone https://github.com/DUNE-DAQ/rawdatautils.git -b mman/sspdecoder
+git clone https://github.com/DUNE-DAQ/dqm.git -b mman_ssp_support
+git clone https://github.com/DUNE-DAQ/daqdataformats.git -b develop
+
+# setup the work area and build the software
+cd /dune/app/users/weishi/DAQ/workdir
+dbt-workarea-env   
+# To force reload: dbt-workarea-env --force-ups-reload
+dbt-build.py
+```
+
+When you return to this work area (for example, after logging out and back in):
+
+```
+cd /dune/app/users/weishi/DAQ/workdir
+source /cvmfs/dunedaq.opensciencegrid.org/setup_dunedaq.sh
+setup_dbt dunedaq-v2.8.0
+dbt-workarea-env
+```
+
+To run the analyzer,
+
+```
+# scp
+
+cd /dune/app/users/weishi/DAQ/workdir/sourcecode/dqm/scripts
+python ssp_processing.py
+
+cd /dune/app/users/weishi/DAQ/workdir/sourcecode/hdf5libs/test/apps
+python NP02PDSCRT_Reader.py
+```
+
+It's possible you need to set up a virtual environment to for some needed modules:
+
+```
+cd the_dir/where/you_have_your/py_script
+#source /cvmfs/..../setup_dune.sh
+#setup python v3_8_3b
+
+#python -m venv .venv_v3_8_3b
+python -m venv .venv_v3_8_3
+source .venv_v3_8_3/bin/activate
+#source .venv_v3_8_3b/bin/activate
+
+pip install matplotlib
+pip install h5py
+# add other modules
+```
+
+The analyzer is adapted from PD1 [script](https://internal.dunescience.org/doxygen/SSPRawDecoder__module_8cc_source.html) starting line 275 by M. Man.
+
+Here is a manual on event readout (Ch. 11) from SiPM signal processor.
+
+Structure:
+```
+GROUP "TriggerRecord000001"
+
+  DATASET "TriggerRecordHeader"
+
+  GROUP "PDS"
+    GROUP "Region001"
+      DATASET "Element01"
+      DATASET "Element02"
+    ...
+```
+
 # Compare with cold box test data (Dec 2021)

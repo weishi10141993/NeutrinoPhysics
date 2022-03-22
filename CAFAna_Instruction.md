@@ -17,66 +17,28 @@ cd CAFAna
 # Build the code, the -u option rely on relevant dependencies from FNAL scisoft
 ./standalone_configure_and_build.sh -u -r --db          # for new YOLO branch
 # To recompile: ./standalone_configure_and_build.sh -u -r --db -f
-# May need to set export GSL_LIB=/usr/lib64
+source build/Linux/CAFAnaEnv.sh
 ```
 
 ## Group of systematics impact on fit contours
 
 The general objective is that user will specify a set of systematics of interest and remove them during the fit to study its impact on the sensitivity. Also the impact on each analysis step will be included.
 
-1. First send job submission for all N systs (N can be: xsec_all, flux_all, flux + xsec, flux + xsec + det) to fit some poi (dmsq32 or ssth23),
+1. First run the following script to do poi (```dmsq32``` or ```ssth23```) fit with all N systs included (N can be: xsec_all, flux_all, flux + xsec, det_all, flux + xsec + det), then only does syst shift at one of the following steps of the analysis and refit to evaluate impacts on the fit from the excluded systs.
 
 ```
-cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
-./standalone_configure_and_build.sh -u -r --db -f               # To recompile/rebuild before submit grid job
-source build/Linux/CAFAnaEnv.sh                                 # set up the environment
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
+# Make sure to update poi options in the script: <dmsq32, ssth23>
+chmod a+x FitAllSyst.sh
 
-# You need to be in the DUNE Virtual Organization to access to global DUNE resources
-# If you are on the DUNE collaboration list and have a Fermilab ID you should have been added automatically to the DUNE VO.
-# Get a certificate from your kerberos ticket
-kx509
+# Recompile and submit jobs in tmux session
+./FitAllSyst.sh > log_xsec_all.txt &
 
-# This may be not necessary as it's already included in FarmCAFPRISMNodeScript.sh:
-# need a proxy to access the grid resources. This is to be done once every 24 hours per login machine you’re using to identify yourself
-# voms-proxy-init -rfc -noregen -voms=dune:/dune/Role=Analysis -valid 120:00
-
-[Optional: running interactively to test]
-# cd PRISM/app
-# PRISM_4Flavour_dChi2Scan /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/build/Linux/fcl/PRISM/SystGroup_Scan_Dmsq32/PRISMOscScan_Grid_bin1.fcl
-
-# If the above runs well, submit grid job
-cd PRISM/scripts/FermiGridPRISMScripts
-# For fitting dmsq32
-./FarmCAFPRISMNodeScript.sh -c SystGroupScanDmsq32Commands.cmd  
-# For fitting ssth23
-./FarmCAFPRISMNodeScript.sh -c SystGroupScanSsth23Commands.cmd
-
-# To check job status
-jobsub_q --user weishi
 # Job output in /pnfs/dune/persistent/users/weishi/*
 jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
 ```
 
-2. Let's say we want to check how the fit contour changes when n systematics (we use the two below for now, n=2) are excluded,
-
-```
-NR_nu_n_CC_2Pi
-NR_nu_n_CC_3Pi
-```
-
-run the script below.
-
-```
-cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
-# Make sure to update poi options: dmsq32, ssth23
-chmod a+x FitExludeSystGroup.sh
-# Recompile and submit jobs in tmux session
-./FitExludeSystGroup.sh > log.txt &
-```
-
-Here is what the above script does: it first excludes ```n``` systs, and only fit with ```N-n``` systs. The script will find the ```n``` systematics and put ```#``` in front of it in the fcl file. Then it will recompile and resubmit job.
-
-Then for the same ```N-n``` systs, it only does syst shift at one of the following steps of the analysis, recompile and resubmit job.
+[The following is some explanation, you can skip this part]
 
 The relevant lines and file names for all analysis components are listed here:
 
@@ -99,95 +61,57 @@ Index   Step/component     File (.cxx)                  Line numbers
 15      numu-e xsec corr   PredictionPRISM              797/802         # only for appearance analysis
 ```
 
-To apply the systematic shift to one specific step in the analysis, it needs to first switch off systematic shifts in all analysis components listed above. This is temporarily copied from another repo (no automatic script for this since the code is constantly changing).
+To apply the systematic shift to one specific step in the analysis, it needs to first switch off systematic shifts in all analysis components listed above.
+
+Basically, you need to change ```(fVaryNDFDMCData ? kNoShift : shift)``` to ```kNoShift``` in ```PRISM/PredictionPRISM.cxx```,
+
+and change ```shift``` to ```kNoShift``` in ```PRISM/PRISMDetectorExtrapolation.cxx```,
+
+and change ```syst``` to ```kNoShift``` in ```PRISM/PRISMMCEffCorrection.cxx```.
+
+In the script ```FitAllSyst.sh```, it temporarily copies files from another repo with all syst shift switched off (no automatic script for this as the code is constantly changing).
 
 ```
 wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/PredictionPRISM.cxx --no-check-certificate
 wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/PRISMMCEffCorrection.cxx --no-check-certificate
 wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/PRISMDetectorExtrapolation.cxx --no-check-certificate
 ```
+It then switches on the single step.
 
-Basically, you need to change ```(fVaryNDFDMCData ? kNoShift : shift)``` to ```kNoShift``` in ```PRISM/PredictionPRISM.cxx```,
+2. Based on all systs used above, say now we want to check how the fit contour changes when n systematics (n < N) are excluded, run the script below.
 
-and change ```shift``` in following lines to ```kNoShift``` in ```PRISM/PRISMDetectorExtrapolation.cxx```,
-
-and change ```syst``` in following lines to ```kNoShift``` in ```PRISM/PRISMMCEffCorrection.cxx```.
-
-In the script it will then switch on the single step.
-
-3. Run the script below to plot the fitted result from N systs and N-n systs (plus result for each step for N-n).
 ```
 cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
-# update poi options in GetFitdChi2Comp.sh and PlotdChiSq1DScan.C: <dmsq32, ssth23>
+# Make sure to update poi options: dmsq32, ssth23
+# Make sure to add the systs you want to exclude
+chmod a+x FitExludeSystGroup.sh
+
+# Recompile and submit jobs in tmux session
+./FitExludeSystGroup.sh > log_xsec_all_exclude.txt &
+```
+
+[The following is some explanation, you can skip this part]
+
+The script ```FitExludeSystGroup.sh``` is similar to previous step. It first excludes ```n``` systs, and only fit with ```N-n``` systs. The script will find the ```n``` systematics and put ```#``` in front of it in the fcl file. Then it will recompile and resubmit job.
+
+Then for the same ```N-n``` systs, it only does syst shift at one of the steps of the analysis listed previously, recompile and resubmit job.
+
+3. Run the script below to plot the fitted result from N systs and N-n systs (plus result for each step).
+
+```
+cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
+# update poi options in GetFitdChi2Comp.sh: <dmsq32, ssth23>
 chmod a+x GetFitdChi2Comp.sh
 ./GetFitdChi2Comp.sh
 ```
 
-The script first hadd all Chi2 files from finished jobs to get the Chi2 plot.
-```
-hadd_fits <PoI> <output> <input>
-# e.g., hadd_fits dmsq32 dmsq32_1D_Chi2_xsec_all.root /pnfs/dune/persistent/users/weishi/DispJointFitXsec_Exclude/PRISMScan_dmsq32_bin*.root
-```
-It then subtracts the min Chi2 to get dChi2 plot and compare the N-n case with N case.
-```
-# Modify the PoI inside
-root -l -b -q PlotdChiSq1DScan.C
-```
-Finally, it summarizes all dChi2 comparison plots into one canvas.
-```
-root -l -b -q MergePlots.C
-```
+[The following is some explanation, you can skip this part]
 
-## Produce fit contours
+The script first hadd all Chi2 files from finished jobs to get the Chi2 plot ```hadd_fits <PoI> <output> <input>```.
 
-Newest state file with all xsec systs: ```/dune/app/users/weishi/StateFiles/PRISMState_FHC_RHC_XSecSysts_NewBin_6Feb22.root```.
-Or ```root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/chasnip/CAFAnaStateFiles/PRISMState_FHC_RHC_XSecSysts_NewBin_6Feb22.root```.
+It then subtracts the min Chi2 to get dChi2 plot and compare the N-n case with N case ```root -l -b -q PlotdChiSq1DScan.C```.
 
-The fitter ```PRISM/app/PRISM_4Flavour_dChi2Scan``` also uses the state file produced from ```MakePRISMPredInterps```, it varies systematics and fit.
-
-The basic config file is ```fcl/PRISM/PRISMOscScan_Grid.fcl```. Modify state file name inside it. Before submit many jobs, try run interactively:
-
-```
-cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna
-source build/Linux/CAFAnaEnv.sh                                 # set up the environment
-# To recompile/rebuild before submit grid job:
-./standalone_configure_and_build.sh -u -r --db -f
-# Ignore the error of can't find the example directory
-
-# In addition to kerberos, you need to be in the DUNE Virtual Organization to access to global DUNE resources
-# If you are on the DUNE collaboration list and have a Fermilab ID you should have been added automatically to the DUNE VO.
-# Get a certificate from your kerberos ticket
-kx509
-
-# Need a proxy to access the grid resources. This is to be done once every 24 hours per login machine you’re using to identify yourself
-export ROLE=Analysis
-voms-proxy-init -rfc -noregen -voms=dune:/dune/Role=$ROLE -valid 120:00
-
-# Running interactively to test
-# Use this state file: /pnfs/dune/persistent/users/chasnip/CAFAnaStateFiles/PRISMState_FHC_RHC_EVisReco_XSecDetFluxSyst2_1Mar22.root
-cd PRISM/app
-PRISM_4Flavour_dChi2Scan /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/build/Linux/fcl/PRISM/Dmsq32_1DScan/PRISMOscScan_Grid_bin1.fcl
-
-# If the above runs well, submit grid job
-cd PRISM/scripts/FermiGridPRISMScripts
-# If necessary: chmod a+x FarmCAFPRISMNodeScript.sh
-./FarmCAFPRISMNodeScript.sh -c Dmsq32ScanCommands.cmd
-
-# To check job status
-jobsub_q --user weishi
-# Job output in /pnfs/dune/persistent/users/weishi/CAFAnaOutputs/MyOutput/
-jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
-
-# Plot the final best fit contour
-cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts
-hadd_fits <PoI> <output> <input>
-# e.g., hadd_fits dmsq32 dmsq32_1D_fit.root /pnfs/dune/persistent/users/weishi/CAFAnaOutputs/MyOutput/PRISMScan_dmsq32_bin*.root
-
-# Subtract the min Chi2 to get dChi2 plot use a simple macro
-# Modify the PoI inside
-source /cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.24.02/x86_64-centos7-gcc48-opt/bin/thisroot.sh
-root -l -b -q Plot1DChiSqScan.C
-```
+Finally, it puts all dChi2 comparison plots into one canvas ```root -l -b -q MergePlots.C```.
 
 ## Plots4Chris
 

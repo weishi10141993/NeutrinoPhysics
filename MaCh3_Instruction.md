@@ -110,7 +110,12 @@ To run MCMC diagnosis, first produce MCMC chain, need to run via slurm job on Se
 ```
 # Run the joint fit: ./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
 # Recommend as much resource as possible: spline evaluation dominate resource and can't be done by GPU
-sbatch SlurmRunMCMC.sh  
+chmod a+x SlurmRunMCMC10ChainsOneJob.sh        # 10 chains per job
+sbatch SlurmRunMCMC10ChainsOneJob.sh
+
+# if want to submit separate 10 jobs
+chmod a+x SlurmRunMCMC1ChainPerJob_10jobs.sh
+./SlurmRunMCMC1ChainPerJob_10jobs.sh
 # Check job status: squeue --user=weishi2
 # Job output
 
