@@ -81,6 +81,7 @@ It then switches on the single step.
 2. Based on all systs used above, say now we want to check how the fit contour changes when n systematics (n < N) are excluded, run the script below.
 
 ```
+# scp
 cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
 # Make sure to update poi options: dmsq32, ssth23
 # Make sure to add the systs you want to exclude
@@ -91,6 +92,12 @@ chmod a+x FitExludeSystGroup.sh
 ```
 
 [The following is some explanation, you can skip this part]
+
+If jobs are held due to memory or time, release it with additional resources, or use [autorelease](https://cdcvs.fnal.gov/redmine/projects/fife/wiki/Job_autorelease) when submitting the job:
+```
+# this adds extra 1024MB and 1800s
+jobsub_release -G <group> --user <userid> --constraint '+FERMIHTC_GraceMemory=1024' --constraint '+FERMIHTC_GraceLifetime=1800'
+```
 
 The script ```FitExludeSystGroup.sh``` is similar to previous step. It first excludes ```n``` systs, and only fit with ```N-n``` systs. The script will find the ```n``` systematics and put ```#``` in front of it in the fcl file. Then it will recompile and resubmit job.
 

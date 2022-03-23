@@ -1,6 +1,6 @@
 # Analysis of data with CRT on top of NP02
 
-Four runs taken with the NP02 PDS using the cosmic ray telescope (CRT) as a trigger. The CRT was moved around:
+Four runs taken with the NP02 PDS (standard arapuca modules from ProtoDUNE-I, no PoF/SoF) using the cosmic ray telescope (CRT) as a trigger. The CRT was moved around:
 
 ```
 Run #   Evts    location of CRT
@@ -10,7 +10,9 @@ Run #   Evts    location of CRT
 12454   3750    20 cm outside the field cage
 ```
 
-Can access from Fermilab:
+The purpose is to study the effect of FC shadow effect on PDS.
+
+Can access run files from Fermilab:
 
 ```
 /pnfs/dune/tape_backed/dunepro/vd-protodune-pds/raw/2022/detector/test/None/00/01/24/51/np02_pds_run012451_0000_20220225T170210.hdf5
@@ -22,7 +24,7 @@ Can access from Fermilab:
 In general, to locate a file using samweb:
 
 ```
-# Go to fnal machine
+# Go to FNAL dunegpvm machine
 source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
 setup dunetpc v09_22_02 -q e19:debug
 setup_fnal_security
@@ -33,7 +35,7 @@ samweb locate-file np02_pds_run012454_0000_20220228T094438.hdf5
 To analyze the file, do the following setup (adapted from [DUNE DAQ](https://github.com/DUNE-DAQ/minidaqapp/wiki/Instructions-for-setting-up-a-v2.9.0-development-environment)):
 
 ```
-ssh -X weishi@dunegpvm03.fnal.gov        
+ssh -X <user_name>@dunegpvm03.fnal.gov        
 cd /dune/app/users/weishi
 mkdir DAQ
 cd DAQ
@@ -97,7 +99,7 @@ pip install h5py
 
 The analyzer is adapted from PD1 [script](https://internal.dunescience.org/doxygen/SSPRawDecoder__module_8cc_source.html) starting line 275 by M. Man.
 
-Here is a manual on event readout (Ch. 11) from SiPM signal processor.
+Here is a [manual](https://github.com/weishi10141993/NeutrinoPhysics/blob/main/SSP_Users_Manual_v2.05.pdf) on event readout (Ch. 11) from SiPM signal processor.
 
 Structure:
 ```
