@@ -1,5 +1,53 @@
 # Instruction for DUNE-PRISM analysis setup from DUNE FNAL machines (dunegpvm*)
 
+## NuTau Appearance Development
+
+[First time only]
+
+```
+kinit -f weishi@FNAL.GOV                 # use your FNAL kerberos password
+ssh -X weishi@dunegpvm03.fnal.gov        
+cd /dune/app/users/weishi
+mkdir NuTauDev
+cd NuTauDev
+git clone https://github.com/weishi10141993/lblpwgtools.git
+cd lblpwgtools
+git checkout nuTau_dev
+cd CAFAna
+# Build the code, the -u option rely on relevant dependencies from FNAL scisoft
+./standalone_configure_and_build.sh -u -r --db          # for new YOLO branch
+# To recompile: ./standalone_configure_and_build.sh -u -r --db -f
+source build/Linux/CAFAnaEnv.sh
+```
+
+The changed places are listed here:
+
+```
+Added/changed var                               File location
+
+# Nutau selection
+kPassFD_CVN_NUTAU                               Cuts/AnaCuts.h
+# This can be changed in the future to other nutau selections: e.g. RecoHadE_NDFD (Core/SpectrumLoader.cxx) or kHadEReco (Analysis/AnalysisVars.cxx)
+
+# Signal state file
+kPRISMFDSignal_True(Selected)_nutau(b)          PRISM/Cuts.h(.cxx)
+kFDSelectionCuts_nutau(b)                       PRISM/app/MakePRISMPredInterps.C
+FDCuts                                          PRISM/app/MakePRISMPredInterps.C
+kNutau/kNutauBar/kNutauNutauBar                 PRISM/PRISMAnalysisDefinitions.h
+chanmode                                        PRISM/app/MakePRISMPredInterps.C
+Nutau_app/Nutaubar_app                          fcl/PRISM/FitChannels.fcl
+FDSigFlavor/Sign/FDWrong/IntrinsicFlavor        PRISM/PredictionPRISM.cxx
+GetFDPrediction_right_sign_nue                  PRISM/PredictionPRISM.cxx
+GetFDUnOscWeightedSigPrediction_right_sign_nue  PRISM/PredictionPRISM.cxx
+FDNutauSwapAppOscPrediction                     PRISM/PredictionPRISM.cxx
+LoadPRISMState                                  PRISM/PRISMUtils.cxx
+```
+
+Make a state file:
+```
+MakePRISMPredInterps -o hadd_state_file_xsec_49_to_54.root -N-nu "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/*.root" -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root -N-nub "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC/*.root" -F-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nonswap.root -Fe-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nueswap.root -Ft-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nutau_state_file.txt &
+```
+
 ## Install CAFAna Framework
 
 [First time only]
@@ -97,6 +145,20 @@ If jobs are held due to memory or time, release it with additional resources, or
 ```
 # this adds extra 1024MB and 1800s
 jobsub_release -G <group> --user <userid> --constraint '+FERMIHTC_GraceMemory=1024' --constraint '+FERMIHTC_GraceLifetime=1800'
+
+# hold codes: https://mu2ewiki.fnal.gov/wiki/ErrorRecovery
+6 sub 0,2 could not execute glidein, and/or docker did not run
+9 not enough memory; remember that you need to include the size of the code tarball/release
+12 sub 2 could not execute glidein
+13
+26 sub 8 wall time (also in the Docker era)
+26 sub 1 memory limits
+26 sub 4 SYSTEM_PERIODIC_HOLD  Starts/limit 31/10 - too many restarts?
+28 sub -10000,512,768,256 sandbox
+30 sub -10000,768 Job put on hold by remote host,  job proxy is not valid
+34 sub 0 - memory limits (also in the Docker era)
+35 sub 0 Error from slot - probably a condor (Docker?) failure on the worker node
+??? disk limits - probably 26 sub ?
 ```
 
 The script ```FitExludeSystGroup.sh``` is similar to previous step. It first excludes ```n``` systs, and only fit with ```N-n``` systs. The script will find the ```n``` systematics and put ```#``` in front of it in the fcl file. Then it will recompile and resubmit job.
