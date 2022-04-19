@@ -1,53 +1,5 @@
 # Instruction for DUNE-PRISM analysis setup from DUNE FNAL machines (dunegpvm*)
 
-## NuTau Appearance Development
-
-[First time only]
-
-```
-kinit -f weishi@FNAL.GOV                 # use your FNAL kerberos password
-ssh -X weishi@dunegpvm03.fnal.gov        
-cd /dune/app/users/weishi
-mkdir NuTauDev
-cd NuTauDev
-git clone https://github.com/weishi10141993/lblpwgtools.git
-cd lblpwgtools
-git checkout nuTau_dev
-cd CAFAna
-# Build the code, the -u option rely on relevant dependencies from FNAL scisoft
-./standalone_configure_and_build.sh -u -r --db          # for new YOLO branch
-# To recompile: ./standalone_configure_and_build.sh -u -r --db -f
-source build/Linux/CAFAnaEnv.sh
-```
-
-The changed places are listed here:
-
-```
-Added/changed var                               File location
-
-# Nutau selection
-kPassFD_CVN_NUTAU                               Cuts/AnaCuts.h
-# This can be changed in the future to other nutau selections: e.g. RecoHadE_NDFD (Core/SpectrumLoader.cxx) or kHadEReco (Analysis/AnalysisVars.cxx)
-
-# Signal state file
-kPRISMFDSignal_True(Selected)_nutau(b)          PRISM/Cuts.h(.cxx)
-kFDSelectionCuts_nutau(b)                       PRISM/app/MakePRISMPredInterps.C
-FDCuts                                          PRISM/app/MakePRISMPredInterps.C
-kNutau/kNutauBar/kNutauNutauBar                 PRISM/PRISMAnalysisDefinitions.h
-chanmode                                        PRISM/app/MakePRISMPredInterps.C
-Nutau_app/Nutaubar_app                          fcl/PRISM/FitChannels.fcl
-FDSigFlavor/Sign/FDWrong/IntrinsicFlavor        PRISM/PredictionPRISM.cxx
-GetFDPrediction_right_sign_nue                  PRISM/PredictionPRISM.cxx
-GetFDUnOscWeightedSigPrediction_right_sign_nue  PRISM/PredictionPRISM.cxx
-FDNutauSwapAppOscPrediction                     PRISM/PredictionPRISM.cxx
-LoadPRISMState                                  PRISM/PRISMUtils.cxx
-```
-
-Make a state file:
-```
-MakePRISMPredInterps -o hadd_state_file_xsec_49_to_54.root -N-nu "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/*.root" -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root -N-nub "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC/*.root" -F-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nonswap.root -Fe-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nueswap.root -Ft-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nutau_state_file.txt &
-```
-
 ## Install CAFAna Framework
 
 [First time only]
@@ -79,11 +31,17 @@ cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/FermiGr
 # Make sure to update poi options in the script: <dmsq32, ssth23>
 chmod a+x FitAllSyst.sh
 
-# Recompile and submit jobs in tmux session
+# !!! Submit jobs in tmux session !!!
 ./FitAllSyst.sh > log_xsec_all.txt &
+# or nohup
 
 # Job output in /pnfs/dune/persistent/users/weishi/*
 jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
+
+# you can run 50 points in one job now using PRISMOscScan_Grid.fcl
+# change scansEG to scans
+# change dmsq23_coarse to dmsq23
+# instead of running 50 fcl files
 ```
 
 [The following is some explanation, you can skip this part]
@@ -135,7 +93,7 @@ cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts/FermiGr
 # Make sure to add the systs you want to exclude
 chmod a+x FitExludeSystGroup.sh
 
-# Recompile and submit jobs in tmux session
+# !!! Recompile and submit jobs in tmux session !!!
 ./FitExludeSystGroup.sh > log_xsec_all_exclude.txt &
 ```
 
@@ -144,7 +102,7 @@ chmod a+x FitExludeSystGroup.sh
 If jobs are held due to memory or time, release it with additional resources, or use [autorelease](https://cdcvs.fnal.gov/redmine/projects/fife/wiki/Job_autorelease) when submitting the job:
 ```
 # this adds extra 1024MB and 1800s
-jobsub_release -G <group> --user <userid> --constraint '+FERMIHTC_GraceMemory=1024' --constraint '+FERMIHTC_GraceLifetime=1800'
+jobsub_release -G <group> --user <userid> --constraint 'FERMIHTC_GraceMemory==1024' --constraint 'FERMIHTC_GraceLifetime==1800'
 
 # hold codes: https://mu2ewiki.fnal.gov/wiki/ErrorRecovery
 6 sub 0,2 could not execute glidein, and/or docker did not run
@@ -159,6 +117,10 @@ jobsub_release -G <group> --user <userid> --constraint '+FERMIHTC_GraceMemory=10
 34 sub 0 - memory limits (also in the Docker era)
 35 sub 0 Error from slot - probably a condor (Docker?) failure on the worker node
 ??? disk limits - probably 26 sub ?
+
+# or remove and resubmit
+jobsub_rm --jobid=<id of your grid process>
+--memory="nnnnMB"
 ```
 
 The script ```FitExludeSystGroup.sh``` is similar to previous step. It first excludes ```n``` systs, and only fit with ```N-n``` systs. The script will find the ```n``` systematics and put ```#``` in front of it in the fcl file. Then it will recompile and resubmit job.
@@ -361,8 +323,9 @@ jobsub_fetchlog --jobid=<id> --unzipdir=<dir>
 
 # Add ND and FD state files
 cd /dune/app/users/weishi/PRISMAnalysis/lblpwgtools/CAFAna/PRISM/scripts
-hadd_state -h
-hadd_state hadd_state_file.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ND_FHC.State.*.root
+hadd_cafana -h
+hadd_cafana hadd_state_file.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ND_FHC.State.*.root
+# hadd_state is sometimes used when many systs are included
 
 # Run over PRISMPrediction
 ```
