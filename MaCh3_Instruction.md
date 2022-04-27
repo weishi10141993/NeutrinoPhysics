@@ -105,13 +105,13 @@ Then run the executables.
 #./AtmJointFit_Bin/PlotAtmByMode configs/AtmosphericConfigs/AtmConfig.cfg 27
 ```
 
-To run MCMC diagnosis, first produce MCMC chain, need to run via slurm job on SeaWulf. It requires 20Gb of RAM and the step time is O(1s/step) so will require 24+ hours of running.
+To run MCMC diagnosis, first produce MCMC chain, need to run via slurm job on SeaWulf. It requires 19Gb of RAM and the step time is O(1s/step) so will require 24+ hours of running.
 
 ```
 # Run the joint fit: ./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
 # Recommend as much resource as possible: spline evaluation dominate resource and can't be done by GPU
-chmod a+x SlurmRunMCMC10ChainsOneJob.sh        # 10 chains per job
-sbatch SlurmRunMCMC10ChainsOneJob.sh
+sbatch SlurmRunMCMCChain0-4Job1.sh        
+sbatch SlurmRunMCMCChain5-9Job2.sh
 
 # if want to submit separate 10 jobs
 chmod a+x SlurmRunMCMC1ChainPerJob_10jobs.sh

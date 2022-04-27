@@ -3,27 +3,27 @@
 #include <string>
 #include <iostream>
 
-void NutauApp_StackedHist() {
+void IntrinsicNue_StackedHist() {
 
-  TFile *f = new TFile("/dune/app/users/weishi/NuTauDev/lblpwgtools/CAFAna/PRISM/app/PRISMPred_EVisReco_nuTauApp.root");
+  TFile *f = new TFile("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/PRISMPred_EVisReco_IntrinsicNue.root");
   TCanvas *newC = new TCanvas("C", "C", 800, 600);
   newC->SetRightMargin(0.07);
   newC->SetLeftMargin(0.12);
   TLegend *leg = new TLegend(0.5,0.45,0.9,0.88);
-  leg->SetHeader("DUNE-PRISM #nu_{#tau} Appearance");
+  leg->SetHeader("DUNE-PRISM FHC #nu_{e} Appearance");
   leg->SetBorderSize(0);
 
   THStack *Hstack = new THStack("Hstack", "");
 
-  TH1D *hFDOsc = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_tau/DataPred_Total");
-  TH1D *hNDFit = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_tau/NDData_FDExtrap"); // NDLinearComb NDData_FDExtrap
-  TH1D *hMCCorr = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_tau/FDFluxCorr");
-  TH1D *hNCBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_tau/FDNCBkg");
-  TH1D *hWSBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_tau/FDWSBkg");
-  TH1D *hWLBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_tau/FDWrongLepBkg");
-  //TH1D *hNTBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_tau/FDNuTauCCBkg"); // for nutau, this is not bkg, do not plot
-  TH1D *hInBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_tau/FDIntrinsicBkg"); // nutau/bar from nue/bar
-  TH1D *hPRISMPred = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_tau/NDDataCorr_FDExtrap"); // PRISMPred NDDataCorr_FDExtrap
+  TH1D *hFDOsc = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/DataPred_Total");
+  TH1D *hNDFit = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/NDData_FDExtrap"); // NDLinearComb NDData_FDExtrap
+  TH1D *hMCCorr = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/FDFluxCorr");
+  TH1D *hNCBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/FDNCBkg");
+  TH1D *hWSBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/FDWSBkg");
+  TH1D *hWLBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/FDWrongLepBkg");
+  TH1D *hNTBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/FDNuTauCCBkg"); // for nutau, this is not bkg, do not plot
+  TH1D *hInBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/FDIntrinsicBkg"); // nutau/bar from nue/bar
+  TH1D *hPRISMPred = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/NDDataCorr_FDExtrap"); // PRISMPred NDDataCorr_FDExtrap
 
   double chi2(0);
   for (int bin = 1; bin <= hFDOsc->GetXaxis()->GetNbins(); bin++) {
@@ -68,27 +68,27 @@ void NutauApp_StackedHist() {
   hWLBkg->SetFillStyle(3001);
   hWLBkg->SetFillColor(kMagenta);
 
-  /*hNTBkg->SetLineColor(kCyan);
+  hNTBkg->SetLineColor(kCyan);
   hNTBkg->SetFillStyle(3001);
-  hNTBkg->SetFillColor(kCyan);*/
+  hNTBkg->SetFillColor(kCyan);
 
   Hstack->Add(hMCCorr, "HIST");
   Hstack->Add(hWSBkg, "HIST");
   Hstack->Add(hNCBkg, "HIST");
   Hstack->Add(hInBkg, "HIST");
   Hstack->Add(hWLBkg, "HIST");
-  //Hstack->Add(hNTBkg, "HIST");
+  Hstack->Add(hNTBkg, "HIST");
   Hstack->Add(hNDFit, "HIST");
 
-  leg->AddEntry(hFDOsc, "FD #nu_{#tau} Data", "PL");
+  leg->AddEntry(hFDOsc, "FD #nu_{e} Data", "PL");
   leg->AddEntry(hNDFit, "ND Data Linear Comb.", "F");
   leg->AddEntry(hPRISMPred, "ND Linear Comb. Error", "F");
-  //leg->AddEntry(hNTBkg, "(#nu_{#tau} + #bar{#nu}_{#tau}) CC", "F"); // don't need this
-  leg->AddEntry(hWLBkg, "(#nu_{e, #mu} + #bar{#nu}_{e, #mu}) CC", "F");
+  leg->AddEntry(hNTBkg, "(#nu_{#tau} + #bar{#nu}_{#tau}) CC", "F"); // don't need this
+  leg->AddEntry(hWLBkg, "(#nu_{#mu} + #bar{#nu}_{#mu}) CC", "F");
   leg->AddEntry(hNCBkg, "NC", "F");
-  leg->AddEntry(hInBkg, "Intrinsic (#nu_{#tau} + #bar{#nu}_{#tau}) CC", "F"); // from nue and nuebar
-  leg->AddEntry(hWSBkg, "(#bar{#nu}_{#mu} #rightarrow #bar{#nu}_{#tau}) CC", "F");
-  leg->AddEntry(hMCCorr, "FD #nu_{#tau} CC Corr.", "F");
+  leg->AddEntry(hInBkg, "Intrinsic (#bar{#nu}_{e}) CC", "F"); // from nue and nuebar
+  leg->AddEntry(hWSBkg, "(#bar{#nu}_{#mu} #rightarrow #bar{#nu}_{e}) CC", "F");
+  leg->AddEntry(hMCCorr, "FD #nu_{e} CC Corr.", "F");
 
   //leg->AddEntry((TObject*)0, "#Delta m^{2}_{32} = 2.38 #times 10^{-3} eV^{2}", "");
   //leg->AddEntry((TObject*)0, "sin^{2}(#theta_{23}) = 0.55", "");
@@ -100,10 +100,10 @@ void NutauApp_StackedHist() {
   newC->cd();
   newC->SetTopMargin(0.08);
   Hstack->Draw("HIST");
-  Hstack->SetTitle("168 kt-MW-Years FHC #nu_{#mu} #rightarrow #nu_{#tau}"); // Extrapolated Prediction with Selection
+  Hstack->SetTitle("48 kt-MW-Years FHC #nu_{#mu} #rightarrow #nu_{e}"); // Extrapolated Prediction with Selection
   //Hstack->SetTitle("48 kT-MW-Years Exposure, #Delta m^{2}_{32} = 2.38 #times 10^{-3} eV^{2}, sin^{2}(#theta_{23}) = 0.55");
-  Hstack->SetMaximum(hFDOsc->GetMaximum() + 100);
-  Hstack->SetMinimum(hMCCorr->GetMinimum() - 150);
+  Hstack->SetMaximum(230);
+  Hstack->SetMinimum(-20);
   Hstack->GetXaxis()->SetTitleOffset(1.2);
   Hstack->GetXaxis()->SetTitle("Reco E_{vis.} (GeV)");
   Hstack->GetYaxis()->SetTitle("Pred. Event Rate per 1 GeV");
@@ -114,7 +114,7 @@ void NutauApp_StackedHist() {
   leg->Draw();
   //leg2->Draw();
   // Save canvas
-  newC->SaveAs("/dune/app/users/weishi/NuTauDev/lblpwgtools/CAFAna/PRISM/app/NuTauStacked.png");
+  newC->SaveAs("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/NueAppStacked.pdf");
 
   //***********************************************
   // Get coefficients
@@ -134,7 +134,7 @@ void NutauApp_StackedHist() {
   legW->AddEntry((TObject*)0, "#Delta m^{2}_{32} = 2.38 #times 10^{-3} eV^{2}", "");
   legW->AddEntry((TObject*)0, "sin^{2}(#theta_{23}) = 0.55", "");
 
-  TH1D *W = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_tau/NDFD_matcher/last_match_293kA");
+  TH1D *W = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/NDFD_matcher/last_match_293kA");
   const double maxYaxis = W->GetMaximum() + 7e-6;
   const double minYaxis = W->GetMinimum() - 7e-6;
 
@@ -159,7 +159,7 @@ void NutauApp_StackedHist() {
   AltP->cd();
   AltP->SetLeftMargin(0.01);
 
-  TH1D *altW = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_tau/NDFD_matcher/last_match_280kA");
+  TH1D *altW = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/NDFD_matcher/last_match_280kA");
   altW->SetAxisRange(minYaxis, maxYaxis, "Y");
   altW->GetYaxis()->SetLabelSize(0);
   altW->GetYaxis()->SetTitleSize(0);
@@ -185,7 +185,7 @@ void NutauApp_StackedHist() {
   hNCBkg->SetDirectory(0);
   hWSBkg->SetDirectory(0);
   hWLBkg->SetDirectory(0);
-  //hNTBkg->SetDirectory(0);
+  hNTBkg->SetDirectory(0);
 
   f->Close();
 }

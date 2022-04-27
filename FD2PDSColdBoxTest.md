@@ -1,5 +1,6 @@
 # Analysis of data with CRT on top of NP02
 
+## File info
 Four runs taken with the NP02 PDS (standard arapuca modules from ProtoDUNE-I, no PoF/SoF) using the cosmic ray telescope (CRT) as a trigger. The CRT was moved around:
 
 ```
@@ -31,6 +32,39 @@ setup_fnal_security
 setup sam_web_client
 samweb locate-file np02_pds_run012454_0000_20220228T094438.hdf5
 ```
+
+Here is an [event readout manual (Ch. 11)](https://github.com/weishi10141993/NeutrinoPhysics/blob/main/SSP_Users_Manual_v2.05.pdf) from SiPM signal processor.
+
+Structure:
+```
+GROUP "TriggerRecord000001"
+
+  DATASET "TriggerRecordHeader"
+
+  GROUP "PDS"
+    GROUP "Region001"
+      DATASET "Element01"
+      DATASET "Element02"
+    ...
+```
+
+The hdf5 files can be converted to root files using dedicated scripts,
+```
+# hdf5 files at: /dune/app/users/weishi/pdsnp02crt
+
+# Get the conversion script here:
+# Usage:
+# make        # compile all binary
+# make clean  # remove ALL binaries and objects
+cd /dune/app/users/weishi/hdf2root
+make
+
+# alternative
+cd /dune/app/users/weishi/hdfconvert/hdf2root
+make
+```
+
+## Analysis setup
 
 To analyze the file, do the following setup (adapted from [DUNE DAQ](https://github.com/DUNE-DAQ/minidaqapp/wiki/Instructions-for-setting-up-a-v2.9.0-development-environment)):
 
@@ -80,7 +114,7 @@ cd /dune/app/users/weishi/DAQ/workdir/sourcecode/hdf5libs/test/apps
 python NP02PDSCRT_Reader.py
 ```
 
-It's possible you need to set up a virtual environment to for some needed modules:
+It's possible you need to set up a virtual environment for some needed modules:
 
 ```
 cd the_dir/where/you_have_your/py_script
@@ -98,20 +132,5 @@ pip install h5py
 ```
 
 The analyzer is adapted from PD1 [script](https://internal.dunescience.org/doxygen/SSPRawDecoder__module_8cc_source.html) starting line 275 by M. Man.
-
-Here is a [manual](https://github.com/weishi10141993/NeutrinoPhysics/blob/main/SSP_Users_Manual_v2.05.pdf) on event readout (Ch. 11) from SiPM signal processor.
-
-Structure:
-```
-GROUP "TriggerRecord000001"
-
-  DATASET "TriggerRecordHeader"
-
-  GROUP "PDS"
-    GROUP "Region001"
-      DATASET "Element01"
-      DATASET "Element02"
-    ...
-```
 
 # Compare with cold box test data (Dec 2021)
