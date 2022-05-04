@@ -23,10 +23,17 @@ source build/Linux/CAFAnaEnv.sh
 ## Testing memory usage in fit
 
 ```
+cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app
+
 # Valgrind: https://valgrind.org/docs/manual/ms-manual.html
 # Time unit is set to the number of bytes allocated/deallocated on the heap and stack(s)
 # --time-unit=MB
-valgrind --tool=massif PRISM_4Flavour_dChi2Scan /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/build/Linux/fcl/PRISM/Ssth23_1DScan/PRISMOscScan_Grid_bin1.fcl > fit_memory_debug.log &
+
+valgrind --tool=massif PRISM_4Flavour_dChi2Scan /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/build/Linux/fcl/PRISM/Ssth23_1DScan/PRISMOscScan_Grid_bin1.fcl > fit_heap_memory.log &
+
+# measure all memory
+valgrind --tool=massif --pages-as-heap=yes PRISM_4Flavour_dChi2Scan /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/build/Linux/fcl/PRISM/Ssth23_1DScan/PRISMOscScan_Grid_bin1.fcl > fit_all_memory.log &
+
 ms_print massif.out.<PID> > memory_graph.log
 ```
 

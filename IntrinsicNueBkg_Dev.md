@@ -25,16 +25,6 @@ make install -j 4
 source build/Linux/CAFAnaEnv.sh
 ```
 
-## Code changes
-
-Make changes:
-
-```
-MakePRISMPredInterps.C: add kIsBeamNue to MatchPredGens
-PredictionsForPRISM.cxx: add intrinsic nue to PredictComponent
-PRISMExtrapolator.cxx: add nue spectrum to target flux
-```
-
 Produce a FHC state file,
 
 ```
@@ -42,15 +32,15 @@ Produce a FHC state file,
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/ --no-fakedata-dials -a EVisReco --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi -N -u
 
 # run FD only
-MakePRISMPredInterps -o FDFHCState_IntrinsicNue_xsec_49_to_54.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor prism_default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nue_intrinsic_state_file.txt &
+MakePRISMPredInterps -o FDFHCState_IntrinsicNue_xsec_49_to_54_withxseccorr.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor prism_default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nue_intrinsic_state_file.txt &
 
 # for debug purpose: use ETrue without selection
 MakePRISMPredInterps -o FDFHCState_IntrinsicNue_xsec_49_to_54.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A ETrue --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nue_intrinsic_state_file.txt &
 
 # add ND and FD files
 cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/bin
-hadd_cafana NDFHCState_IntrinsicNue_xsec_49_to_54.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/FHCIntrinsicNue/*.root
-hadd_cafana hadd_FHC_state_IntrinsicNue_xsec_49_to_54.root NDFHCState_IntrinsicNue_xsec_49_to_54.root FDFHCState_IntrinsicNue_xsec_49_to_54.root
+hadd_cafana NDFHCState_IntrinsicNue_xsec_49_to_54_withxseccorr.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/FHCIntrinsicNue/*.root
+hadd_cafana hadd_FHC_state_IntrinsicNue_xsec_49_to_54.root NDFHCState_IntrinsicNue_xsec_49_to_54_withxseccorr.root FDFHCState_IntrinsicNue_xsec_49_to_54_withxseccorr.root
 ```
 
 Make a RHC state file:
