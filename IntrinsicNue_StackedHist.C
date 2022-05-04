@@ -5,30 +5,40 @@
 
 void IntrinsicNue_StackedHist() {
 
-  TFile *f = new TFile("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/PRISMPred_EVisReco_IntrinsicNue.root");
+  // Oscillation channels: FD_nu_numu, FD_nu_nue, FD_nu_nutau, FD_nub_numu, FD_nub_nue, FD_nub_nutau
+  TString channame = "FD_nub_nue";
+  TString dirname = "numu_EvMatch_nom_2";
+
+  TFile *f = new TFile("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/PRISMPred_EVisReco_IntrinsicNue_RHC_App.root");
   TCanvas *newC = new TCanvas("C", "C", 800, 600);
   newC->SetRightMargin(0.07);
   newC->SetLeftMargin(0.12);
   TLegend *leg = new TLegend(0.5,0.45,0.9,0.88);
-  leg->SetHeader("DUNE-PRISM FHC #nu_{e} Appearance");
+  if ( channame == "FD_nu_nue" ) {
+    leg->SetHeader("DUNE-PRISM FHC #nu_{e} Appearance");
+  } else if ( channame == "FD_nub_nue" ) {
+    leg->SetHeader("DUNE-PRISM RHC #bar{#nu}_{e} Appearance");
+  }
   leg->SetBorderSize(0);
 
   THStack *Hstack = new THStack("Hstack", "");
 
-  TH1D *hFDOsc = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/DataPred_Total");
-  TH1D *hNDFit = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/NDData_FDExtrap"); // NDLinearComb NDData_FDExtrap
-  TH1D *hMCCorr = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/FDFluxCorr");
-  TH1D *hNCBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/FDNCBkg");
-  TH1D *hWSBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/FDWSBkg");
-  TH1D *hWLBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/FDWrongLepBkg");
-  TH1D *hNTBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/FDNuTauCCBkg"); // for nutau, this is not bkg, do not plot
-  TH1D *hInBkg = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/FDIntrinsicBkg"); // nutau/bar from nue/bar
-  TH1D *hPRISMPred = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/NDDataCorr_FDExtrap"); // PRISMPred NDDataCorr_FDExtrap
+  TH1D *hFDOsc = (TH1D*)gDirectory->Get( TString::Format("%s/%s/DataPred_Total", dirname.Data(), channame.Data() ) );
+  TH1D *hNDFit = (TH1D*)gDirectory->Get( TString::Format("%s/%s/NDData_FDExtrap", dirname.Data(), channame.Data() ) ); // NDLinearComb NDData_FDExtrap
+  TH1D *hMCCorr = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDFluxCorr", dirname.Data(), channame.Data() ) );
+  TH1D *hNCBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDNCBkg", dirname.Data(), channame.Data() ) );
+  TH1D *hWSBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDWSBkg", dirname.Data(), channame.Data() ) );
+  TH1D *hWLBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDWrongLepBkg", dirname.Data(), channame.Data() ) );
+  TH1D *hNTBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDNuTauCCBkg", dirname.Data(), channame.Data() ) ); // for nutau, this is not bkg, do not plot
+  TH1D *hInBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDIntrinsicBkg", dirname.Data(), channame.Data() ) ); // nutau/bar from nue/bar
+  TH1D *hPRISMPred = (TH1D*)gDirectory->Get( TString::Format("%s/%s/NDDataCorr_FDExtrap", dirname.Data(), channame.Data() ) ); // PRISMPred NDDataCorr_FDExtrap
 
   double chi2(0);
-  for (int bin = 1; bin <= hFDOsc->GetXaxis()->GetNbins(); bin++) {
-    chi2 += pow(hFDOsc->GetBinContent(bin) - hPRISMPred->GetBinContent(bin), 2) /
-	    hPRISMPred->GetBinContent(bin);
+  int totbin(0);
+  totbin = hFDOsc->GetXaxis()->GetNbins() - 1; // exclude overflow bin
+  std::cout << "Tot bins = " << totbin << std::endl;
+  for (int bin = 1; bin <= totbin; bin++) {
+    chi2 += pow(hFDOsc->GetBinContent(bin) - hPRISMPred->GetBinContent(bin), 2) / hPRISMPred->GetBinContent(bin);
   }
   std::cout << "Chi2 = " << chi2 << std::endl;
 
@@ -81,29 +91,41 @@ void IntrinsicNue_StackedHist() {
   Hstack->Add(hNDFit, "HIST");
 
   leg->AddEntry(hFDOsc, "FD #nu_{e} Data", "PL");
-  leg->AddEntry(hNDFit, "ND Data Linear Comb.", "F");
+  if ( channame == "FD_nu_nue" ) { // from nue or nuebar
+    leg->AddEntry(hNDFit, "ND Data LC (signal + intrinsic #nu_{e})", "F");
+  } else if ( channame == "FD_nub_nue" ) {
+    leg->AddEntry(hNDFit, "ND Data LC (signal + intrinsic #bar{#nu}_{e})", "F");
+  }
   leg->AddEntry(hPRISMPred, "ND Linear Comb. Error", "F");
-  leg->AddEntry(hNTBkg, "(#nu_{#tau} + #bar{#nu}_{#tau}) CC", "F"); // don't need this
+  leg->AddEntry(hNTBkg, "(#nu_{#tau} + #bar{#nu}_{#tau}) CC", "F"); // don't need this for nutau
   leg->AddEntry(hWLBkg, "(#nu_{#mu} + #bar{#nu}_{#mu}) CC", "F");
   leg->AddEntry(hNCBkg, "NC", "F");
-  leg->AddEntry(hInBkg, "Intrinsic (#bar{#nu}_{e}) CC", "F"); // from nue and nuebar
-  leg->AddEntry(hWSBkg, "(#bar{#nu}_{#mu} #rightarrow #bar{#nu}_{e}) CC", "F");
-  leg->AddEntry(hMCCorr, "FD #nu_{e} CC Corr.", "F");
-
-  //leg->AddEntry((TObject*)0, "#Delta m^{2}_{32} = 2.38 #times 10^{-3} eV^{2}", "");
-  //leg->AddEntry((TObject*)0, "sin^{2}(#theta_{23}) = 0.55", "");
-
-  //TLegend *leg2 = new TLegend(0.1,0.7,0.5,0.6);
-  //leg2->SetBorderSize(0);
-  //leg2->AddEntry((TObject*)0, "NuFit4.0, #Delta m^{2}_{32} = 2.38 #times 10^{-3} eV^{2}, sin^{2}(#theta_{23}) = 0.55", "");
+  if ( channame == "FD_nu_nue" ) { // from nue or nuebar
+    leg->AddEntry(hInBkg, "Intrinsic #bar{#nu}_{e} CC", "F");
+    leg->AddEntry(hWSBkg, "(#bar{#nu}_{#mu} #rightarrow #bar{#nu}_{e}) CC", "F");
+  } else if ( channame == "FD_nub_nue" ) {
+    leg->AddEntry(hInBkg, "Intrinsic #nu_{e} CC", "F");
+    leg->AddEntry(hWSBkg, "(#nu_{#mu} #rightarrow #nu_{e}) CC", "F");
+  }
+  leg->AddEntry(hMCCorr, "Flux Match Corr.", "F");
 
   newC->cd();
   newC->SetTopMargin(0.08);
   Hstack->Draw("HIST");
-  Hstack->SetTitle("48 kt-MW-Years FHC #nu_{#mu} #rightarrow #nu_{e}"); // Extrapolated Prediction with Selection
-  //Hstack->SetTitle("48 kT-MW-Years Exposure, #Delta m^{2}_{32} = 2.38 #times 10^{-3} eV^{2}, sin^{2}(#theta_{23}) = 0.55");
-  Hstack->SetMaximum(230);
-  Hstack->SetMinimum(-20);
+  if ( channame == "FD_nu_nue" ) {
+    Hstack->SetTitle("48 kt-MW-Years FHC #nu_{#mu} #rightarrow #nu_{e}"); // Extrapolated Prediction with Selection
+    Hstack->SetMaximum(230);
+    Hstack->SetMinimum(-20);
+  } else if ( channame == "FD_nub_nue" ) {
+    Hstack->SetTitle("48 kt-MW-Years RHC #bar{#nu}_{#mu} #rightarrow #bar{#nu}_{e}");
+    Hstack->SetMaximum(57);
+    Hstack->SetMinimum(-6);
+  } else if ( channame == "FD_nu_nutau" ) {
+    Hstack->SetTitle("48 kt-MW-Years FHC #nu_{#mu} #rightarrow #nu_{#tau}");
+    Hstack->SetMaximum(7000);
+    Hstack->SetMinimum(-10);
+  }
+  Hstack->GetXaxis()->SetRangeUser(0, 10); // don't draw overflow bin
   Hstack->GetXaxis()->SetTitleOffset(1.2);
   Hstack->GetXaxis()->SetTitle("Reco E_{vis.} (GeV)");
   Hstack->GetYaxis()->SetTitle("Pred. Event Rate per 1 GeV");
@@ -112,9 +134,15 @@ void IntrinsicNue_StackedHist() {
 
   hFDOsc->Draw("P SAME");
   leg->Draw();
-  //leg2->Draw();
+
   // Save canvas
-  newC->SaveAs("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/NueAppStacked.pdf");
+  if ( channame == "FD_nu_nue" ) {
+    newC->SaveAs("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/NueAppStacked.pdf");
+  } else if ( channame == "FD_nub_nue" ) {
+    newC->SaveAs("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/NueBarAppStacked.pdf");
+  } else if ( channame == "FD_nu_nutau" ) {
+    newC->SaveAs("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/NutauAppStacked.pdf");
+  }
 
   //***********************************************
   // Get coefficients
@@ -134,7 +162,7 @@ void IntrinsicNue_StackedHist() {
   legW->AddEntry((TObject*)0, "#Delta m^{2}_{32} = 2.38 #times 10^{-3} eV^{2}", "");
   legW->AddEntry((TObject*)0, "sin^{2}(#theta_{23}) = 0.55", "");
 
-  TH1D *W = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/NDFD_matcher/last_match_293kA");
+  TH1D *W = (TH1D*)gDirectory->Get( TString::Format("%s/%s/NDFD_matcher/last_match_293kA", dirname.Data(), channame.Data() ) );
   const double maxYaxis = W->GetMaximum() + 7e-6;
   const double minYaxis = W->GetMinimum() - 7e-6;
 
@@ -154,12 +182,10 @@ void IntrinsicNue_StackedHist() {
 
   W->Draw("HIST");
 
-  //legW->Draw();
-
   AltP->cd();
   AltP->SetLeftMargin(0.01);
 
-  TH1D *altW = (TH1D*)gDirectory->Get("numu_EvMatch_nom/FD_nu_nue/NDFD_matcher/last_match_280kA");
+  TH1D *altW = (TH1D*)gDirectory->Get( TString::Format("%s/%s/NDFD_matcher/last_match_280kA", dirname.Data(), channame.Data() ) );
   altW->SetAxisRange(minYaxis, maxYaxis, "Y");
   altW->GetYaxis()->SetLabelSize(0);
   altW->GetYaxis()->SetTitleSize(0);

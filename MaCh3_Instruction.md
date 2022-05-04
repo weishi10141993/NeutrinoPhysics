@@ -103,24 +103,63 @@ Then run the executables.
 ./AtmJointFit_Bin/CreateRCTables configs/AtmosphericConfigs/AtmConfig.cfg  # Generate new RC tables with updated evt topology
 ./AtmJointFit_Bin/MakeAtmDetHists configs/AtmosphericConfigs/AtmConfig.cfg
 #./AtmJointFit_Bin/PlotAtmByMode configs/AtmosphericConfigs/AtmConfig.cfg 27
+
+# Run the joint fit:
+./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
 ```
 
-To run MCMC diagnosis, first produce MCMC chain, need to run via slurm job on SeaWulf. It requires 19Gb of RAM and the step time is O(1s/step) so will require 24+ hours of running.
+## Running MaCh3 on grid
+
+The first joint fit requires 19Gb/chain of RAM and the step time is O(1s/step). And about 2.5Gb/chain of GPU memory, regardless of systematics fixed or not (but do matter if you remove systematics).
+
+To run on GPU: uncomment setup.sh #export CUDAPATH=${CUDA_HOME} and recompile, once it’s compiled in GPU, it can run on GPU queue
+
+### SeaWulf
+
+Send slurm jobs on SeaWulf. Example script ```SlurmRunMCMCChain0-4Job1.sh``` running on CPU (8 cores per chain, 5 chains on 1 node):
+It doesn't work to request 2 nodes and run 10 chains. So better to put 5 chains into each job, each on a node. Max number of nodes you can request: https://it.stonybrook.edu/help/kb/seawulf-queues
+The following 5 chains run time 1-11:41:38
+```
+#!/bin/bash
+#
+#SBATCH --job-name=MaCh3Fit
+#SBATCH --output=MaCh3Fit.log
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=wei.shi.1@stonybrook.edu
+#SBATCH --nodes=1
+#SBATCH --time=168:00:00
+#SBATCH -p extended-40core
+
+JOBNUM=1
+
+cd /gpfs/projects/McGrewGroup/weishi/MaCh3/MaCh3
+
+export OMP_NUM_THREADS=8
+
+for CHAINNUM in 0 1 2 3 4
+do
+  ./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/job${JOBNUM}/AtmConfig_ch${CHAINNUM}.cfg > /gpfs/scratch/weishi2/job${JOBNUM}/ch${CHAINNUM}.out &
+  sleep 5
+done
+wait
+```
 
 ```
-# Run the joint fit: ./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
 # Recommend as much resource as possible: spline evaluation dominate resource and can't be done by GPU
 sbatch SlurmRunMCMCChain0-4Job1.sh        
 sbatch SlurmRunMCMCChain5-9Job2.sh
 
 # if want to submit separate 10 jobs
-chmod a+x SlurmRunMCMC1ChainPerJob_10jobs.sh
-./SlurmRunMCMC1ChainPerJob_10jobs.sh
 # Check job status: squeue --user=weishi2
 # Job output
+```
 
-# Can run diagnosis while the chain is still running
+### Aspen/Birch/Cedar/Fir
 
+### Chain diagnosis
+
+You can run diagnosis while the chain is still running
+```
 # Diagnose
 ./AtmJointFit_Bin/DiagMCMC ./output/MaCh3-Atmospherics-MCMC.root
 
@@ -137,6 +176,8 @@ curl -u T2KSKReader:qJzSN-L3Nic-xNP75-YmS4m-Ak58P https://nextcloud.nms.kcl.ac.u
 
 curl -u ASGReader:mkND3-2k6PP-dwyM2-8coi2-rnsRR https://nextcloud.nms.kcl.ac.uk/remote.php/dav/files/ASGReader/ASG/asg_backup/asg/asg2019oa/ND280/Splines/ -o .
 ```
+### Make plots from chain
+
 
 ## Spline production
 

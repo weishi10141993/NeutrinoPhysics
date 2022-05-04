@@ -39,18 +39,18 @@ Produce a FHC state file,
 
 ```
 # run ND only
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/ --no-fakedata-dials -a EVisReco --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi -N -u  
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/ --no-fakedata-dials -a EVisReco --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi -N -u
 
 # run FD only
-MakePRISMPredInterps -o FDFHCState_IntrinsicNue_xsec_49_to_54.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nue_intrinsic_state_file.txt &
+MakePRISMPredInterps -o FDFHCState_IntrinsicNue_xsec_49_to_54.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor prism_default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nue_intrinsic_state_file.txt &
 
 # for debug purpose: use ETrue without selection
 MakePRISMPredInterps -o FDFHCState_IntrinsicNue_xsec_49_to_54.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A ETrue --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nue_intrinsic_state_file.txt &
 
 # add ND and FD files
 cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/bin
-hadd_cafana NDFHCState_IntrinsicNue_xsec_49_to_54.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/*.root
-hadd_cafana hadd_state_IntrinsicNue_file_xsec_49_to_54.root NDFHCState_IntrinsicNue_xsec_49_to_54.root FDFHCState_IntrinsicNue_xsec_49_to_54.root
+hadd_cafana NDFHCState_IntrinsicNue_xsec_49_to_54.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/FHCIntrinsicNue/*.root
+hadd_cafana hadd_FHC_state_IntrinsicNue_xsec_49_to_54.root NDFHCState_IntrinsicNue_xsec_49_to_54.root FDFHCState_IntrinsicNue_xsec_49_to_54.root
 ```
 
 Make a RHC state file:
@@ -67,26 +67,23 @@ Make a RHC state file:
 # run ND off-axis only
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC_Attempt2 --no-fakedata-dials -a EVisReco --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi -N -b
 
-# interactively
-MakePRISMPredInterps -o NDOnAxisRHCState_IntrinsicNue_xsec_49_to_54.root -N-nub "/pnfs/dune/persistent/users/weishi/NDCAF/OnAxis/*.root" --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nue_intrinsic_state_file_nd_on.txt &
-
-MakePRISMPredInterps -o NDOffAxisRHCState_IntrinsicNue_xsec_49_to_54.root -N-nub "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC_Attempt2/*.root" --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nue_intrinsic_state_file_nd_off.txt &
-
 # run FD only
-MakePRISMPredInterps -o FDRHCState_IntrinsicNue_xsec_49_to_54.root -F-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nonswap.root -Fe-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nueswap.root -Ft-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nue_intrinsic_state_file.txt &
+MakePRISMPredInterps -o FDRHCState_IntrinsicNue_xsec_49_to_54.root -F-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nonswap.root -Fe-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nueswap.root -Ft-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_tauswap.root --bin-descriptor prism_default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nue_intrinsic_state_file.txt &
 
 # add files
 hadd_cafana NDOnAxisRHCState_IntrinsicNue_xsec_49_to_54.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/RHCIntrinsicNue/NDOnAxis/*.root
 hadd_cafana NDOffAxisRHCState_IntrinsicNue_xsec_49_to_54.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/RHCIntrinsicNue/NDOffAxis/*.root
+hadd_cafana hadd_rhc_state_intrinsic_nue_file_xsec_49_to_54.root NDOnAxisRHCState_IntrinsicNue_xsec_49_to_54.root NDOffAxisRHCState_IntrinsicNue_xsec_49_to_54.root FDRHCState_IntrinsicNue_xsec_49_to_54.root
 ```
 
-Verify state file contain non-empty plot in ```FDMatchInterp_ETrue_numu_nu/pred_nom/extrap/nue_surv``` folder.
-Verify state file contain non-empty plot in ```FDMatchInterp_ETrue_numu_nu/pred_nom/extrap/nue_surv_anti``` folder.
+Verify FHC state file contain non-empty plot in ```FDMatchInterp_ETrue_numu_nu/pred_nom/extrap/nue_surv``` folder.
+Verify RHC state file contain non-empty plot in ```FDMatchInterp_ETrue_numu_nub/pred_nom/extrap/nue_surv_anti``` folder.
 
 Produce plots,
 
 ```
 cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app
+# Change match_intrinsic_nue to true
 PRISMPrediction ../../fcl/PRISM/NuisanceSyst_Scan/Basic_PRISMPred_PlaceHolder.fcl
 ```
 

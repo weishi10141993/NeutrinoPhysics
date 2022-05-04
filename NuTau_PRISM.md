@@ -1,6 +1,22 @@
 # Instruction for DUNE-PRISM analysis setup from DUNE FNAL machines (dunegpvm*)
 
-## NuTau Appearance Development
+## NuTau Appearance Development [work on nnhome machine]
+
+[First time only]
+
+```
+ssh -X wshi@nnhome.physics.sunysb.edu
+mkdir nutau
+cd /home/wshi/nutau
+
+# check nutau code is committed
+# the idea is to commit to the main YOLO branch and delete the nuTau_dev branch
+
+git clone https://github.com/weishi10141993/lblpwgtools.git -b Catastrophic_Yolo_PRISM_Merge
+
+```
+
+## NuTau Appearance Development [work on FNAL machine]
 
 [First time only]
 
