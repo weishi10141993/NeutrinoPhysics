@@ -5,15 +5,160 @@
 [First time only]
 
 ```
-ssh -X wshi@nnhome.physics.sunysb.edu
+ssh -X <user_name>@nnhome.physics.sunysb.edu
+# Request an interactive node for compiling !!! NEVER COMPILE ON nnhome !!!
+srun --pty bash -i
+
 mkdir nutau
 cd /home/wshi/nutau
 
-# check nutau code is committed
-# the idea is to commit to the main YOLO branch and delete the nuTau_dev branch
+# Go to your local laptop
+git clone https://github.com/weishi10141993/lblpwgtools.git -b nuTau_dev     # the idea is to merge this branch to the YOLO branch
+cd lblpwgtools
 
-git clone https://github.com/weishi10141993/lblpwgtools.git -b Catastrophic_Yolo_PRISM_Merge
+# Sync local code changes to remote nnhome machine
+rsync -e ssh -avSz  ./* <user_name>@nnhome.physics.sunysb.edu:/home/<user_name>/nutau/lblpwgtools
 
+# Go back to nnhome
+cd /home/wshi/nutau/lblpwgtools/CAFAna
+
+# The build below requires the following softwares installed on nnhome
+# Make sure you include these lines in ~/.profile:
+################################################
+# set ROOT PATH
+#if [ -d "$HOME/ROOT/root_install/bin" ]; then
+#    PATH="$HOME/ROOT/root_install/bin:$PATH"
+#fi
+# OR these
+ROOTSYS="/home/wshi/ROOT/root_install"
+PATH=$PATH:$ROOTSYS/bin
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib
+# OR change order
+#ROOTSYS="/home/wshi/ROOT/root_install"
+#PATH=$ROOTSYS/bin:$PATH
+#LD_LIBRARY_PATH=$ROOTSYS/lib
+# OR
+#source /home/wshi/ROOT/root_install/bin/thisroot.sh
+
+# Homebrew
+eval "$(/home/wshi/.linuxbrew/bin/brew shellenv)"
+################################################
+
+################################################
+# Before compile:
+#   1) NEED to add: -Wl,-rpath,${ROOT_LIB}
+#      to LDFLAGS_BINS in OscLib/Makefile:L16
+# This is already done in weishi10141993/OscLib.git
+################################################
+
+# Build the code    
+# Do not use '-u' option as it relies on cvmfs which is not mounted on nnhome.
+./standalone_configure_and_build.sh -r --db
+
+# set CAFAna environment
+source build/Linux/CAFAnaEnv.sh
+
+# To recompile code changes
+cd build
+make install -j 4
+
+# To recompile from scratch (rarely used)
+./standalone_configure_and_build.sh -r --db -f
+```
+
+## File locations
+
+The input CAF files will be copied to ```/storage/shared```. All large file output should be stored in the same area instead of home area!
+
+### Install ROOT6 on nnhome
+
+ROOT6 is required for the code to compile. ROOT6 has been installed at my home area. The following instruction is for future reference only.
+
+Instruction is adapted from: https://root.cern/install/build_from_source/
+
+```
+[First time only]
+
+cd /home/wshi/
+mkdir ROOT
+cd ROOT
+
+git clone https://github.com/root-project/root.git
+cd root
+git checkout -b v6-22-08 v6-22-08
+cd ..
+
+mkdir root_build root_install && cd root_build
+
+# Build ROOT with c++17 as later OscLib uses c++17
+# ROOT needs to be configured and built with the same C++ standard
+# as the programs that will make use of it.
+# We also need minuit2
+cmake -DCMAKE_CXX_STANDARD=17 -Dminuit2=ON -DCMAKE_INSTALL_PREFIX=../root_install ../root
+# Default: cmake -DCMAKE_INSTALL_PREFIX=../root_install ../root    # CMake will check your environment before build
+
+# Speedup the build with:
+cmake --build . -- install -j4
+# 4 is the number of available cores. Use 'lscpu' to find out how many cores and check entry 'Core(s) per socket'
+# there are some warnings of deprecated functions in python3.9: /usr/include/python3.9, but the build is successful
+# original command: cmake --build . --target install                        # Build
+
+# v6-22-08
+source /home/wshi/ROOT/root_install/bin/thisroot.sh
+
+# Check ROOT C++ compiler:
+root-config --features
+# This is the output:
+#   cxx17 asimage builtin_afterimage builtin_clang builtin_ftgl builtin_glew builtin_llvm builtin_lz4 builtin_tbb builtin_vdt builtin_xrootd builtin_xxhash builtin_zstd clad dataframe davix exceptions fftw3 gdml http imt mathmore mlp minuit2 opengl pyroot roofit webgui root7 runtime_cxxmodules shared ssl tmva tmva-cpu tmva-pymva spectrum vdt x11 xml xrootd
+# So ROOT is compiled for C++17
+
+# nnhome has C++ compiler version: g++ (Debian 10.2.1-6) 10.2.1 20210110
+
+# if want to remove root
+rm -rf /home/wshi/ROOT/root_install
+```
+
+### Install Homebrew on nnhome
+
+[Homebrew](https://brew.sh/) is required for the code to compile. It has been installed at my home area. The following instruction is for future reference only.
+
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# After done, add Homebrew to your ~/.bashrc or ~/.profile:
+eval "$(/home/wshi/.linuxbrew/bin/brew shellenv)"
+```
+
+It installs at ```/home/wshi/.linuxbrew```.
+
+### Install gsl-config on nnhome
+
+This turns out not necessary anymore as trees on nnhome has ```gsl``` installed already.
+
+The following is from this [tutorial](https://coral.ise.lehigh.edu/jild13/2016/07/11/hello/).
+
+```
+wget ftp://ftp.gnu.org/gnu/gsl/gsl-2.7.tar.gz
+tar -zxvf gsl-2.7.tar.gz
+cd gsl-2.7
+
+# create install dir
+mkdir /home/wshi/gsl
+./configure --prefix=/home/wshi/gsl
+# If there are no errors, compile the library.
+make
+# check and test the library before actually installing it.
+make check
+# install the library
+make install
+
+# source it in ~/.bashrc
+source /home/wshi/gsl/bin/gsl-config
+# Or try:
+export GSL_CONFIG=/home/wshi/gsl/bin/gsl-config
+export PATH=/home/wshi/gsl/bin:$PATH
+# the above will probably lock you outside the nnhome
+# do this to avoid running .bashrc or .profile:
+# ssh -t user@host bash --noprofile --norc
 ```
 
 ## NuTau Appearance Development [work on FNAL machine]

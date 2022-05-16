@@ -9,7 +9,7 @@ void IntrinsicNue_StackedHist() {
   TString channame = "FD_nub_nue";
   TString dirname = "numu_EvMatch_nom_2";
 
-  TFile *f = new TFile("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/PRISMPred_EVisReco_IntrinsicNue_RHC_App.root");
+  TFile *f = new TFile("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/PRISMPred_EVisReco_IntrinsicNue_stat_only_withxseccorr_flagoff_RHC_App.root");
   TCanvas *newC = new TCanvas("C", "C", 800, 600);
   newC->SetRightMargin(0.07);
   newC->SetLeftMargin(0.12);
