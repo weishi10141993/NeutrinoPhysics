@@ -25,11 +25,48 @@ make install -j 4
 source build/Linux/CAFAnaEnv.sh
 ```
 
-```
-#
-# Stat only
-#
+Produce plots,
 
+```
+cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app
+# Change match_intrinsic_nue to true
+PRISMPrediction ../../fcl/PRISM/NuisanceSyst_Scan/Basic_PRISMPred_PlaceHolder.fcl
+```
+
+Plot stacked histogram,
+
+```
+cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app
+# Get the plotting script [One time only]
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/IntrinsicNue_StackedHist.C
+# Do not include intrinsic nue MC in stacked histogram
+root -l -b -q IntrinsicNue_StackedHist.C
+```
+
+Produce a fit,
+```
+cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
+./FarmCAFPRISMNodeScript.sh -c Dmsq32ScanCommands.cmd # this includes both dmsq32, ssth23, and dcp
+
+# To compare fit Chi2
+root -l -b -q OverlaydChi2IntrinsicNue.C
+```
+
+## List of state files
+
+Stat only:
+```
+root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNueStatOnly/hadd_state_IntrinsicNue_stat_only_withxseccorr.root
+```
+
+Flux+xsec:
+```
+root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/
+```
+
+## Stat only state file production
+
+```
 # For ND
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/ --no-fakedata-dials -a EVisReco --syst-descriptor "nosyst" -N -u
 
@@ -75,34 +112,7 @@ hadd_cafana hadd_RHC_state_IntrinsicNue_stat_only_withxseccorr.root NDOnAxisRHCS
 Verify FHC state file contains non-empty plot in ```FDMatchInterp_ETrue_numu_nu/pred_nom/extrap/nue_surv``` folder.
 Verify RHC state file contains non-empty plot in ```FDMatchInterp_ETrue_numu_nub/pred_nom/extrap/nue_surv_anti``` folder.
 
-Produce plots,
-
-```
-cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app
-# Change match_intrinsic_nue to true
-PRISMPrediction ../../fcl/PRISM/NuisanceSyst_Scan/Basic_PRISMPred_PlaceHolder.fcl
-```
-
-Plot stacked histogram,
-
-```
-cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app
-# Get the plotting script [One time only]
-wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/IntrinsicNue_StackedHist.C
-# Do not include intrinsic nue MC in stacked histogram
-root -l -b -q IntrinsicNue_StackedHist.C
-```
-
-Produce a fit,
-```
-cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
-./FarmCAFPRISMNodeScript.sh -c Dmsq32ScanCommands.cmd # this includes both dmsq32, ssth23, and dcp
-
-# To compare fit Chi2
-root -l -b -q OverlaydChi2IntrinsicNue.C
-```
-
-## State file production with all systs on FermiGrid
+## State file production with flux+xsec systs on FermiGrid
 
 Below is an example of submit a state file production job to FermiGrid with a no detector systematic (i.e., xsec + flux systematics).
 
@@ -123,7 +133,44 @@ cd PRISM/scripts/FermiGridPRISMScripts/
 
 Hadd the output state files:
 ```
-hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/*.root
+#######
+# NDFHC
+#######
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part1.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part1/*.root
+
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part2.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part2/*.root
+
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part3.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part3/*.root
+
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part4.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part4/*.root
+
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part5.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part5/*.root
+
+#############
+# NDRHCOnAxis
+#############
+hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part1.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part1/*.root
+
+hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part2.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part2/*.root
+
+hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part3.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part3/*.root
+
+##############
+# NDRHCOffAxis
+##############
+#mach 14
+hadd_cafana NDRHCOffAxisState_IntrinsicNue_nodet_withxseccorr_part1A.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOffAxis/part1/trancheA/*.root
+#mach 13
+hadd_cafana NDRHCOffAxisState_IntrinsicNue_nodet_withxseccorr_part1B.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOffAxis/part1/trancheB/*.root
+
+#part2
+hadd_cafana NDRHCOffAxisState_IntrinsicNue_nodet_withxseccorr_part2.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOffAxis/part2/*.root
+
+#FDFHC
+FDFHCState_IntrinsicNue_nodet_withxseccorr.root
+
+#FDRHC
+FDRHCState_IntrinsicNue_nodet_withxseccorr.root
 ```
 
 ## Testing memory usage in fit
