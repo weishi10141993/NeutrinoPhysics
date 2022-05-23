@@ -6,8 +6,9 @@
 
 ```
 ssh -X <user_name>@nnhome.physics.sunysb.edu
-# Request an interactive node for compiling !!! NEVER COMPILE ON nnhome !!!
+# Request an interactive terminal for compiling !!! NEVER COMPILE ON nnhome login node !!!
 srun --pty bash -i
+# Only use srun if you are actually interacting with a program, and limit yourself to a single srun job
 
 mkdir nutau
 cd /home/<usr name>/nutau
@@ -28,13 +29,7 @@ cd /home/<usr name>/nutau/lblpwgtools/CAFAna
 # ROOT v6-22-08
 ROOTSYS="/home/wshi/ROOT/root_install"
 PATH=$PATH:$ROOTSYS/bin
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib
-# OR change order
-#ROOTSYS="/home/wshi/ROOT/root_install"
-#PATH=$PATH:$ROOTSYS/bin
-#LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
-# OR source the root
-# source /home/wshi/ROOT/root_install/bin/thisroot.sh
+LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 
 # Homebrew
 eval "$(/home/wshi/.linuxbrew/bin/brew shellenv)"
@@ -46,15 +41,25 @@ eval "$(/home/wshi/.linuxbrew/bin/brew shellenv)"
 
 # set CAFAna environment
 source build/Linux/CAFAnaEnv.sh
+```
 
-# To test code changes: first sync changes to remote
+If you modified code locally, first sync local changes to remote:
+
+```
 rsync -e ssh -avSz  ./* <user_name>@nnhome.physics.sunysb.edu:/home/<user_name>/nutau/lblpwgtools
-# then rebuild
-cd build
+```
+
+then rebuild:
+
+```
+cd lblpwgtools/CAFAna/build
 make install -j 4
 source Linux/CAFAnaEnv.sh
+```
 
-# To recompile from scratch (rarely used)
+To recompile from scratch (rarely used):
+
+```
 ./standalone_configure_and_build.sh -r --db -f
 ```
 
@@ -84,24 +89,37 @@ root -l -b -q NutauApp_StackedHist.C
 Produce a fit,
 
 ```
+!!! NEVER DO FIT ON nnhome login node !!!
 cd /home/<user name>/nutau/lblpwgtools/CAFAna/PRISM/app
-PRISM_4Flavour_dChi2Scan /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/fcl/PRISM/PRISMOscScan_Grid.fcl
+PRISM_4Flavour_dChi2Scan ../../fcl/PRISM/PRISMOscScan_Grid.fcl
+# stat-only fit of both dmsq32 and ssth23 takes 2 hrs
 ```
 
-### Use slurm on nnhome
+### Run batch job on nnhome
 
+Use Slurm. For example, to run the above fit,
+
+```
+ssh -X <user_name>@nnhome.physics.sunysb.edu
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/Slurm_nnhome.sh
+sbatch Slurm_nnhome.sh
+```
+
+To check the job status:```squeue --user=<user_name>```.
+
+To kill a job: ```scancel <jobid>```.
 
 ### File locations
 
-The input CAF files will be copied to ```/storage/shared```. All large file output should be stored in the same area instead of home area!
+All large file output should be stored in the ```/storage/shared``` area instead of home area!
 
-The input state files will be copied to ```/storage/shared```. All large file output should be stored in the same area instead of home area!
+The input state files are at ```/storage/shared/wshi/StateFiles/FHCNuTau```.
+
+The input CAF files will be copied to ```/storage/shared/wshi/CAFs``` if needed.
 
 #### Make a new state file
 
 You need to make a new state file for example when you want to change binning, or event selection. This is usually done via grid jobs on FermiGrid. If you are on nnhome, either you can run interactively or submit a slurm job.
-
-
 
 
 ### Reference
@@ -110,7 +128,7 @@ You need to make a new state file for example when you want to change binning, o
 
 ROOT6 is required for the code to compile. ROOT6 has been installed at my home area. The following instruction is for future reference only.
 
-Instruction is adapted from: https://root.cern/install/build_from_source/
+Instruction is adapted from CERN [ROOT](https://root.cern/install/build_from_source/).
 
 ```
 [First time only]
