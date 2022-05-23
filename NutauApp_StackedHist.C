@@ -5,7 +5,7 @@
 
 void NutauApp_StackedHist() {
 
-  TFile *f = new TFile("/dune/app/users/weishi/NuTauDev/lblpwgtools/CAFAna/PRISM/app/PRISMPred_EVisReco_nuTauApp.root");
+  TFile *f = new TFile("/home/wshi/nutau/lblpwgtools/CAFAna/PRISM/app/PRISMPred_EVisReco_nuTauApp.root");
   TCanvas *newC = new TCanvas("C", "C", 800, 600);
   newC->SetRightMargin(0.07);
   newC->SetLeftMargin(0.12);
@@ -114,7 +114,7 @@ void NutauApp_StackedHist() {
   leg->Draw();
   //leg2->Draw();
   // Save canvas
-  newC->SaveAs("/dune/app/users/weishi/NuTauDev/lblpwgtools/CAFAna/PRISM/app/NuTauStacked.png");
+  newC->SaveAs("/home/wshi/nutau/lblpwgtools/CAFAna/PRISM/app/NuTauStacked.png");
 
   //***********************************************
   // Get coefficients

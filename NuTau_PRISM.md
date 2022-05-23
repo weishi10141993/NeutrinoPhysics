@@ -1,6 +1,6 @@
-# Instruction for DUNE-PRISM analysis setup from DUNE FNAL machines (dunegpvm*)
+# Instruction for DUNE-PRISM analysis
 
-## NuTau Appearance Development [work on nnhome machine]
+## NuTau Appearance Development [on nnhome machine]
 
 [First time only]
 
@@ -29,6 +29,12 @@ cd /home/<usr name>/nutau/lblpwgtools/CAFAna
 ROOTSYS="/home/wshi/ROOT/root_install"
 PATH=$PATH:$ROOTSYS/bin
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROOTSYS/lib
+# OR change order
+#ROOTSYS="/home/wshi/ROOT/root_install"
+#PATH=$PATH:$ROOTSYS/bin
+#LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
+# OR source the root
+# source /home/wshi/ROOT/root_install/bin/thisroot.sh
 
 # Homebrew
 eval "$(/home/wshi/.linuxbrew/bin/brew shellenv)"
@@ -41,70 +47,66 @@ eval "$(/home/wshi/.linuxbrew/bin/brew shellenv)"
 # set CAFAna environment
 source build/Linux/CAFAnaEnv.sh
 
-# To recompile code changes
+# To test code changes: first sync changes to remote
+rsync -e ssh -avSz  ./* <user_name>@nnhome.physics.sunysb.edu:/home/<user_name>/nutau/lblpwgtools
+# then rebuild
 cd build
 make install -j 4
+source Linux/CAFAnaEnv.sh
 
 # To recompile from scratch (rarely used)
 ./standalone_configure_and_build.sh -r --db -f
 ```
 
-Make a FHC state file:
+### Make plots interactively at terminal
+
+ROOT libs need to be found at runtime,
 ```
-# run ND only
-# AXISBLOBNAME is set to uniform_coarse for finer bins
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/ --no-fakedata-dials -a EVisReco --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi -N -u  
-
-# run FD only
-MakePRISMPredInterps -o FDFHCStateNuTau_xsec_49_to_54_uniform_coarse_binning.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor uniform_coarse --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nutau_state_file.txt &
-
-# add ND and FD files
-cd /dune/app/users/weishi/NuTauDev/lblpwgtools/CAFAna/bin
-hadd_cafana NDFHCStateNuTau_xsec_49_to_54_uniform_coarse_binning.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/*.root
-hadd_cafana hadd_state_file_xsec_49_to_54_uniform_coarse_binning.root NDFHCStateNuTau_xsec_49_to_54_uniform_coarse_binning.root FDFHCStateNuTau_xsec_49_to_54_uniform_coarse_binning.root
-
-# FHC Only (ND+FD together, interactively, longer time)
-MakePRISMPredInterps -o hadd_state_file_xsec_49_to_54.root -N-nu "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/*.root" -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nutau_state_file.txt &
-```
-
-Make a RHC state file:
-```
-# with all
-# for RHC ND, need to run twice with on and off axis, then hadd_cafana
-# RHC on axis: /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC/*_0m*.root
-# RHC off axis: /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC_Attempt2
-MakePRISMPredInterps -o hadd_state_file_xsec_49_to_54.root -N-nu "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/*.root" -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root -N-nub "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC/*.root" -F-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nonswap.root -Fe-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nueswap.root -Ft-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nutau_state_file.txt &
+source /home/wshi/ROOT/root_install/bin/thisroot.sh    
 ```
 
 Produce plots,
 
 ```
-cd /dune/app/users/weishi/NuTauDev/lblpwgtools/CAFAna/PRISM/app
+cd /home/<user name>/nutau/lblpwgtools/CAFAna/PRISM/app
 PRISMPrediction ../../fcl/PRISM/NuisanceSyst_Scan/Basic_PRISMPred_PlaceHolder.fcl
 ```
 
 Plot stacked histogram,
 
 ```
-cd /dune/app/users/weishi/NuTauDev/lblpwgtools/CAFAna/PRISM/scripts
+cd /home/<user name>/nutau/lblpwgtools/CAFAna/PRISM/scripts
 # Get the plotting script [One time only]
 wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/NutauApp_StackedHist.C
 root -l -b -q NutauApp_StackedHist.C
 ```
 
 Produce a fit,
+
 ```
-cd /dune/app/users/weishi/NuTauDev/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
-./FarmCAFPRISMNodeScript.sh -c Dmsq32ScanCommands.cmd # this includes both dmsq32 and ssth23
+cd /home/<user name>/nutau/lblpwgtools/CAFAna/PRISM/app
+PRISM_4Flavour_dChi2Scan /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/fcl/PRISM/PRISMOscScan_Grid.fcl
 ```
 
-## File locations
+### Use slurm on nnhome
+
+
+### File locations
 
 The input CAF files will be copied to ```/storage/shared```. All large file output should be stored in the same area instead of home area!
 
-## Reference
+The input state files will be copied to ```/storage/shared```. All large file output should be stored in the same area instead of home area!
 
-### Install ROOT6 on nnhome
+#### Make a new state file
+
+You need to make a new state file for example when you want to change binning, or event selection. This is usually done via grid jobs on FermiGrid. If you are on nnhome, either you can run interactively or submit a slurm job.
+
+
+
+
+### Reference
+
+#### Install ROOT6 on nnhome
 
 ROOT6 is required for the code to compile. ROOT6 has been installed at my home area. The following instruction is for future reference only.
 
@@ -152,7 +154,7 @@ root-config --features
 rm -rf /home/wshi/ROOT/root_install
 ```
 
-### Install Homebrew on nnhome
+#### Install Homebrew on nnhome
 
 [Homebrew](https://brew.sh/) is required for the code to compile. It has been installed at my home area. The following instruction is for future reference only.
 
@@ -164,7 +166,7 @@ eval "$(/home/wshi/.linuxbrew/bin/brew shellenv)"
 
 It installs at ```/home/wshi/.linuxbrew```.
 
-### Install gsl-config on nnhome
+#### Install gsl-config on nnhome
 
 This turns out not necessary anymore as trees on nnhome has ```gsl``` installed already.
 
@@ -210,7 +212,7 @@ Other than installing above softwares, the build on nnhome also needs to link to
 ################################################
 ```
 
-## NuTau Appearance Development [work on FNAL machine]
+## NuTau Appearance Development [on FNAL machine]
 
 [First time only]
 
@@ -253,4 +255,55 @@ GetFDUnOscWeightedSigPrediction_right_sign_nue  PRISM/PredictionPRISM.cxx
 FDNutauSwapAppOscPrediction                     PRISM/PredictionPRISM.cxx
 LoadPRISMState                                  PRISM/PRISMUtils.cxx
 fSpectrumNutauSwap                              Prediction/PredictionsForPRISM
+```
+
+Make a FHC state file:
+
+```
+# run ND only
+# AXISBLOBNAME is set to uniform_coarse for finer bins
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/ --no-fakedata-dials -a EVisReco --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi -N -u  
+
+# run FD only
+MakePRISMPredInterps -o FDFHCStateNuTau_xsec_49_to_54_uniform_coarse_binning.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor uniform_coarse --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nutau_state_file.txt &
+
+# add ND and FD files
+cd /dune/app/users/weishi/NuTauDev/lblpwgtools/CAFAna/bin
+hadd_cafana NDFHCStateNuTau_xsec_49_to_54_uniform_coarse_binning.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/*.root
+hadd_cafana hadd_state_file_xsec_49_to_54_uniform_coarse_binning.root NDFHCStateNuTau_xsec_49_to_54_uniform_coarse_binning.root FDFHCStateNuTau_xsec_49_to_54_uniform_coarse_binning.root
+
+# FHC Only (ND+FD together, interactively, longer time)
+MakePRISMPredInterps -o hadd_state_file_xsec_49_to_54.root -N-nu "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/*.root" -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nutau_state_file.txt &
+```
+
+Make a RHC state file:
+
+```
+# with all
+# for RHC ND, need to run twice with on and off axis, then hadd_cafana
+# RHC on axis: /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC/*_0m*.root
+# RHC off axis: /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC_Attempt2
+MakePRISMPredInterps -o hadd_state_file_xsec_49_to_54.root -N-nu "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/*.root" -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root -N-nub "/pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC/*.root" -F-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nonswap.root -Fe-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_nueswap.root -Ft-nub /dune/data/users/chasnip/OffAxisCAFs/FD_RHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor list:NR_nubar_n_NC_1Pi:NR_nubar_n_NC_2Pi:NR_nubar_n_NC_3Pi:NR_nubar_p_NC_1Pi:NR_nubar_p_NC_2Pi:NR_nubar_p_NC_3Pi > nutau_state_file.txt &
+```
+
+Produce plots,
+
+```
+cd /dune/app/users/weishi/NuTauDev/lblpwgtools/CAFAna/PRISM/app
+PRISMPrediction ../../fcl/PRISM/NuisanceSyst_Scan/Basic_PRISMPred_PlaceHolder.fcl
+```
+
+Plot stacked histogram,
+
+```
+cd /dune/app/users/weishi/NuTauDev/lblpwgtools/CAFAna/PRISM/scripts
+# Get the plotting script [One time only]
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/NutauApp_StackedHist.C
+root -l -b -q NutauApp_StackedHist.C
+```
+
+Produce a fit,
+```
+cd /dune/app/users/weishi/NuTauDev/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
+./FarmCAFPRISMNodeScript.sh -c Dmsq32ScanCommands.cmd # this includes both dmsq32 and ssth23
 ```
