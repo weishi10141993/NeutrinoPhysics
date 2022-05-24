@@ -132,49 +132,51 @@ cd PRISM/scripts/FermiGridPRISMScripts/
 ```
 
 Hadd the output state files:
+
 ```
 #######
 # NDFHC
 #######
-hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part1.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part1/*.root
 
-hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part2.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part2/*.root
+#mach15
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part1A.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part1/trancheA/*.root
+#mach14
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part1B.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part1/trancheB/*.root
 
-hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part3.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part3/*.root
+#mach13
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part2A.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part2/trancheA/*.root
+#mach12
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part2B.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part2/trancheB/*.root
 
-hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part4.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part4/*.root
+#mach11
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part3A.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part3/trancheA/*.root
+#mach10
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part3B.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part3/trancheB/*.root
 
-hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part5.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part5/*.root
+#mach09
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part4A.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part4/trancheA/*.root
+#mach08
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part4B.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part4/trancheB/*.root
+
+#mach07
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part5A.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part5/trancheA/*.root
+#mach05
+hadd_cafana NDFHCState_IntrinsicNue_nodet_withxseccorr_part5B.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/part5/trancheB/*.root
 
 #############
 # NDRHCOnAxis
 #############
 NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part1B.root
-
-#mach12
-hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part1A1.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part1/trancheA/set1/*.root
-#mach11
-hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part1A2.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part1/trancheA/set2/*.root
-
-#mach10
-hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part2A1.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part2/trancheA/set1/*.root
-#mach09
-hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part2A2.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part2/trancheA/set2/*.root
-
-#mach08
-hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part2B1.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part2/trancheB/set1/*.root
-#mach07
-hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part2B2.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part2/trancheB/set2/*.root
-
-#mach06
-hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part3A1.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part3/trancheA/set1/*.root
-#mach04
-hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part3A2.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part3/trancheA/set2/*.root
-
-#mach03
-hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part3B1.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part3/trancheB/set1/*.root
-#mach02
-hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part3B2.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/part3/trancheB/set2/*.root
+NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part1A1.root
+NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part1A2.root
+NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part2A2.root
+NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part3A2.root
+NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part3B1.root
+NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part3B2.root
+NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part2A1.root
+NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part2B1.root
+NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part2B2.root
+NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part3A1.root
 
 ##############
 # NDRHCOffAxis
@@ -182,11 +184,8 @@ hadd_cafana NDRHCOnAxisState_IntrinsicNue_nodet_withxseccorr_part3B2.root /pnfs/
 NDRHCOffAxisState_IntrinsicNue_nodet_withxseccorr_part1A.root
 NDRHCOffAxisState_IntrinsicNue_nodet_withxseccorr_part1B.root
 NDRHCOffAxisState_IntrinsicNue_nodet_withxseccorr_part2B.root
-
-#mach14
-hadd_cafana NDRHCOffAxisState_IntrinsicNue_nodet_withxseccorr_part2A1.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOffAxis/part2/trancheA/set1/*.root
-#mach13
-hadd_cafana NDRHCOffAxisState_IntrinsicNue_nodet_withxseccorr_part2A2.root /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOffAxis/part2/trancheA/set2/*.root
+NDRHCOffAxisState_IntrinsicNue_nodet_withxseccorr_part2A1.root
+NDRHCOffAxisState_IntrinsicNue_nodet_withxseccorr_part2A2.root
 
 ######
 #FDFHC
