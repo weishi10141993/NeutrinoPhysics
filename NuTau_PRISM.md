@@ -24,7 +24,8 @@ rsync -e ssh -avSz  ./* <user_name>@nnhome.physics.sunysb.edu:/home/<user_name>/
 cd /home/<usr name>/nutau/lblpwgtools/CAFAna
 
 # The build requires the following softwares installed on nnhome
-# Make sure you include these lines in ~/.profile:
+# Make sure you include these lines in ~/.profile
+# and then log out the shell and relogin:
 ################################################
 # ROOT v6-22-08
 ROOTSYS="/home/wshi/ROOT/root_install"
@@ -109,18 +110,52 @@ To check the job status:```squeue --user=<user_name>```.
 
 To kill a job: ```scancel <jobid>```.
 
+### Make a state file [on nnhome machine]
+
+You need to make a new state file for example when you want to change binning, or event selection. This is usually done via grid jobs on FermiGrid. If you are on ```nnhome```, either you can run the following interactively or run them with slurm jobs.
+
+Make a FHC state file:
+
+```
+MakePRISMPredInterps -o hadd_state_file_stat_only_FHC.root -N-nu "/storage/shared/wshi/CAFs/NDFHC/*.root" -F-nu /storage/shared/wshi/CAFs/FD/FD_FHC_nonswap.root -Fe-nu /storage/shared/wshi/CAFs/FD/FD_FHC_nueswap.root -Ft-nu /storage/shared/wshi/CAFs/FD/FD_FHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor "nosyst" > nutau_state_file_FHC.txt &
+```
+
+Make a RHC state file:
+
+(For RHC ND, need to run twice with on and off axis, then add them together using ```hadd_cafana```.)
+
+```
+# ND on axis
+MakePRISMPredInterps -o hadd_state_file_stat_only_RHC_ND_onaxis.root -N-nub "/storage/shared/wshi/CAFs/NDRHCOnAxis/*.root" --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor "nosyst" > nutau_state_file_RHC_ND_onaxis.txt &
+
+# ND off axis
+MakePRISMPredInterps -o hadd_state_file_stat_only_RHC_ND_offaxis.root -N-nub "/storage/shared/wshi/CAFs/NDRHCOffAxis/*.root" --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor "nosyst" > nutau_state_file_RHC_ND_offaxis.txt &
+
+# FD
+MakePRISMPredInterps -o hadd_state_file_stat_only_RHC_FD.root -F-nub /storage/shared/wshi/CAFs/FD/FD_RHC_nonswap.root -Fe-nub /storage/shared/wshi/CAFs/FD/FD_RHC_nueswap.root -Ft-nub /storage/shared/wshi/CAFs/FD/FD_RHC_tauswap.root --bin-descriptor default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor "nosyst" > nutau_state_file_RHC_FD.txt &
+```
+
 ### File locations
 
 All large file output should be stored in the ```/storage/shared``` area instead of home area!
 
-The input state files are at ```/storage/shared/wshi/StateFiles/FHCNuTau```.
+To start with, two input state files with different binning are at ```/storage/shared/wshi/StateFiles/FHCNuTau```.
 
-The input CAF files will be copied to ```/storage/shared/wshi/CAFs``` if needed.
+The input CAF files needed to reproduce new state files are:
 
-#### Make a new state file
+```
+# FD (FHC + RHC)
+/storage/shared/wshi/CAFs/FD
 
-You need to make a new state file for example when you want to change binning, or event selection. This is usually done via grid jobs on FermiGrid. If you are on nnhome, either you can run interactively or submit a slurm job.
+# RHC ND on axis
+/storage/shared/wshi/CAFs/NDRHCOnAxis
 
+# RHC ND off axis
+/storage/shared/wshi/CAFs/NDRHCOffAxis
+
+# FHC ND
+/storage/shared/wshi/CAFs/NDFHC
+```
 
 ### Reference
 
@@ -274,6 +309,8 @@ FDNutauSwapAppOscPrediction                     PRISM/PredictionPRISM.cxx
 LoadPRISMState                                  PRISM/PRISMUtils.cxx
 fSpectrumNutauSwap                              Prediction/PredictionsForPRISM
 ```
+
+### Make a state file [on FNAL machine]
 
 Make a FHC state file:
 
