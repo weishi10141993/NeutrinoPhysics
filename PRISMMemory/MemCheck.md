@@ -24,6 +24,12 @@ valgrind --leak-check=yes --suppressions=$ROOTSYS/etc/valgrind-root.supp --log-f
 # The log-file option to direct memory check output
 ```
 
+To track origin,
+
+```
+valgrind --leak-check=yes --track-origins=yes --suppressions=$ROOTSYS/etc/valgrind-root.supp --log-file="fit_dmsq32_stat_only_FourFlavor_mem_leak.log" PRISM_4Flavour_dChi2Scan /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/fcl/PRISM/PRISMOscScan_Grid.fcl > fit_output_with_valgrind.log &
+```
+
 ### Heap memory usage
 
 ```
