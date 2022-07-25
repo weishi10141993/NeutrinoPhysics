@@ -8,15 +8,16 @@
 //------------------------------------------------------------------
 
 void OverlaydChi2IntrinsicNue() {
-  TString HornCurrent = "FourFlavor"; // FHC, RHC, FourFlavor
-	TString FileFlagOff = "Chi2_dmsq32_ssth23_dcp_stat_only_FourFlavor_flagoff.root";
-	TString FileFlagOn  = "Chi2_dmsq32_ssth23_dcp_stat_only_FourFlavor_flagon.root";
+  TString HornCurrent = "RHC"; // FHC, RHC, FourFlavor
+	TString FileFlagOff = "Chi2_dcp_nodet_RHC_flagoff.root";
+	TString FileFlagOn  = "Chi2_dcp_nodet_RHC_flagon.root";
 	TString Dir = "/pnfs/dune/persistent/users/weishi/IntrinsicNueFit"; // File on local
 
-	std::vector<TString> pois {"dmsq32", "ssth23", "dcp"};
+	std::vector<TString> pois {"dcp"};
   TString PoI = "undefined";
 	float MaxdChi2 = 100;
 
+  // loop over pois
 	for (int ipoi = 0; ipoi < pois.size(); ipoi++) {
 		PoI = pois.at(ipoi);
 
@@ -54,8 +55,8 @@ void OverlaydChi2IntrinsicNue() {
 		}
 
 		// Two hists
-  	TH1F *h_flag_off = (TH1F*)f1->Get( TString::Format("%s_nom/dChi2Scan", PoI.Data() ) )->Clone("h_flag_off");
-	  TH1F *h_flag_on  = (TH1F*)f2->Get( TString::Format("%s_nom/dChi2Scan", PoI.Data() ) )->Clone("h_flag_on");
+  	TH1F *h_flag_off = (TH1F*)f1->Get( TString::Format("%s_nodet/dChi2Scan", PoI.Data() ) )->Clone("h_flag_off");
+	  TH1F *h_flag_on  = (TH1F*)f2->Get( TString::Format("%s_nodet/dChi2Scan", PoI.Data() ) )->Clone("h_flag_on");
 
     // Find minimum Chi2 and the bin
 	  double min_flagoff(1E15), min_flagon(1E15);
@@ -84,7 +85,7 @@ void OverlaydChi2IntrinsicNue() {
 	  TCanvas *c = new TCanvas("c", "c", 800, 600);
 	  c->cd(); c->SetGridx(); c->SetGridy();
     // Plot style
-	  h_flag_off->SetTitle( TString::Format("DUNE-PRISM %s Joint Fit (Exposure: 1 yr)",  HornCurrent.Data() ) );
+	  h_flag_off->SetTitle( TString::Format("DUNE-PRISM %s Joint Fit: xsec+flux systematics (Exposure: 1 yr)",  HornCurrent.Data() ) );
 	  h_flag_off->SetStats(0);
 	  if ( PoI == "ssth23" ) h_flag_off->GetXaxis()->SetTitle("sin^{2}(#theta_{23})");
 	  else if ( PoI == "dmsq32" ) h_flag_off->GetXaxis()->SetTitle("#Delta m^{2}_{32} (#times 10^{-3} eV^{2})");

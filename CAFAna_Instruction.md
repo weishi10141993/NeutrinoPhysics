@@ -20,6 +20,66 @@ cd CAFAna
 source build/Linux/CAFAnaEnv.sh
 ```
 
+List of up-to-date state files:
+
+```
+# ELepEHadReco (xsec only)
+/pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/ELepEHadReco_Axis_lep_default_Binning_hadd_state_xsec_syst_only.root
+
+# EVisReco (xsec + flux)
+root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/hadd_state_IntrinsicNue_nodet_withxseccorr.root
+```
+
+## 2D state file production
+
+Below is an example of submit a 2D (ELepEHadReco) state file production job to FermiGrid with only xsec systematic.
+
+The memory consumption is larger than 1D, 40GB/job. Default binning is ```lep_default```.
+
+```
+cd PRISM/scripts/FermiGridPRISMScripts/
+
+# ND FHC only (564 input files: DONE)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/ --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -N -u
+
+# ND RHC only: on axis (350 input files: DONE)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/NDCAF/OnAxis --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -N -b
+
+# ND RHC only: off axis (239 input files: DONE)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC_Attempt2 --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -N -b
+
+# All FD CAFs in /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/
+# now copied separately under /pnfs/dune/persistent/users/weishi/FDCAF/FHC
+
+# FD FHC only
+# DONE
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nonswap --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -F -u  
+# DONE: this actually runs over nonswap+nueswap as nonswap always need to be included (not clear why)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nueswap --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -F -u  
+# DONE: this actually runs over nonswap+tauswap as nonswap always need to be included (not clear why)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/tauswap --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -F -u
+
+# FD RHC only
+# DONE
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/nonswap --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -F -b
+# DONE: this actually runs over nonswap+nueswap as nonswap always need to be included (not clear why)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/nueswap --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -F -b
+# DONE: this actually runs over nonswap+tauswap as nonswap always need to be included (not clear why)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/tauswap --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -F -b
+```
+
+Hadd the output state files (can try SBU local cluster with more RAM):
+
+```
+NDRHC On Axis: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/NDRHCOnAxis (DONE)
+NDRHC Off Axis: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/NDRHCOffAxis (DONE)
+NDFHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/NDFHC (DONE)
+FD FHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/FDFHC (DONE)
+FD RHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/FDRHC (DONE)
+
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/Hadded
+```
+
 ## Group of systematics impact on fit contours
 
 The general objective is that user will specify a set of systematics of interest and remove them during the fit to study its impact on the sensitivity. Also the impact on each analysis step will be included.

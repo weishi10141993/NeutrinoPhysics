@@ -47,9 +47,12 @@ root -l -b -q IntrinsicNue_StackedHist.C
 Produce a fit,
 ```
 cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
-./FarmCAFPRISMNodeScript.sh -c Dmsq32ScanCommands.cmd # this includes both dmsq32, ssth23, and dcp
+./FarmCAFPRISMNodeScript.sh -c Dmsq32ScanCommands.cmd
+./FarmCAFPRISMNodeScript.sh -c Ssth23ScanCommands.cmd
+./FarmCAFPRISMNodeScript.sh -c DcpScanCommands.cmd
 
 # To compare fit Chi2
+cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/scripts
 root -l -b -q OverlaydChi2IntrinsicNue.C
 ```
 
@@ -66,6 +69,8 @@ root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFA
 ```
 
 ## Stat only state file production
+
+Make a FHC state file:
 
 ```
 # For ND
