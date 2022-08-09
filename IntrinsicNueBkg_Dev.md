@@ -58,14 +58,46 @@ root -l -b -q OverlaydChi2IntrinsicNue.C
 
 ## List of state files
 
-Stat only:
+## State file production with flux+xsec systs on FermiGrid
+
+Below is an example of submit a state file production job to FermiGrid without detector systematic (i.e., xsec + flux systematics).
+
 ```
-root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNueStatOnly/hadd_state_IntrinsicNue_stat_only_withxseccorr.root
+cd PRISM/scripts/FermiGridPRISMScripts/
+
+# ND FHC only (564 files)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/ --no-fakedata-dials -a EVisReco --syst-descriptor "nodet" -N -u
+
+# ND RHC only: on axis (350 files)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/NDCAF/OnAxis --no-fakedata-dials -a EVisReco --syst-descriptor "nodet" -N -b
+
+# ND RHC only: off axis (239 files)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC_Attempt2 --no-fakedata-dials -a EVisReco --syst-descriptor "nodet" -N -b
+
+# FD FHC only
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor "nodet" -F -u  
+
+# FD RHC only
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor "nodet" -F -b
 ```
 
-Flux+xsec:
+Hadd the output state files (can try SBU local cluster with more RAM):
+
 ```
-root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/hadd_state_IntrinsicNue_nodet_withxseccorr.root
+ND FHC:
+/pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/batch1 (DONE)
+/pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/batch2 (DONE)
+/pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDFHC/batch3 (DONE)
+
+ND RHC on axis:
+/pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/batch1 (DONE)
+/pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/batch2 (58961704)
+
+ND RHC off axis: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOffAxis (DONE)
+FD FHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/FDFHC
+FD RHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/FDRHC
+
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/NDRHCOnAxis/batch2
 ```
 
 ## Stat only state file production
@@ -117,29 +149,3 @@ hadd_cafana hadd_RHC_state_IntrinsicNue_stat_only_withxseccorr.root NDOnAxisRHCS
 
 Verify FHC state file contains non-empty plot in ```FDMatchInterp_ETrue_numu_nu/pred_nom/extrap/nue_surv``` folder.
 Verify RHC state file contains non-empty plot in ```FDMatchInterp_ETrue_numu_nub/pred_nom/extrap/nue_surv_anti``` folder.
-
-## State file production with flux+xsec systs on FermiGrid
-
-Below is an example of submit a state file production job to FermiGrid with a no detector systematic (i.e., xsec + flux systematics).
-
-```
-cd PRISM/scripts/FermiGridPRISMScripts/
-
-# ND FHC only
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/ --no-fakedata-dials -a EVisReco --syst-descriptor "nodet" -N -u
-# ND RHC only: on axis
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/NDCAF/OnAxis --no-fakedata-dials -a EVisReco --syst-descriptor "nodet" -N -b
-# ND RHC only: off axis
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC_Attempt2 --no-fakedata-dials -a EVisReco --syst-descriptor "nodet" -N -b
-# FD FHC only
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor "nodet" -F -u  
-# FD RHC only
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/ --no-fakedata-dials -a EVisReco --syst-descriptor "nodet" -F -b
-```
-
-Hadd the output state files (can try SBU local cluster with more RAM):
-
-```
-Hadding ND files: hadd_cafana
-Not adding ND files: hadd_state / hadd_cafana
-```

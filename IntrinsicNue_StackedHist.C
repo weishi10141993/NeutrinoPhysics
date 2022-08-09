@@ -30,7 +30,7 @@ void IntrinsicNue_StackedHist() {
   TH1D *hWSBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDWSBkg", dirname.Data(), channame.Data() ) );
   TH1D *hWLBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDWrongLepBkg", dirname.Data(), channame.Data() ) );
   TH1D *hNTBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDNuTauCCBkg", dirname.Data(), channame.Data() ) ); // for nutau, this is not bkg, do not plot
-  TH1D *hInBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDIntrinsicBkg", dirname.Data(), channame.Data() ) ); // nutau/bar from nue/bar
+  TH1D *hInBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDIntrinsicBkg", dirname.Data(), channame.Data() ) ); // intrinsic bkg from nue/bar
   TH1D *hPRISMPred = (TH1D*)gDirectory->Get( TString::Format("%s/%s/NDDataCorr_FDExtrap", dirname.Data(), channame.Data() ) ); // PRISMPred NDDataCorr_FDExtrap
 
   double chi2(0);

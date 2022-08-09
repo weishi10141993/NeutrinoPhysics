@@ -26,9 +26,16 @@ List of up-to-date state files:
 # ELepEHadReco (xsec only)
 /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/ELepEHadReco_Axis_lep_default_Binning_hadd_state_xsec_syst_only.root
 
-# EVisReco (xsec + flux)
+# Intrinsic nue Stat only (OBSELETE):
+root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNueStatOnly/hadd_state_IntrinsicNue_stat_only_withxseccorr.root
+
+# Intrinsic nue Flux+xsec (OBSELETE):
 root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/hadd_state_IntrinsicNue_nodet_withxseccorr.root
 ```
+
+## NC bkg pred
+PredictionPRISM.cxx: GetGaussian
+NC ND --> FD NC bkg
 
 ## 2D state file production
 

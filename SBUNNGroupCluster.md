@@ -27,3 +27,8 @@ Each user can at most request 2 GPUs on a single machine (one machine has 2 GPUs
 Q: How to find out the amount of space taken up by my home directory in the nnhome machine?
 ```
 A: Go to your home directory ```cd /home/<your usr name>``` and do ```du -hc --max-depth=0 .```.
+
+```
+Q: What to do if lost access to /storage/shared space? (example on ivy)
+```
+First check the directory is mounted, i.e., check "autofs" deamon. Then if mounted, check if it's due to some job running out of memory.
