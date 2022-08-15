@@ -9,12 +9,20 @@ OUTDIR=/pnfs/dune/scratch/users/${GRID_USER}/myFDntuples
 OUTFILE=myntuple_${CLUSTER}_${PROCESS}_$(date -u +%Y%m%dT%H%M%SZ).root
 
 # Make sure we see what we expect
+echo "See where are at: pwd"
 pwd
 
+echo "tarball is copied and untarred at this worker node directory CONDOR_DIR_INPUT: ${CONDOR_DIR_INPUT}"
+
+echo "ls -l CONDOR_DIR_INPUT"
 # Tarball is copied and untarred into a directory on the worker node, accessed via this CONDOR_DIR_INPUT environment variable
 ls -l $CONDOR_DIR_INPUT
 
+echo "ls -l INPUT_TAR_DIR_LOCAL: ${INPUT_TAR_DIR_LOCAL} (should see .sh and the untarred FDEff folder)"
+ls -l $INPUT_TAR_DIR_LOCAL
+
 if [ -e ${INPUT_TAR_DIR_LOCAL}/setupFDEffTarBall-grid.sh ]; then
+  echo "run setupFDEffTarBall-grid.sh"
   . ${INPUT_TAR_DIR_LOCAL}/setupFDEffTarBall-grid.sh
 else
   echo "Error, setup script not found. Exiting."
@@ -24,16 +32,23 @@ fi
 echo "Success ran setupFDEffTarBall-grid.sh"
 
 # Go back to the top-level directory since we know that's writable
+echo "cd _CONDOR_JOB_IWD: ${_CONDOR_JOB_IWD}"
 cd ${_CONDOR_JOB_IWD}
 
-echo "Look at _CONDOR_JOB_IWD"
+echo "ls _CONDOR_JOB_IWD"
 ls
-echo "And _CONDOR_DIR_INPUT"
+echo "And ls _CONDOR_DIR_INPUT: ${_CONDOR_DIR_INPUT}"
 ls ${_CONDOR_DIR_INPUT}
 
 # Symlink the desired fcl to the current directory
 ln -s ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/srcs/myntuples/myntuples/MyEnergyAnalysis/MyEnergyAnalysis.fcl .
 echo "Did the symlink"
+
+echo "Again, see where are at: pwd"
+pwd
+
+echo "Again, ls -l ."
+ls -l .
 
 # Set some other very useful environment variables for xrootd and IFDH
 export IFDH_CP_MAXRETRIES=2
@@ -57,6 +72,8 @@ echo "Finished checking outdir: $OUTDIR"
 myinfile=$(samweb get-file-access-url --schema=root nu_dune10kt_1x2x6_13009312_0_20181104T221530_gen_g4_detsim_reco.root)
 
 echo "Got xrootd url: $myinfile"
+
+# NEED Setting?
 
 # Now we should be in the work dir if setupFDEffTarBall-grid.sh worked
 lar -c MyEnergyAnalysis.fcl -n -1 $myinfile

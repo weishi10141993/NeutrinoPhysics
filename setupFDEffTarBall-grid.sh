@@ -13,8 +13,19 @@ if [ ! -d "$WORKDIR" ]; then
   export WORKDIR=`echo ~`
 fi
 
+
+echo "Check work dir _CONDOR_JOB_IWD: ls -l ${_CONDOR_JOB_IWD}"
+ls -l ${_CONDOR_JOB_IWD}
+
 echo "Started set up grid"
+echo "Check setup-grid exist: ls -l ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/localProducts*"
+ls -l ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/localProducts*
 source ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/localProducts*/setup-grid
-echo "Finished set up grid, now mrbslp"
-mrbslp    # setup all products installed in localProducts*
-echo "Done mrbslp"
+echo "Finished set up grid, now mrbsetenv"
+mrbsetenv
+#echo "Recompile"
+#cd ${MRB_BUILDDIR}                        # Go to your build directory
+#mrb z                                     # Remove old build directory
+#mrbsetenv
+echo "Done mrbsetenv"
+#cd ${_CONDOR_JOB_IWD}                     # Go back to local work directory
