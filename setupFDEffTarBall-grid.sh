@@ -13,19 +13,38 @@ if [ ! -d "$WORKDIR" ]; then
   export WORKDIR=`echo ~`
 fi
 
-
+# _CONDOR_JOB_IWD is /srv
 echo "Check work dir _CONDOR_JOB_IWD: ls -l ${_CONDOR_JOB_IWD}"
 ls -l ${_CONDOR_JOB_IWD}
 
+# Copy the untarred folder and remove the CVMFS linked read-only version
+# because later mrbsetenv needs to modify larsoft-v09_22_02 in build* directory
+# which can't be done in the CVMFS read-only version
+echo "copy ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY} as ${DIRECTORY}_copy"
+cp -r ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY} ${DIRECTORY}_copy
+#echo "Check work dir _CONDOR_JOB_IWD: ls -l ${_CONDOR_JOB_IWD}"
+#ls -l ${_CONDOR_JOB_IWD}
+echo "remove CVMFS version: rm -rf ${DIRECTORY}"
+rm -rf ${DIRECTORY}
+#echo "Check work dir _CONDOR_JOB_IWD: ls -l ${_CONDOR_JOB_IWD}"
+#ls -l ${_CONDOR_JOB_IWD}
+echo "rename copied version: mv ${DIRECTORY}_copy ${DIRECTORY}"
+mv ${DIRECTORY}_copy ${DIRECTORY}
+#echo "Check work dir _CONDOR_JOB_IWD: ls -l ${_CONDOR_JOB_IWD}"
+#ls -l ${_CONDOR_JOB_IWD}
+
 echo "Started set up grid"
-echo "Check setup-grid exist: ls -l ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/localProducts*"
-ls -l ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/localProducts*
-source ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/localProducts*/setup-grid
+# INPUT_TAR_DIR_LOCAL is /srv/no_xfer/0/TRANSFERRED_INPUT_FILES/FDEff
+# copy FDEff to local work dir _CONDOR_JOB_IWD: /srv
+# now is /srv/FDEff/srcs
+
+echo "Check setup-grid exist and source it: ls -l ${_CONDOR_JOB_IWD}/${DIRECTORY}/localProducts*"
+ls -l ${_CONDOR_JOB_IWD}/${DIRECTORY}/localProducts*
+source ${_CONDOR_JOB_IWD}/${DIRECTORY}/localProducts*/setup-grid
+
+#echo "Check permission of file: larsoft-v09_22_02: ls -l ${_CONDOR_JOB_IWD}/${DIRECTORY}/build*"
+#ls -l ${_CONDOR_JOB_IWD}/${DIRECTORY}/build*
+
 echo "Finished set up grid, now mrbsetenv"
 mrbsetenv
-#echo "Recompile"
-#cd ${MRB_BUILDDIR}                        # Go to your build directory
-#mrb z                                     # Remove old build directory
-#mrbsetenv
-echo "Done mrbsetenv"
-#cd ${_CONDOR_JOB_IWD}                     # Go back to local work directory
+echo "Finish mrbsetenv"

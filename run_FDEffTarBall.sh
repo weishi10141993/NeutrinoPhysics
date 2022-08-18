@@ -21,15 +21,17 @@ ls -l $CONDOR_DIR_INPUT
 echo "ls -l INPUT_TAR_DIR_LOCAL: ${INPUT_TAR_DIR_LOCAL} (should see .sh and the untarred FDEff folder)"
 ls -l $INPUT_TAR_DIR_LOCAL
 
+sleep 2
+
 if [ -e ${INPUT_TAR_DIR_LOCAL}/setupFDEffTarBall-grid.sh ]; then
-  echo "run setupFDEffTarBall-grid.sh"
+  echo "Start to run setupFDEffTarBall-grid.sh"
   . ${INPUT_TAR_DIR_LOCAL}/setupFDEffTarBall-grid.sh
 else
   echo "Error, setup script not found. Exiting."
   exit 1
 fi
 
-echo "Success ran setupFDEffTarBall-grid.sh"
+echo "Finished run setupFDEffTarBall-grid.sh"
 
 # Go back to the top-level directory since we know that's writable
 echo "cd _CONDOR_JOB_IWD: ${_CONDOR_JOB_IWD}"
@@ -43,12 +45,6 @@ ls ${_CONDOR_DIR_INPUT}
 # Symlink the desired fcl to the current directory
 ln -s ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/srcs/myntuples/myntuples/MyEnergyAnalysis/MyEnergyAnalysis.fcl .
 echo "Did the symlink"
-
-echo "Again, see where are at: pwd"
-pwd
-
-echo "Again, ls -l ."
-ls -l .
 
 # Set some other very useful environment variables for xrootd and IFDH
 export IFDH_CP_MAXRETRIES=2
