@@ -10,7 +10,7 @@ A: It usually happens because the Slurm controller deamon isn't active. You can 
 ```
 Q: How to run a batch job from nnhome?
 ```
-A: Say your need to run this program ```root -l -q -b XXX.C```, and it needs to run ~1hr on one node, then use this [batch script](https://github.com/weishi10141993/NeutrinoPhysics/blob/main/Slurm_nnhome_example.sh) and do ```sbatch Slurm_nnhome_example.sh```
+A: Say your need to run this program ```root -l -q -b XXX.C```, and it needs to run ~1hr on one node, then use this [batch script](https://github.com/weishi10141993/NeutrinoPhysics/blob/main/SBU/Slurm_nnhome_example.sh) and do ```sbatch Slurm_nnhome_example.sh```
 
 ```
 Q: Ivy shut down due to power outage. After manual machine reboot, logging in gives permission denied error:

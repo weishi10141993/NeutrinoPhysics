@@ -7,9 +7,10 @@ void IntrinsicNue_StackedHist() {
 
   // Oscillation channels: FD_nu_numu, FD_nu_nue, FD_nu_nutau, FD_nub_numu, FD_nub_nue, FD_nub_nutau
   TString channame = "FD_nub_nue";
-  TString dirname = "numu_EvMatch_nom_2";
+  TFile *f = new TFile("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/PRISMPred_EVisReco_IntrinsicNue_nodet_withxseccorr_flagon_RHC_App.root");
+  TString dirname = "numu_EvMatch_nom";
+  double maxX = 4; // Set max x axis range
 
-  TFile *f = new TFile("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/PRISMPred_EVisReco_IntrinsicNue_stat_only_withxseccorr_flagoff_RHC_App.root");
   TCanvas *newC = new TCanvas("C", "C", 800, 600);
   newC->SetRightMargin(0.07);
   newC->SetLeftMargin(0.12);
@@ -30,7 +31,7 @@ void IntrinsicNue_StackedHist() {
   TH1D *hWSBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDWSBkg", dirname.Data(), channame.Data() ) );
   TH1D *hWLBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDWrongLepBkg", dirname.Data(), channame.Data() ) );
   TH1D *hNTBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDNuTauCCBkg", dirname.Data(), channame.Data() ) ); // for nutau, this is not bkg, do not plot
-  TH1D *hInBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDIntrinsicBkg", dirname.Data(), channame.Data() ) ); // intrinsic bkg from nue/bar
+  TH1D *hInBkg = (TH1D*)gDirectory->Get( TString::Format("%s/%s/FDIntrinsicBkg", dirname.Data(), channame.Data() ) ); // intrinsic bkg from nue/nuebar
   TH1D *hPRISMPred = (TH1D*)gDirectory->Get( TString::Format("%s/%s/NDDataCorr_FDExtrap", dirname.Data(), channame.Data() ) ); // PRISMPred NDDataCorr_FDExtrap
 
   double chi2(0);
@@ -90,7 +91,13 @@ void IntrinsicNue_StackedHist() {
   Hstack->Add(hNTBkg, "HIST");
   Hstack->Add(hNDFit, "HIST");
 
-  leg->AddEntry(hFDOsc, "FD #nu_{e} Data", "PL");
+  if ( channame == "FD_nu_numu" ) {
+    leg->AddEntry(hFDOsc, "FD #nu_{#mu} Data", "PL");
+  }
+  else {
+    leg->AddEntry(hFDOsc, "FD #nu_{e} Data", "PL");
+  }
+
   if ( channame == "FD_nu_nue" ) { // from nue or nuebar
     leg->AddEntry(hNDFit, "ND Data LC (signal + intrinsic #nu_{e})", "F");
   } else if ( channame == "FD_nub_nue" ) {
@@ -125,7 +132,7 @@ void IntrinsicNue_StackedHist() {
     Hstack->SetMaximum(7000);
     Hstack->SetMinimum(-10);
   }
-  Hstack->GetXaxis()->SetRangeUser(0, 10); // don't draw overflow bin
+  Hstack->GetXaxis()->SetRangeUser(0, maxX);
   Hstack->GetXaxis()->SetTitleOffset(1.2);
   Hstack->GetXaxis()->SetTitle("Reco E_{vis.} (GeV)");
   Hstack->GetYaxis()->SetTitle("Pred. Event Rate per 1 GeV");
@@ -136,7 +143,9 @@ void IntrinsicNue_StackedHist() {
   leg->Draw();
 
   // Save canvas
-  if ( channame == "FD_nu_nue" ) {
+  if ( channame == "FD_nu_numu" ) {
+    newC->SaveAs("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/NumuDispStacked.pdf");
+  } else if ( channame == "FD_nu_nue" ) {
     newC->SaveAs("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/NueAppStacked.pdf");
   } else if ( channame == "FD_nub_nue" ) {
     newC->SaveAs("/dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/app/NueBarAppStacked.pdf");

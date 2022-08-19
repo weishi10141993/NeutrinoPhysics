@@ -26,11 +26,11 @@ List of up-to-date state files:
 # ELepEHadReco (xsec only)
 /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/ELepEHadReco_Axis_lep_default_Binning_hadd_state_xsec_syst_only.root
 
+# Intrinsic nue Flux+xsec (Aug 17):
+root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/hadd_state_IntrinsicNue_nodet_withxseccorr.root
+
 # Intrinsic nue Stat only (OBSELETE):
 root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNueStatOnly/hadd_state_IntrinsicNue_stat_only_withxseccorr.root
-
-# Intrinsic nue Flux+xsec (OBSELETE):
-root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/hadd_state_IntrinsicNue_nodet_withxseccorr.root
 ```
 
 ## NC bkg pred
@@ -84,7 +84,7 @@ NDFHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadRec
 FD FHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/FDFHC (DONE)
 FD RHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/FDRHC (DONE)
 
-./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/Hadded
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/Hadded (70G RAM needed)
 ```
 
 ## Group of systematics impact on fit contours

@@ -46,12 +46,19 @@ root -l -b -q IntrinsicNue_StackedHist.C
 
 Produce a fit,
 ```
+# Edit what systematics to include
 cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
+
 ./FarmCAFPRISMNodeScript.sh -c Dmsq32ScanCommands.cmd
+FHC: flagon (59416930):
+stat only fit succeed: PRISM_4Flavour_dChi2Scan fcl/PRISM/Dmsq32_1DScan/PRISMOscScan_Grid_bin37.fcl
+then syst
+FHC: flagoff ()
+
 ./FarmCAFPRISMNodeScript.sh -c Ssth23ScanCommands.cmd
 ./FarmCAFPRISMNodeScript.sh -c DcpScanCommands.cmd
 
-# To compare fit Chi2
+# Compare fit Chi2
 cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/scripts
 root -l -b -q OverlaydChi2IntrinsicNue.C
 ```
@@ -98,7 +105,7 @@ ND RHC off axis: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/I
 FD FHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/FDFHC
 FD RHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/FDRHC
 
-./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/Hadded
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/Hadded (25-30G RAM is enough)
 ```
 
 ## Stat only state file production
