@@ -12,6 +12,9 @@ echo "Input file start line ${STARTLINE}, end line ${ENDLINE}, total files: ${TO
 # Set the output location for copyback
 OUTDIR=/pnfs/dune/scratch/users/${GRID_USER}/myFDntuples
 
+# Let's rename the output file so it's unique in case we send multiple jobs.
+OUTFILE=myntuple_${CLUSTER}_${PROCESS}_$(date -u +%Y%m%dT%H%M%SZ).root
+
 # Make sure we see what we expect
 echo "See where are at: pwd"
 pwd
@@ -68,45 +71,43 @@ fi
 
 echo "Finished checking outdir: $OUTDIR"
 
+myinfile=""
+
 # Loop over file list in txt file (samweb list-files "Dimensions")
 for ifile in $(cat ${INPUT_TAR_DIR_LOCAL}/MCC11FDBeamsim_nu_reco.txt | sed -n ${STARTLINE},${ENDLINE}p); do
-#for ifile in $(cat ${INPUT_TAR_DIR_LOCAL}/MCC11FDBeamsim_nu_reco_test.txt); do
   # Get the xrootd URL for the input file. Not necessary for SAM inputs when using ifdh_art, etc.
-  myinfile=$(samweb get-file-access-url --schema=root ${ifile})
-  echo "Got xrootd url: $myinfile"
-
-  # Now we should be in the work dir if setupFDEffTarBall-grid.sh worked
-  echo "lar -c MyEnergyAnalysis.fcl -n -1 $myinfile"
-  lar -c MyEnergyAnalysis.fcl -n -1 $myinfile
-  LAR_RESULT=$?   # check the exit status!!!
-
-  if [ $LAR_RESULT -ne 0 ]; then
-    echo "lar exited with abnormal status $LAR_RESULT. See error outputs."
-    exit $LAR_RESULT
-  fi
-
-  echo "Have output"
-
-  # Let's rename the output file so it's unique in case we send multiple jobs.
-  OUTFILE=myntuple_${CLUSTER}_${PROCESS}_$(date -u +%Y%m%dT%H%M%SZ).root
-
-  if [ -f myntuple.root ]; then
-
-    echo "mv myntuple.root $OUTFILE"
-    mv myntuple.root $OUTFILE
-
-    # and copy our output file back
-    ifdh cp -D $OUTFILE $OUTDIR
-
-    # check the exit status to see if the copyback actually worked. Print a message if it did not.
-    IFDH_RESULT=$?
-    if [ $IFDH_RESULT -ne 0 ]; then
-      echo "Error during output copyback. See output logs."
-      exit $IFDH_RESULT
-    fi
-  fi
-
+  myinfile="${myinfile} $(samweb get-file-access-url --schema=root ${ifile})"
 done
+
+echo "Got xrootd urls: $myinfile"
+
+# Now we should be in the work dir if setupFDEffTarBall-grid.sh worked
+echo "lar -c MyEnergyAnalysis.fcl -n -1 $myinfile"
+lar -c MyEnergyAnalysis.fcl -n -1 $myinfile
+LAR_RESULT=$?   # check the exit status!!!
+
+if [ $LAR_RESULT -ne 0 ]; then
+  echo "lar exited with abnormal status $LAR_RESULT. See error outputs."
+  exit $LAR_RESULT
+fi
+
+echo "Have output"
+
+if [ -f myntuple.root ]; then
+
+  echo "mv myntuple.root $OUTFILE"
+  mv myntuple.root $OUTFILE
+
+  # and copy our output file back
+  ifdh cp -D $OUTFILE $OUTDIR
+
+  # check the exit status to see if the copyback actually worked. Print a message if it did not.
+  IFDH_RESULT=$?
+  if [ $IFDH_RESULT -ne 0 ]; then
+    echo "Error during output copyback. See output logs."
+    exit $IFDH_RESULT
+  fi
+fi
 
 #If we got this far, we succeeded.
 echo "Completed successfully."
