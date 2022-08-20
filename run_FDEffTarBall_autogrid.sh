@@ -85,8 +85,8 @@ fi
 
 echo "Have output"
 
-# Let's rename the output file so it's unique in case we send multiple jobs.
-OUTFILE=myntuple_${CLUSTER}_${PROCESS}_$(date -u +%Y%m%dT%H%M%SZ).root
+# Unique name in case we send multiple jobs.
+OUTFILE=myntuple_${CLUSTER}_${PROCESS}.root
 
 if [ -f myntuple.root ]; then
 
