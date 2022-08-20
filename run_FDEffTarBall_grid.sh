@@ -6,7 +6,7 @@ echo "Running on $(hostname) at ${GLIDEIN_Site}. GLIDEIN_DUNESite = ${GLIDEIN_DU
 # Require: STARTLINE <= ENDLINE
 STARTLINE=2
 ENDLINE=4
-TOTALIN=${ENDLINE}-${STARTLINE}+1
+((TOTALIN = ${ENDLINE} - ${STARTLINE} + 1 ))
 echo "Input file start line ${STARTLINE}, end line ${ENDLINE}, total files: ${TOTALIN}"
 
 # Set the output location for copyback
