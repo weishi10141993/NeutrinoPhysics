@@ -3,7 +3,7 @@
 echo "Running on $(hostname) at ${GLIDEIN_Site}. GLIDEIN_DUNESite = ${GLIDEIN_DUNESite}"
 
 # Set the output location for copyback
-OUTDIR=/pnfs/dune/scratch/users/${GRID_USER}/myFDntuples
+OUTDIR=/pnfs/dune/persistent/users/${GRID_USER}/myFDntuples
 
 # Make sure we see what we expect
 echo "See where are at: pwd"
