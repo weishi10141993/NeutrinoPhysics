@@ -50,10 +50,12 @@ Produce a fit,
 cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/scripts/FermiGridPRISMScripts
 
 ./FarmCAFPRISMNodeScript.sh -c Dmsq32ScanCommands.cmd
-FHC: flagon (59416930):
-stat only fit succeed: PRISM_4Flavour_dChi2Scan fcl/PRISM/Dmsq32_1DScan/PRISMOscScan_Grid_bin37.fcl
-then syst
-FHC: flagoff ()
+FHC flagon (59416930):
+FHC flagoff (59473784)
+RHC flagon  ()
+RHC flagoff ()
+4 Flavor flagon: ()
+4 Flavor flagoff: ()
 
 ./FarmCAFPRISMNodeScript.sh -c Ssth23ScanCommands.cmd
 ./FarmCAFPRISMNodeScript.sh -c DcpScanCommands.cmd

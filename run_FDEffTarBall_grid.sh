@@ -28,8 +28,6 @@ ls -l $CONDOR_DIR_INPUT
 echo "ls -l INPUT_TAR_DIR_LOCAL: ${INPUT_TAR_DIR_LOCAL} (should see .sh and the untarred FDEff folder)"
 ls -l $INPUT_TAR_DIR_LOCAL
 
-sleep 2
-
 if [ -e ${INPUT_TAR_DIR_LOCAL}/setupFDEffTarBall-grid.sh ]; then
   echo "Start to run setupFDEffTarBall-grid.sh"
   . ${INPUT_TAR_DIR_LOCAL}/setupFDEffTarBall-grid.sh
