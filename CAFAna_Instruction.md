@@ -26,7 +26,7 @@ List of up-to-date state files:
 # ELepEHadReco (xsec only)
 /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/ELepEHadReco_Axis_lep_default_Binning_hadd_state_xsec_syst_only.root
 
-# Intrinsic nue Flux+xsec (Aug 17):
+# Intrinsic nue Flux+xsec bin: lep_default (Aug 17):
 root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/hadd_state_IntrinsicNue_nodet_withxseccorr.root
 
 # Intrinsic nue Stat only (OBSELETE):
