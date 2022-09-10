@@ -51,18 +51,18 @@ cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/scripts/FermiGri
 
 ./FarmCAFPRISMNodeScript.sh -c Dmsq32ScanCommands.cmd
 FHC flagon: /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FHC/dmsq32_nodet/flagon
-FHC flagoff (59595469): 
+FHC flagoff: /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FHC/dmsq32_nodet/flagoff
 RHC flagon: /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/RHC/dmsq32_nodet/flagon
 RHC flagoff: /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/RHC/dmsq32_nodet/flagoff
-4 Flavor flagon (double RAM 40G): /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FourFlavor/dmsq32_nodet/flagon
+4 Flavor flagon (double RAM 40G):  /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FourFlavor/dmsq32_nodet/flagon
 4 Flavor flagoff (double RAM 40G): /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FourFlavor/dmsq32_nodet/flagoff
 
 ./FarmCAFPRISMNodeScript.sh -c Ssth23ScanCommands.cmd
-FHC flagon (37330225)
-FHC flagoff (37330597): /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FHC/ssth23_nodet/flagoff
-RHC flagon  (37331705): /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/RHC/ssth23_nodet/flagon
-RHC flagoff (37331672): /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/RHC/ssth23_nodet/flagoff
-4 Flavor flagon (double RAM 40G): /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FourFlavor/ssth23_nodet/flagon
+FHC flagon:  /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FHC/ssth23_nodet/flagon
+FHC flagoff: /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FHC/ssth23_nodet/flagoff
+RHC flagon:  /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/RHC/ssth23_nodet/flagon
+RHC flagoff: /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/RHC/ssth23_nodet/flagoff
+4 Flavor flagon (double RAM 40G):  /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FourFlavor/ssth23_nodet/flagon
 4 Flavor flagoff (double RAM 40G): /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FourFlavor/ssth23_nodet/flagoff
 
 ./FarmCAFPRISMNodeScript.sh -c DcpScanCommands.cmd
@@ -70,12 +70,12 @@ FHC flagon (old plot exists)
 FHC flagoff (old plot exists)
 RHC flagon  (old plot exists)
 RHC flagoff (old plot exists)
-4 Flavor flagon (double RAM 40G): /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FourFlavor/dcp_nodet/flagon
+4 Flavor flagon (double RAM 40G):  /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FourFlavor/dcp_nodet/flagon
 4 Flavor flagoff (double RAM 40G): /pnfs/dune/persistent/users/weishi/IntrinsicNueFit/FourFlavor/dcp_nodet/flagoff
 
 # Compare fit Chi2
 cd /dune/app/users/weishi/NueIntrinsic/lblpwgtools/CAFAna/PRISM/scripts
-# edit pois, HornCurrent, Syst
+# Edit pois, HornCurrent, Syst
 root -l -b -q OverlaydChi2IntrinsicNueV1.C
 ```
 

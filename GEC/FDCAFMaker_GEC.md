@@ -7,19 +7,21 @@ mkdir NewFDCAFMaker
 cd NewFDCAFMaker
 
 source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
-setup larsoft v09_56_00 -q e20:debug
+setup dunesw v09_58_01d00 -q e20:debug
 
-mrb newDev
-source /dune/app/users/weishi/NewFDCAFMaker/localProducts_larsoft_v09_56_00_debug_e20/setup
+mrb newDev -v v09_58_01d00 -q e20:debug
+source /dune/app/users/weishi/NewFDCAFMaker/localProducts_larsoft_v09_58_01d00_e20_debug/setup
 
 # Get duneana
 cd srcs
-mrb g duneana (develop default)
-mrb g dunesim (develop default)
-mrb g dunecore
+# do a setup of dunesw that will include many fcl files
+mrb g dunesw
+mrb g duneana  (develop default)
 
-# Build the code
+# Add to cmakelist
 mrb uc
+
+# Build/rebuild the code
 cd ${MRB_BUILDDIR}       
 mrb z
 mrbsetenv
@@ -29,16 +31,15 @@ mrb b
 Run CAF Maker interactively:
 ```
 cd /dune/app/users/weishi/NewFDCAFMaker/srcs/duneana/duneana/CAFMaker
-lar -c cafmakerjob.fcl -n 10 /pnfs/dune/tape_backed/dunepro/mcc11/protodune/mc/full-reconstructed/07/51/31/11/nu_dune10kt_1x2x6_13009312_0_20181104T221530_gen_g4_detsim_reco.root
+lar -c select_ana_dune10kt_nu.fcl -n 10 /pnfs/dune/tape_backed/dunepro/mcc11/protodune/mc/full-reconstructed/07/51/31/11/nu_dune10kt_1x2x6_13009312_0_20181104T221530_gen_g4_detsim_reco.root
 ```
 
-Recompile if source code changed,
-
+Relogin:
 ```
-cd ${MRB_BUILDDIR}                   
-mrb z
-mrbsetenv  
-make install -j 4  (how diff is this to mrb b)
+source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
+setup dunesw v09_58_01d00 -q e20:debug
+source /dune/app/users/weishi/NewFDCAFMaker/localProducts_larsoft_v09_58_01d00_e20_debug/setup
+mrbsetenv
 ```
 
 ## Run TDR version FD CAFMaker (dune tpc on redmine)

@@ -9,8 +9,8 @@
 
 void OverlaydChi2IntrinsicNueV1() {
   // User edit
-	std::vector<TString> pois {"dmsq32", "ssth23", "dcp"}; //dmsq32, ssth23, dcp
-  TString HornCurrent = "FourFlavor"; // FHC, RHC, FourFlavor
+	std::vector<TString> pois {"dmsq32"}; //dmsq32, ssth23, dcp
+  TString HornCurrent = "FHC"; // FHC, RHC, FourFlavor
   TString Syst = "nodet"; // nodet means xsec+flux
   TString Dir = "/pnfs/dune/persistent/users/weishi/IntrinsicNueFit"; // File on gpvm
 
@@ -147,7 +147,7 @@ void OverlaydChi2IntrinsicNueV1() {
 		h_flag_on->Draw("HIST SAME");
 
 		TLegend *leg = new TLegend(0.19, 0.62, 0.56, 0.89);
-	  leg->SetHeader("FD Intrinsic #nu_{e} Bkg Options", "C");
+	  leg->SetHeader("FD Intrinsic #nu_{e} Bkg Options", "L");
 		leg->AddEntry(h_flag_off, TString::Format("#splitline{MC estimation}{min #chi^{2}: %.5f, bin: %d}",  min_flagoff, minbin_flagoff), "L");
 		leg->AddEntry(h_flag_on,  TString::Format("#splitline{Include in LC}{min #chi^{2}: %.5f, bin: %d}",  min_flagon,  minbin_flagon),  "L");
 		leg->SetBorderSize(0);
