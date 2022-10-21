@@ -10,12 +10,10 @@ ssh -X weishi@dunegpvm03.fnal.gov
 cd /dune/app/users/weishi
 mkdir PRISMAnalysis
 cd PRISMAnalysis
-git clone https://github.com/weishi10141993/lblpwgtools.git
-cd lblpwgtools
-git checkout Catastrophic_Yolo_PRISM_Merge
-cd CAFAna
+git clone https://github.com/weishi10141993/lblpwgtools.git # as of Sep 23, 2022
+cd lblpwgtools/CAFAna
 # Build the code, the -u option rely on relevant dependencies from FNAL scisoft
-./standalone_configure_and_build.sh -u -r --db          # for new YOLO branch
+./standalone_configure_and_build.sh -u -r --db
 # To recompile: ./standalone_configure_and_build.sh -u -r --db -f
 source build/Linux/CAFAnaEnv.sh
 ```
@@ -23,15 +21,34 @@ source build/Linux/CAFAnaEnv.sh
 List of up-to-date state files:
 
 ```
-# ELepEHadReco (xsec only)
-/pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/ELepEHadReco_Axis_lep_default_Binning_hadd_state_xsec_syst_only.root
+# Sep 9 after major merge of YOLO and main branch: EvisReco
+/pnfs/dune/persistent/users/chasnip/CAFAnaStateFiles/PRISMState_FHC_RHC_EVisReco_FluxXSecDet_9Sep22.root
 
 # Intrinsic nue Flux+xsec bin: lep_default (Aug 17):
 root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/hadd_state_IntrinsicNue_nodet_withxseccorr.root
 
-# Intrinsic nue Stat only (OBSELETE):
-root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNueStatOnly/hadd_state_IntrinsicNue_stat_only_withxseccorr.root
+# ELepEHadReco (xsec only)
+/pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/ELepEHadReco_Axis_lep_default_Binning_hadd_state_xsec_syst_only.root
 ```
+
+## How to run apps after CAFAna code merge
+
+```
+PRISMPrediction --fcl fcl/PRISM/MyPred.fcl
+PRISM_4Flavour_dChi2Scan --fcl fcl/PRISM/MyScan.fcl --binx X -- biny Y
+# the --binx and --biny inputs for the fitting script are optional and are only used for when submitting many jobs in parallel to the grid
+# All of the million fcl files are gone now
+```
+## NEW ND CAF files with half stop
+```
+ND FHC:  /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC
+ND RHC: /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC
+```
+
+## Fermilab debug node
+fnpctest1.fnal.gov
+If you can't log in, just open a ticket to get access.
+Note that it is configured like a regular grid worker node, so no direct access to /dune/dats or /dune/app. You can scp files in though, and it has /cvmfs.
 
 ## NC bkg pred
 PredictionPRISM.cxx: GetGaussian
@@ -46,14 +63,14 @@ The memory consumption is larger than 1D, 40GB/job. Default binning is ```lep_de
 ```
 cd PRISM/scripts/FermiGridPRISMScripts/
 
-# ND FHC only (564 input files: DONE)
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/FHC/ --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -N -u
+ND FHC: /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC
+ND RHC: /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC
 
-# ND RHC only: on axis (350 input files: DONE)
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/NDCAF/OnAxis --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -N -b
+# ND FHC only: these include additional off-axis stops Sep 23, 2022
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -N -u
 
-# ND RHC only: off axis (239 input files: DONE)
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/abooth/Production/ND_CAFMaker/nd_offaxis/v7/CAF/Hadded/subsets/RHC_Attempt2 --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -N -b
+# ND RHC only: these include additional off-axis stops Sep 23, 2022
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -N -b
 
 # All FD CAFs in /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/
 # now copied separately under /pnfs/dune/persistent/users/weishi/FDCAF/FHC

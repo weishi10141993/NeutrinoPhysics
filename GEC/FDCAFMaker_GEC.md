@@ -14,9 +14,20 @@ source /dune/app/users/weishi/NewFDCAFMaker/localProducts_larsoft_v09_58_01d00_e
 
 # Get duneana
 cd srcs
-# do a setup of dunesw that will include many fcl files
+# Setup dunesw that will include many fcl files
+# Need to set the tag to v09_58_01d00 as the develop branch keeps moving
 mrb g dunesw
-mrb g duneana  (develop default)
+cd dunesw
+git checkout tags/v09_58_01d00
+
+cd ..
+mrb g duneana  
+cd duneana
+git checkout tags/v09_58_01d00
+
+# Use this fcl
+cd ..
+cp /dune/app/users/weishi/select_ana_dune10kt_nu.fcl ./duneana/duneana/CAFMaker
 
 # Add to cmakelist
 mrb uc

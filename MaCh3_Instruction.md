@@ -1,3 +1,145 @@
+# Summit OakRidge
+
+## General info
+```
+ssh -X wshi@home.ccs.ornl.gov (PIN+token)
+```
+All intensive tasks should be done on Summit.
+
+## MaCh3 installation on Summit
+```
+ssh -X wshi@summit.olcf.ornl.gov
+cd ~
+```
+
+Clone MaCh3,
+```
+mkdir MaCh3
+cd MaCh3
+git clone git@github.com:weishi10141993/MaCh3.git -b DBarrow_JointFit
+cd MaCh3
+```
+
+Start setup,
+```
+source SetMeUp.sh
+```
+
+ROOT5 install error: cmake can't support summit compiler. Try configure build.
+
+# On Compute Canada
+
+## General info
+MaCh3 installed at home dir. Submit job from project dir. Scratch dir for output.
+
+Machines: ```cedar```, ```beluga```, ```graham```, ```narval```, ```niagara```.
+
+Can use screen command. Runs ```Slurm```, same system as SeaWulf.
+
+## MaCh3 installation on compute canada
+
+This is based on [Mo's documentation](https://github.com/mojiastonybrook/PublicDocumentations/blob/main/MaCh3%20Installation%20on%20ComputeCanada.md).
+
+Use ```cedar``` machine as example,
+```
+ssh -X weishi2@cedar.computecanada.ca
+cd ~
+```
+
+Open ```~/.bashrc``` and add these,
+```
+export MACH3_DATA=/home/weishi2/projects/rpp-blairt2k/jiangcc/storage_pub/MaCh3_storage/ND280_DataMC_OA2020/P6Data
+export MACH3_MC=/home/weishi2/projects/rpp-blairt2k/jiangcc/storage_pub/MaCh3_storage/ND280_DataMC_OA2020/P6MC
+module load nixpkgs/16.09
+module load gcc/5.4.0
+module load cuda/10.0.130
+```
+then source the file or re-login.
+
+Clone MaCh3,
+```
+mkdir MaCh3
+cd MaCh3
+git clone git@github.com:weishi10141993/MaCh3.git -b DBarrow_JointFit
+cd MaCh3
+```
+
+Start setup,
+```
+source SetMeUp.sh
+```
+
+answer yes to build all these,
+```
+Build ROOT? (y/n)y
+Build CMT (needed for psyche)? (y/n)y
+Build iRODS and get files? (y/n)y
+Setup NIWGReWeight? (y/n)y
+Build CMAKE binary? (y/n)y
+```
+
+At the stage of IRODS settings: answer "no" to all configure questions until "save configuration?". Answer yes to save the config choice and start the build.
+
+A password to IRODS might be needed and for that go to the [data website](https://t2k.org/asg/oagroup/gadatastorage/index_html), look for the section of iRODS web interface. But the server from iRODS might be problematic for now, so expect downloading nothing after enter the password and see a bunch of errors. That's fine.
+
+What's relevant is the ND MC and data from iRODS, we have those copied from NextCloud, can be linked.
+
+Routine setup,
+```
+source setup_CUDAProb.sh
+source setup_psyche.sh      # you will need it to fit ND stuff
+source setup_T2KSKTools.sh
+source setup.sh
+```
+
+Finally,
+```
+make clean
+make
+```
+
+Link the following SK atm and T2K-SK samples and splines:
+(ND280 samples path are exported in ~/.bashrc)
+```
+# If want unlink symlink: unlink SKMCSplines  (do not use rm!!!)
+ln -s /home/weishi2/projects/rpp-blairt2k/jiangcc/storage_pub/MaCh3_storage/m3_input_mcmc_skatm/SKMtuples_Sept052022 /home/weishi2/MaCh3/MaCh3/inputs/skatm/SKMC
+ln -s /home/weishi2/projects/rpp-blairt2k/jiangcc/storage_pub/MaCh3_storage/m3_input_mcmc_skatm_spline/SKSplines_Sept052022 /home/weishi2/MaCh3/MaCh3/inputs/skatm/SKMCSplines
+ln -s /home/weishi2/projects/rpp-blairt2k/jiangcc/storage_pub/MaCh3_storage/m3_input_mcmc_t2kbeam/T2KMtuples_Sept052022 /home/weishi2/MaCh3/MaCh3/inputs/SK_19b_13av7_fitqun20
+ln -s /home/weishi2/projects/rpp-blairt2k/jiangcc/storage_pub/MaCh3_storage/m3_input_mcmc_t2kbeam_spline/T2KSplines_Sept052022 /home/weishi2/MaCh3/MaCh3/inputs/SK_19b_13av7_splines20
+```
+
+## Run MaCh3
+
+Create sample configs for all the ATMPD sample with the relevant sample bools, values and binning information,
+
+```
+cd configs/AtmosphericConfigs
+python makeConfigs.py
+```
+
+Whenever want to run executables, do
+```
+source setup.sh
+```
+
+Then run the executables.
+
+```
+./AtmJointFit_Bin/PrintEventRate configs/AtmosphericConfigs/AtmConfig.cfg
+./AtmJointFit_Bin/CreateRCTables configs/AtmosphericConfigs/AtmConfig.cfg  # Generate new RC tables with updated evt topology
+./AtmJointFit_Bin/MakeAtmDetHists configs/AtmosphericConfigs/AtmConfig.cfg
+#./AtmJointFit_Bin/PlotAtmByMode configs/AtmosphericConfigs/AtmConfig.cfg 27
+
+# Run the joint fit:
+./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
+```
+
+## Submit jobs
+
+Below is an example. You need to specify the project account and you cannot specify the node name. Also it’s strongly suggested that you specify the memory, otherwise the default mem is so small that your job will probably fail.
+```
+```
+
 # On SBU SeaWulf
 
 Make sure the ```~/.bashrc``` file contains these:
@@ -108,13 +250,11 @@ Then run the executables.
 ./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
 ```
 
-## Running MaCh3 on grid
+## Running MaCh3 jobs on SeaWulf
 
 The first joint fit requires 19Gb/chain of RAM and the step time is O(1s/step). And about 2.5Gb/chain of GPU memory, regardless of systematics fixed or not (but do matter if you remove systematics).
 
-To run on GPU: uncomment setup.sh #export CUDAPATH=${CUDA_HOME} and recompile, once it’s compiled in GPU, it can run on GPU queue
-
-### SeaWulf
+To run on GPU: uncomment ```setup.sh``` the line ```#export CUDAPATH=${CUDA_HOME}``` and recompile, once it’s compiled in GPU, it can run on GPU queue
 
 Send slurm jobs on SeaWulf. Example script ```SlurmRunMCMCChain0-4Job1.sh``` running on CPU (8 cores per chain, 5 chains on 1 node):
 It doesn't work to request 2 nodes and run 10 chains. So better to put 5 chains into each job, each on a node. Max number of nodes you can request: https://it.stonybrook.edu/help/kb/seawulf-queues
@@ -154,8 +294,6 @@ sbatch SlurmRunMCMCChain5-9Job2.sh
 # Job output
 ```
 
-### Aspen/Birch/Cedar/Fir
-
 ### Chain diagnosis
 
 You can run diagnosis while the chain is still running
@@ -179,7 +317,7 @@ curl -u ASGReader:mkND3-2k6PP-dwyM2-8coi2-rnsRR https://nextcloud.nms.kcl.ac.uk/
 ### Make plots from chain
 
 
-## Spline production
+## Spline production on SeaWulf
 
 Install the following softwares:
 NEUT: matrix dial
@@ -212,7 +350,7 @@ export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH
 bin/make_xsec_response_sk_2019_2d -w /gpfs/projects/McGrewGroup/weishi/test.root -m /gpfs/projects/McGrewGroup/jjjiang/my_MaCh3/MaCh3/inputs/skatm/SKMC/sk4_fcmc_tau_pcmc_ummc_fQv4r0_sf_minituple_500yr_Sample2_Channel1.root -o /gpfs/projects/McGrewGroup/weishi/splines_test.root -s 2
 ```
 
-## Install MaCh3 for starter tasks
+## Install MaCh3 for starter tasks on SeaWulf
 
 Regarding branches: the ```main``` branch is for OA2020. The ```develop``` branch is for OA2021. Dan's branch ```DBarrow_JointFit``` is for joint fit.
 
