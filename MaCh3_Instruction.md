@@ -25,7 +25,22 @@ Start setup,
 source SetMeUp.sh
 ```
 
-ROOT5 install error: cmake can't support summit compiler. Try configure build.
+Range of ROOT work for MaCh3?
+root_v5.34.34—> doesn’t work, cmake no support on compiler; configure fail due to header files <.h>
+root_v5.34.38—> configure works!!! cmake same error as root_v5.34.34
+ROOT expert also suggest take this branch: https://github.com/root-project/root/tree/v5-34-00-patches
+https://root-forum.cern.ch/t/install-root-v5-34-34/52085
+
+* try module load gcc lowest version and then cmake 3434
+
+GSL: then gsl failed
+Try download the most up to date version of the config scripts from
+
+  http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD
+and
+  http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD
+
+
 
 # On Compute Canada
 

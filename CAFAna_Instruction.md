@@ -10,8 +10,8 @@ ssh -X weishi@dunegpvm03.fnal.gov
 cd /dune/app/users/weishi
 mkdir PRISMAnalysis
 cd PRISMAnalysis
-git clone https://github.com/weishi10141993/lblpwgtools.git # as of Sep 23, 2022
-cd lblpwgtools/CAFAna
+git clone https://github.com/weishi10141993/lblpwgtools.git -b feature/prism
+cd CAFAna
 # Build the code, the -u option rely on relevant dependencies from FNAL scisoft
 ./standalone_configure_and_build.sh -u -r --db
 # To recompile: ./standalone_configure_and_build.sh -u -r --db -f
@@ -31,24 +31,31 @@ root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFA
 /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/ELepEHadReco_Axis_lep_default_Binning_hadd_state_xsec_syst_only.root
 ```
 
-## How to run apps after CAFAna code merge
-
-```
-PRISMPrediction --fcl fcl/PRISM/MyPred.fcl
-PRISM_4Flavour_dChi2Scan --fcl fcl/PRISM/MyScan.fcl --binx X -- biny Y
-# the --binx and --biny inputs for the fitting script are optional and are only used for when submitting many jobs in parallel to the grid
-# All of the million fcl files are gone now
-```
 ## NEW ND CAF files with half stop
 ```
 ND FHC:  /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC
 ND RHC: /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC
 ```
+Raw CAF files in LBL dir
 
-## Fermilab debug node
-fnpctest1.fnal.gov
-If you can't log in, just open a ticket to get access.
-Note that it is configured like a regular grid worker node, so no direct access to /dune/dats or /dune/app. You can scp files in though, and it has /cvmfs.
+## How to run apps after CAFAna code merge (Since Sep 23, 2022)
+
+```
+# State file prod
+cd PRISM/app
+# stat only: FD
+MakePRISMPredInterps -o FDFHCState_stat_only.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor prism_default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor "nosyst"
+
+
+# PRISM prediction
+PRISMPrediction --fcl fcl/PRISM/MyPred.fcl
+
+# PRISM fit
+PRISM_4Flavour_dChi2Scan --fcl fcl/PRISM/MyScan.fcl --binx X -- biny Y
+# the --binx and --biny inputs for the fitting script are optional and are only used for when submitting many jobs in parallel to the grid
+```
+
+
 
 ## NC bkg pred
 PredictionPRISM.cxx: GetGaussian
