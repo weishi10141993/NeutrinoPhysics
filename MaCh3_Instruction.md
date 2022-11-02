@@ -12,6 +12,16 @@ ssh -X wshi@summit.olcf.ornl.gov
 cd ~
 ```
 
+Add these to ```~/.bashrc```: THIS DOESN'T SEEM TO WORK~@@@@!!!
+```
+module load gcc/7.5.0     # need this version to build ROOT 5.34
+module load cuda/11.5.2   # this is the cuda version that works tested by Junjie
+module load cmake/3.18.4  # needed for setup_T2KSKTools.sh
+module load python/3.8-anaconda3 # need to make python configs in first step
+# EXPORT GSL path?
+
+```
+
 Clone MaCh3,
 ```
 mkdir MaCh3
@@ -19,6 +29,55 @@ cd MaCh3
 git clone git@github.com:weishi10141993/MaCh3.git -b DBarrow_JointFit
 cd MaCh3
 ```
+
+# Standalone ROOT5 install:
+
+##Configure
+
+```
+git clone -b v5-34-00-patches http://root.cern.ch/git/root.git v5-34-00-patches
+module load gcc/7.5.0
+make distclean
+# or make clean
+./configure --disable-unuran --disable-vc --enable-soversion --build=debug
+make
+gdb bin/root.exe
+run
+-------
+# ./configure --disable-unuran --disable-vc > configure.out.txt 2>&1
+# make > make.out.txt 2>&1
+```
+
+1. try clean first (did try re-git-clone, same error)
+```
+make clean
+configure
+make
+```
+
+2. try: make install
+```
+module load gcc/7.5.0
+make distclean
+./configure --disable-unuran --disable-vc --enable-soversion --build=debug
+make cintdlls --> gmake: *** No rule to make target 'cintdlls'.  Stop. --> make distclean --> make install --> SAME ERROR
+make install
+make cintdlls # second time
+make install
+```
+
+## Cmake
+3. try original cmake with these modify:
+
+https://github.com/root-project/root/blob/v5-34-00-patches/cmake/modules/SetUpLinux.cmake#L28
+https://github.com/root-project/root/blob/v5-34-00-patches/cmake/modules/SetUpLinux.cmake#L84
+from Clang to XL
+```
+gcc default 8.x
+module load cmake/3.18.4
+cmake ../v5-34-00-patches/ -Dminuit2:BOOL=ON -Droofit:BOOL=ON -Dfortran:BOOL=ON -Dpython:BOOL=OFF -Dx11:BOOL=OFF -Dmysql:BOOL=OFF -Dalien:BOOL=OFF -Dxml:BOOL=ON -Dalien:BOOL=OFF -Dastiff:BOOL=OFF -Dbonjour:BOOL=OFF -Dbuiltin_gsl:BOOL=OFF -Dopengl:BOOL=OFF -Dglite:BOOL=OFF -Dldap:BOOL=OFF -Dmonalisa:BOOL=OFF -Doracle:BOOL=OFF -Dpgsql:BOOL=OFF -Dsapdb:BOOL=OFF -Dsqlite:BOOL=OFF -Dxft:BOOL=OFF
+```
+
 
 Start setup,
 ```
@@ -32,15 +91,29 @@ ROOT expert also suggest take this branch: https://github.com/root-project/root/
 https://root-forum.cern.ch/t/install-root-v5-34-34/52085
 
 * try module load gcc lowest version and then cmake 3434
+* try patch head https://root-forum.cern.ch/t/trouble-installing/18046/11
 
-GSL: then gsl failed
-Try download the most up to date version of the config scripts from
-
+GSL build:
+Download the most up to date version of the config scripts from
   http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD
 and
   http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD
+worked!
+these are also needed with ```libconfig/aux-build``` when doing the final compile.
 
+Routine source
+```
+source setup_CUDAProb.sh
+source setup_psyche.sh
+source setup_T2KSKTools.sh
+source setup.sh
+```
 
+Compile
+```
+make clean
+make
+```
 
 # On Compute Canada
 

@@ -33,10 +33,40 @@ root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFA
 
 ## NEW ND CAF files with half stop
 ```
-ND FHC:  /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC
+ND FHC: /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC
 ND RHC: /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC
 ```
 Raw CAF files in LBL dir
+```
+/pnfs/dune/persistent/physicsgroups/dunelbl/abooth/PRISM/Production/Simulation/ND_CAFMaker/v7/CAF
+```
+
+## How to Hadd ND CAF files produced by grid/production team
+
+The main app is ```PRISM/app/OffAxisNDCAFCombiner```, it works out the file exposure of before and after hadding.
+
+```
+./BuildOffAxisInputs.sh
+```
+
+The number of files is summarized in each ND position is summarized in ```OffAxisPoTCalc.C```. It produces ```TotalOffAxisFileExposure.root``` that will combine with the weight contained in CAF. ```m-293``` in the root file refers to RHC mode.
+
+NEED TO ADD GEC RANDOM THROW TREE.
+
+## How to add new flux systematics based on provided beam MC
+Beam MC will contain nominal, +/-1sigma flux distributions of all flux systematics.
+
+```
+PRISM/scripts/produce_flux_syst_inputs.C
+```
+will get the fractional flux shift --> output: flux_shift_OffAxis_2022.root (79 ND off-axis slices now)
+
+The class in ```Syst/NewOffAxisFluxUncertainty2022Helper.cxx``` will then take this file and propagate to analysis the shift.
+
+```
+Syst/DUNEFluxSysts.h (ISyst)
+```
+will then use the class NewOffAxisFluxUncertainty2022Helper to get shifts.
 
 ## How to run apps after CAFAna code merge (Since Sep 23, 2022)
 
@@ -45,7 +75,6 @@ Raw CAF files in LBL dir
 cd PRISM/app
 # stat only: FD
 MakePRISMPredInterps -o FDFHCState_stat_only.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor prism_default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor "nosyst"
-
 
 # PRISM prediction
 PRISMPrediction --fcl fcl/PRISM/MyPred.fcl
