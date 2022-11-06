@@ -32,20 +32,16 @@ cd MaCh3
 
 # Standalone ROOT5 install:
 
-##Configure
+## Configure build ROOT 5
 
 ```
-git clone -b v5-34-00-patches http://root.cern.ch/git/root.git v5-34-00-patches
 module load gcc/7.5.0
+git clone -b v5-34-00-patches http://root.cern.ch/git/root.git v5-34-00-patches
+./configure --disable-unuran --disable-vc --enable-soversion --build=debug > configure.out.txt 2>&1
+make > make.out.txt 2>
+-------
 make distclean
 # or make clean
-./configure --disable-unuran --disable-vc --enable-soversion --build=debug
-make
-gdb bin/root.exe
-run
--------
-# ./configure --disable-unuran --disable-vc > configure.out.txt 2>&1
-# make > make.out.txt 2>&1
 ```
 
 1. try clean first (did try re-git-clone, same error)
@@ -141,6 +137,8 @@ export MACH3_MC=/home/weishi2/projects/rpp-blairt2k/jiangcc/storage_pub/MaCh3_st
 module load nixpkgs/16.09
 module load gcc/5.4.0
 module load cuda/10.0.130
+#ROOT?
+module load root/5.34.36
 ```
 then source the file or re-login.
 

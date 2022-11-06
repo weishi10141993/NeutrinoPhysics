@@ -1,6 +1,6 @@
 # Instruction for DUNE-PRISM analysis setup from DUNE FNAL machines (dunegpvm*)
 
-## Install CAFAna Framework
+## Build CAFAna analysis code
 
 [First time only]
 
@@ -14,11 +14,39 @@ git clone https://github.com/weishi10141993/lblpwgtools.git -b feature/prism
 cd CAFAna
 # Build the code, the -u option rely on relevant dependencies from FNAL scisoft
 ./standalone_configure_and_build.sh -u -r --db
-# To recompile: ./standalone_configure_and_build.sh -u -r --db -f
+
+# set up work area environment
 source build/Linux/CAFAnaEnv.sh
 ```
 
-List of up-to-date state files:
+To recompile, normally:
+```
+cd /dune/app/users/weishi/PRISMAnalysis/CAFAna/build
+make install -j 4
+```
+
+The following is seldom used, remove old compile and recompile from scratch
+```
+./standalone_configure_and_build.sh -u -r --db -f
+```
+
+## How to run apps after CAFAna code merge (Since Sep 23, 2022)
+
+```
+# State file prod
+cd PRISM/app
+# stat only: FD
+MakePRISMPredInterps -o FDFHCState_stat_only.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor prism_default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor "nosyst"
+
+# PRISM prediction
+PRISMPrediction --fcl ../../fcl/PRISM/PRISMPred_Grid.fcl
+
+# PRISM fit
+PRISM_4Flavour_dChi2Scan --fcl fcl/PRISM/MyScan.fcl --binx X -- biny Y
+# the --binx and --biny inputs for the fitting script are optional and are only used for when submitting many jobs in parallel to the grid
+```
+
+## List of up-to-date state files:
 
 ```
 # Sep 9 after major merge of YOLO and main branch: EvisReco
@@ -67,24 +95,6 @@ The class in ```Syst/NewOffAxisFluxUncertainty2022Helper.cxx``` will then take t
 Syst/DUNEFluxSysts.h (ISyst)
 ```
 will then use the class NewOffAxisFluxUncertainty2022Helper to get shifts.
-
-## How to run apps after CAFAna code merge (Since Sep 23, 2022)
-
-```
-# State file prod
-cd PRISM/app
-# stat only: FD
-MakePRISMPredInterps -o FDFHCState_stat_only.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor prism_default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor "nosyst"
-
-# PRISM prediction
-PRISMPrediction --fcl fcl/PRISM/MyPred.fcl
-
-# PRISM fit
-PRISM_4Flavour_dChi2Scan --fcl fcl/PRISM/MyScan.fcl --binx X -- biny Y
-# the --binx and --biny inputs for the fitting script are optional and are only used for when submitting many jobs in parallel to the grid
-```
-
-
 
 ## NC bkg pred
 PredictionPRISM.cxx: GetGaussian
