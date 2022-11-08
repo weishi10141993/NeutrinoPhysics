@@ -1,4 +1,4 @@
-# Summit OakRidge
+# OakRidge Summit
 
 ## General info
 
@@ -6,11 +6,21 @@ All intensive tasks should be done on Summit.
 
 ### Configure build ROOT 5
 
+Option 1: Build with default gcc/8.3.1
 ```
-# Build with default gcc/8.3.1
 module load python/2.7.15       # this python is also built with same gcc
 mkdir ProdROOT
 cd ProdROOT
+git clone -b v5-34-00-patches http://root.cern.ch/git/root.git v5-34-00-patches
+./configure --disable-unuran --disable-vc --enable-soversion --enable-minuit2 --enable-roofit --enable-python --disable-mysql
+make
+```
+
+Option 2 [NOT TESTED YET]: Build with default gcc/8.3.1 and default python/2.7.17 (no need to load)
+See [discussion](https://root-forum.cern.ch/t/install-root-v5-34-34/52085/100?u=weishi).
+```
+mkdir ROOT
+cd ROOT
 git clone -b v5-34-00-patches http://root.cern.ch/git/root.git v5-34-00-patches
 ./configure --disable-unuran --disable-vc --enable-soversion --enable-minuit2 --enable-roofit --enable-python --disable-mysql
 make
@@ -29,6 +39,8 @@ cd MaCh3
 git clone git@github.com:weishi10141993/MaCh3.git -b DBarrow_JointFit
 cd MaCh3
 ```
+
+### Match option 1 of built ROOT5:
 
 Start setup,
 ```
@@ -56,6 +68,20 @@ Compile
 make clean
 make
 ```
+
+Whenever want to run executables, do (if relog-in)
+```
+source setup.sh
+
+# module load python/XXX (this will depend on which executable you run)
+
+module load python/3.8-anaconda3
+cd configs/AtmosphericConfigs
+python makeConfigs.py
+
+./AtmJointFit_Bin/PrintEventRate configs/AtmosphericConfigs/AtmConfig.cfg
+```
+
 
 # On Compute Canada
 
