@@ -4,6 +4,10 @@
 
 All intensive tasks should be done on Summit.
 
+Project area: /ccs/proj/phy171
+
+ROOT will be built there
+
 ### Configure build ROOT 5
 
 Option 1: Build with default gcc/8.3.1
@@ -67,6 +71,15 @@ Compile
 ```
 make clean
 make
+```
+
+Link samples:
+```
+# If want unlink symlink: unlink SKMCSplines  (do not use rm!!!)
+ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_skatm /autofs/nccs-svm1_home1/wshi/MaCh3/MaCh3/inputs/skatm/SKMC
+ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_skatm_spline /autofs/nccs-svm1_home1/wshi/MaCh3/MaCh3/inputs/skatm/SKMCSplines
+ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_t2kbeam /autofs/nccs-svm1_home1/wshi/MaCh3/MaCh3/inputs/SK_19b_13av7_fitqun20
+ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_t2kbeam_spline /autofs/nccs-svm1_home1/wshi/MaCh3/MaCh3/inputs/SK_19b_13av7_splines20
 ```
 
 Whenever want to run executables, do (if relog-in)
