@@ -4,27 +4,31 @@
 
 All intensive tasks should be done on Summit.
 
-Project area: /ccs/proj/phy171
+Project area: ```/ccs/proj/phy171```
 
-ROOT will be built there
+ROOT will be built there.
 
 ### Configure build ROOT 5
 
-Option 1: Build with default gcc/8.3.1
+Option 1: build with default gcc/8.3.1 and enable cxx11
 ```
+cd ~       
 module load python/2.7.15       # this python is also built with same gcc
-mkdir ProdROOT
-cd ProdROOT
-git clone -b v5-34-00-patches http://root.cern.ch/git/root.git v5-34-00-patches
-./configure --disable-unuran --disable-vc --enable-soversion --enable-minuit2 --enable-roofit --enable-python --disable-mysql
+mkdir ROOTDebug
+cd ROOTDebug
+git clone --depth 1 --branch v5-34-00-patches https://github.com/root-project/root.git v5-34-00-patches
+cd v5-34-00-patches
+# Pending ROOT patches: replace file config/Makefile.linuxppc64gcc and add __linux definition
+./configure --disable-unuran --disable-vc --enable-soversion --enable-minuit2 --enable-roofit --enable-python --enable-cxx11 --disable-mysql
 make
 ```
 
 Option 2 [NOT TESTED YET]: Build with default gcc/8.3.1 and default python/2.7.17 (no need to load)
-See [discussion](https://root-forum.cern.ch/t/install-root-v5-34-34/52085/100?u=weishi).
+See [discussion](https://root-forum.cern.ch/t/install-root-v5-34-34/52085/100?u=weishi) and this [thread](https://root-forum.cern.ch/t/number-5-is-alive/52310)
+
 ```
-mkdir ROOT
-cd ROOT
+mkdir TestROOT
+cd TestROOT
 git clone -b v5-34-00-patches http://root.cern.ch/git/root.git v5-34-00-patches
 ./configure --disable-unuran --disable-vc --enable-soversion --enable-minuit2 --enable-roofit --enable-python --disable-mysql
 make
@@ -47,18 +51,21 @@ cd MaCh3
 ### Match option 1 of built ROOT5:
 
 Start setup,
+
 ```
 source SetMeUp.sh
 # Do not build root, will auto source root built at my dir
 # Do not build iRODS, will copy ND files over directly
-Build ROOT? (y/n)n
-Build CMT (needed for psyche)? (y/n)y
-Build iRODS and get files? (y/n)n
-Setup NIWGReWeight? (y/n)y
-Build CMAKE binary? (y/n)y
+# Do not build CMAKE
+Build ROOT? (y/n) n
+Build CMT (needed for psyche)? (y/n) y
+Build iRODS and get files? (y/n) n
+Setup NIWGReWeight? (y/n) y
+Build CMAKE binary? (y/n) n
 ```
 
-Routine source
+Routine source,
+
 ```
 source setup_CUDAProb.sh
 source setup_psyche.sh
@@ -85,14 +92,16 @@ ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_t2
 Whenever want to run executables, do (if relog-in)
 ```
 source setup.sh
-
-# module load python/XXX (this will depend on which executable you run)
-
-module load python/3.8-anaconda3
-cd configs/AtmosphericConfigs
-python makeConfigs.py
+# export gsl
+# gslpath=/autofs/nccs-svm1_home1/wshi/MaCh3/gsl-1.16
+# export PATH=/autofs/nccs-svm1_home1/wshi/MaCh3/gsl-1.16/Linux/bin:${PATH}
+# export LD_LIBRARY_PATH=/autofs/nccs-svm1_home1/wshi/MaCh3/gsl-1.16/Linux/lib:${LD_LIBRARY_PATH}
 
 ./AtmJointFit_Bin/PrintEventRate configs/AtmosphericConfigs/AtmConfig.cfg
+
+module load python/3.8-anaconda3 (note this could modify PATH/LD_LIBRARY_PATH)
+cd configs/AtmosphericConfigs
+python makeConfigs.py
 ```
 
 
