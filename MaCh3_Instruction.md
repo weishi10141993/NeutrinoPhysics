@@ -53,6 +53,7 @@ cd MaCh3
 Start setup,
 
 ```
+export CXXFLAGS="-std=c++11" # try to "enforce" the C++ standard
 source SetMeUp.sh
 # Do not build root, will auto source root built at my dir
 # Do not build iRODS, will copy ND files over directly
@@ -97,11 +98,37 @@ source setup.sh
 # export PATH=/autofs/nccs-svm1_home1/wshi/MaCh3/gsl-1.16/Linux/bin:${PATH}
 # export LD_LIBRARY_PATH=/autofs/nccs-svm1_home1/wshi/MaCh3/gsl-1.16/Linux/lib:${LD_LIBRARY_PATH}
 
-./AtmJointFit_Bin/PrintEventRate configs/AtmosphericConfigs/AtmConfig.cfg
-
-module load python/3.8-anaconda3 (note this could modify PATH/LD_LIBRARY_PATH)
+module load python/3.8-anaconda3 (note: this could modify PATH/LD_LIBRARY_PATH)
 cd configs/AtmosphericConfigs
 python makeConfigs.py
+
+# Print event rate (runs ok on atm sample 1)
+./AtmJointFit_Bin/PrintEventRate configs/AtmosphericConfigs/AtmConfig.cfg
+
+# Generate new RC tables with updated evt topology (runs ok to me)
+./AtmJointFit_Bin/CreateRCTables configs/AtmosphericConfigs/AtmConfig.cfg  
+
+# . Note to set ```useT2K = false``` in ```AtmSigmaVar.cpp``` and recompile. The output is in $MaCh3/output.
+# runs ok #
+./AtmJointFit_Bin/AtmSigmaVar configs/AtmosphericConfigs/AtmConfig.cfg
+
+# LLH scan:  Note to set ```useT2K = false``` in ```SystLLHScan.cpp``` and recompile. This takes a while (~6hrs/sample)
+# Use ```nohup ./AtmJointFit_Bin/SystLLHScan configs/AtmosphericConfigs/AtmConfig.cfg >& out_LLHScan_nohup.log &``` to keep it running even after logged out.
+# Complaining P6Data not copied yet
+./AtmJointFit_Bin/SystLLHScan configs/AtmosphericConfigs/AtmConfig.cfg
+
+# Some error (screenshot) on plotting
+# ??? Do we expect it to work???
+./AtmJointFit_Bin/MakeAtmDetHists configs/AtmosphericConfigs/AtmConfig.cfg
+# Some error (screenshot) on 2020 xsec cov was 147 pars long and the one you've given me isn't ../covariance/BANFF_to_xsec_mapping.h:254
+# ??? Do we expect it to work???
+./AtmJointFit_Bin/PlotAtmByMode configs/AtmosphericConfigs/AtmConfig.cfg 27
+
+# Run the joint fit:
+./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
+
+# diagnose
+./AtmJointFit_Bin/DiagMCMC ./output/MaCh3-Atmospherics-MCMC.root
 ```
 
 
