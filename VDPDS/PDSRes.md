@@ -5,13 +5,15 @@
 The main module is ```duneopdet/OpticalDetector/SIPMOpSensorSim_module.cc```, where we are interested in the parameter ```DarkNoiseRate```(default to 10Hz). This is equivalently the noise rate, can be treated as a proxy for PoF light noise.
 
 ```
-source /grid/fermiapp/products/dune/setup_dune.sh
-ups list -aK+ dunesw
-setup dunesw v09_62_00d01 -q e20:prof
 cd /dune/app/users/weishi
 mkdir VDPDSRes
 cd VDPDSRes
+
+source /grid/fermiapp/products/dune/setup_dune.sh
+ups list -aK+ dunesw
+setup dunesw v09_62_00d01 -q e20:prof
 mrb newDev
+source /dune/app/users/weishi/VDPDSRes/localProducts_larsoft_v09_62_00_e20_prof/setup
 cd srcs
 mrb g duneopdet
 cd $MRB_BUILDDIR

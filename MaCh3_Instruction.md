@@ -93,10 +93,6 @@ ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_t2
 Whenever want to run executables, do (if relog-in)
 ```
 source setup.sh
-# export gsl
-# gslpath=/autofs/nccs-svm1_home1/wshi/MaCh3/gsl-1.16
-# export PATH=/autofs/nccs-svm1_home1/wshi/MaCh3/gsl-1.16/Linux/bin:${PATH}
-# export LD_LIBRARY_PATH=/autofs/nccs-svm1_home1/wshi/MaCh3/gsl-1.16/Linux/lib:${LD_LIBRARY_PATH}
 
 module load python/3.8-anaconda3 (note: this could modify PATH/LD_LIBRARY_PATH)
 cd configs/AtmosphericConfigs
@@ -109,12 +105,12 @@ python makeConfigs.py
 ./AtmJointFit_Bin/CreateRCTables configs/AtmosphericConfigs/AtmConfig.cfg  
 
 # . Note to set ```useT2K = false``` in ```AtmSigmaVar.cpp``` and recompile. The output is in $MaCh3/output.
-# runs ok #
+### runs ok ###
 ./AtmJointFit_Bin/AtmSigmaVar configs/AtmosphericConfigs/AtmConfig.cfg
 
 # LLH scan:  Note to set ```useT2K = false``` in ```SystLLHScan.cpp``` and recompile. This takes a while (~6hrs/sample)
 # Use ```nohup ./AtmJointFit_Bin/SystLLHScan configs/AtmosphericConfigs/AtmConfig.cfg >& out_LLHScan_nohup.log &``` to keep it running even after logged out.
-# Complaining P6Data not copied yet
+### Complaining P6Data not copied yet ###
 ./AtmJointFit_Bin/SystLLHScan configs/AtmosphericConfigs/AtmConfig.cfg
 
 # Some error (screenshot) on plotting
@@ -124,10 +120,12 @@ python makeConfigs.py
 # ??? Do we expect it to work???
 ./AtmJointFit_Bin/PlotAtmByMode configs/AtmosphericConfigs/AtmConfig.cfg 27
 
+## TO-TEST
+
 # Run the joint fit:
 ./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
 
-# diagnose
+# Diagnose
 ./AtmJointFit_Bin/DiagMCMC ./output/MaCh3-Atmospherics-MCMC.root
 ```
 
