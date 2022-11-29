@@ -10,54 +10,22 @@ ROOT will be built there.
 
 ### Configure build ROOT 5
 
+
 Option 1: build with default gcc/8.3.1 and enable cxx11
-```
-cd ~       
-module load python/2.7.15       # this python is also built with same gcc
-mkdir ROOTDebug
-cd ROOTDebug
-git clone --depth 1 --branch v5-34-00-patches https://github.com/root-project/root.git v5-34-00-patches
-cd v5-34-00-patches
-# Pending ROOT patches (Nov 21):
-# 1. replace file config/Makefile.linuxppc64gcc
-# 2. add __linux definition in two files:
-#    "`cint/cint/inc/G__ci.h`": right before the line 368 which contains "`/* added by Fons Radamakers in 2000 Oct 2 */`"
-#    "`core/base/inc/RConfig.h`": right before the line 61 which contains "`#ifdef __linux`"
-// Add this definition //
-#if defined(__linux__) && defined(__GNUC__) && defined(__STRICT_ANSI__)
-#   ifndef __linux
-#      define __linux
-#   endif
-#endif
-//======================
-./configure --disable-unuran --disable-vc --enable-soversion --enable-minuit2 --enable-roofit --enable-python --enable-cxx11 --disable-mysql
-make
-```
 
-Option 2: build with default gcc/8.3.1 and enable cxx11
 ```
-cd ~       
+cd /ccs/proj/phy171/wshi        # so everyone in the project have access
 module load python/2.7.15       # this python is also built with same gcc
-mkdir ROOTDebug2
-cd ROOTDebug2
+mkdir ROOT
+cd ROOT
 git clone --depth 1 --branch v5-34-00-patches https://github.com/root-project/root.git v5-34-00-patches
-# apply patches
-patch -p0 < v5-34-00-patches.diff.out.txt
 cd v5-34-00-patches
 ./configure --disable-unuran --disable-vc --enable-soversion --enable-minuit2 --enable-roofit --enable-python --enable-cxx11 --disable-mysql
 make
 ```
 
-Option 3 [NOT TESTED YET]: Build with default gcc/8.3.1 and default python/2.7.17 (no need to load)
+Option 2 [NOT TESTED YET]: Build with default gcc/8.3.1 and default python/2.7.17 (no need to load)
 See [discussion](https://root-forum.cern.ch/t/install-root-v5-34-34/52085/100?u=weishi) and this [thread](https://root-forum.cern.ch/t/number-5-is-alive/52310)
-
-```
-mkdir TestROOT
-cd TestROOT
-git clone -b v5-34-00-patches http://root.cern.ch/git/root.git v5-34-00-patches
-./configure --disable-unuran --disable-vc --enable-soversion --enable-minuit2 --enable-roofit --enable-python --disable-mysql
-make
-```
 
 ## MaCh3 installation on Summit
 
@@ -72,8 +40,6 @@ cd MaCh3
 git clone git@github.com:weishi10141993/MaCh3.git -b DBarrow_JointFit
 cd MaCh3
 ```
-
-### Match option 1 or 2 of built ROOT5:
 
 Start setup,
 
@@ -114,6 +80,8 @@ ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_sk
 ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_t2kbeam /autofs/nccs-svm1_home1/wshi/MaCh3/MaCh3/inputs/SK_19b_13av7_fitqun20
 ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_t2kbeam_spline /autofs/nccs-svm1_home1/wshi/MaCh3/MaCh3/inputs/SK_19b_13av7_splines20
 ```
+
+Copy and link P6Data and P6MC -- to do.
 
 Whenever want to run executables, do (if relog-in)
 ```

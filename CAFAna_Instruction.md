@@ -39,6 +39,7 @@ cd PRISM/app
 MakePRISMPredInterps -o FDFHCState_stat_only.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor prism_default --no-fakedata-dials -A EVisReco --UseSelection --syst-descriptor "nosyst"
 
 # PRISM prediction
+export CAFANA_STAT_ERRS=1
 PRISMPrediction --fcl ../../fcl/PRISM/PRISMPred_Grid.fcl
 
 # PRISM fit
