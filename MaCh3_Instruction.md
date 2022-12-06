@@ -101,10 +101,12 @@ python makeConfigs.py
 ### runs ok ###
 ./AtmJointFit_Bin/AtmSigmaVar configs/AtmosphericConfigs/AtmConfig.cfg
 
-# LLH scan:  Note to set ```useT2K = false``` in ```SystLLHScan.cpp``` and recompile. This takes a while (~6hrs/sample)
-# Use ```nohup ./AtmJointFit_Bin/SystLLHScan configs/AtmosphericConfigs/AtmConfig.cfg >& out_LLHScan_nohup.log &``` to keep it running even after logged out.
-### Complaining P6Data not copied yet ###
+# Note to set ```useT2K = false``` in ```SystLLHScan.cpp``` and recompile. This takes a while (~6hrs/sample)
+# Use ```nohup ./AtmJointFit_Bin/SystLLHScan configs/AtmosphericConfigs/AtmConfig.cfg >& out_LLHScan_nohup.log &``` to keep it running even after logged out, or submit a job, see below
 ./AtmJointFit_Bin/SystLLHScan configs/AtmosphericConfigs/AtmConfig.cfg
+
+# Run the joint fit, submit a job, see below
+./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
 
 # Some error (screenshot) on plotting
 # ??? Do we expect it to work???
@@ -115,13 +117,50 @@ python makeConfigs.py
 
 ## TO-TEST
 
-# Run the joint fit:
-./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
-
 # Diagnose
 ./AtmJointFit_Bin/DiagMCMC ./output/MaCh3-Atmospherics-MCMC.root
 ```
 
+## Summit Job Submission
+
+Open new batch job file ```vi myjob.lsf``` and use the [high-memory queue](https://docs.olcf.ornl.gov/systems/summit_user_guide.html#batch-hm-queue-policy) so that we can get more wall time:
+
+```
+#!/bin/bash
+#BSUB -P phy171
+#BSUB -W 24:00
+#BSUB -q batch-hm
+#BSUB -nnodes 1
+#BSUB -J SystLLHScan
+#BSUB -o SystLLHScan.%J
+#BSUB -e SystLLHScan.%J
+
+cd /ccs/home/wshi/MaCh3/MaCh3
+date
+jsrun -n 12 -a 1 -c 1 -g 0 ./AtmJointFit_Bin/SystLLHScan configs/AtmosphericConfigs/AtmConfig.cfg
+wait
+```
+
+Or to run the fit:
+```
+#!/bin/bash
+#BSUB -P phy171
+#BSUB -W 24:00
+#BSUB -q batch-hm
+#BSUB -nnodes 1
+#BSUB -J JointAtmFit
+#BSUB -o JointAtmFit.%J
+#BSUB -e JointAtmFit.%J
+
+cd /ccs/home/wshi/MaCh3/MaCh3
+export OMP_NUM_THREADS=8
+date
+jsrun -n 12 -a 1 -c 8 -g 0 ./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
+wait
+```
+
+Submit: ```bsub *.lsf``` (wall time limit to 2hrs?)
+Monitor:  ```bjobs``` (more [options](https://docs.olcf.ornl.gov/systems/summit_user_guide.html#monitoring-jobs))
 
 # On Compute Canada
 
