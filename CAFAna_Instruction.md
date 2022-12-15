@@ -30,22 +30,26 @@ The following is seldom used, remove old compile and recompile from scratch
 ./standalone_configure_and_build.sh -u -r --db -f
 ```
 
-## NEW ND CAF files with half stop
+## ND CAF files
+
+New ND CAF files with half stops:
 ```
 ND FHC: /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC
 ND RHC: /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC
 ```
-Raw CAF files in LBL dir
+Raw CAF files (pre-hadded) in LBL dir
 ```
 /pnfs/dune/persistent/physicsgroups/dunelbl/abooth/PRISM/Production/Simulation/ND_CAFMaker/v7/CAF
 ```
 
+## FD CAF files
+
 ```
-# All FD CAFs in:
 /pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/
 
-# copied separately under:
+# Copied separately under:
 /pnfs/dune/persistent/users/weishi/FDCAF/FHC
+
 # Note: the nue or tauswap state file production actually runs over nonswap+nueswap as nonswap always need to be included (not clear why) so the relevant folder have two FD files
 ```
 
@@ -61,13 +65,20 @@ MakePRISMPredInterps -o FDFHCState_stat_only.root -F-nu /dune/data/users/chasnip
 export CAFANA_STAT_ERRS=1
 PRISMPrediction --fcl ../../fcl/PRISM/PRISMPred_Grid.fcl
 
-# PRISM fit
-PRISM_4Flavour_dChi2Scan --fcl fcl/PRISM/MyScan.fcl --binx X -- biny Y
+# PRISM 1D fit interactively
+PRISM_4Flavour_dChi2Scan --fcl fcl/PRISM/PRISMOscScan_Grid.fcl --binx 1
+# PRISM 2D fit interactively
+PRISM_4Flavour_dChi2Scan --fcl fcl/PRISM/PRISMOscScan_Grid.fcl --binx 1 --biny 1
+# PRISM 1D fit on grid
+./FarmCAFPRISMNodeScript.sh -c PRISM_1DScan_Commands.cmd
+# PRISM 2D fit on grid
+./FarmCAFPRISMNodeScript.sh -c PRISM_2DScan_Commands.cmd
+
 # the --binx and --biny inputs for the fitting script are optional and are only used for when submitting many jobs in parallel to the grid
 ```
 
 ## 2D state file production (stat-only)
-Below is an example of submit a 2D (ELepEHad) state file production job to FermiGrid without any systematic responses.
+Below is an example of submit a 2D (ELepEHad, true ELep and true EHad) state file production job to FermiGrid without any systematic responses.
 
 ```
 cd PRISM/scripts/FermiGridPRISMScripts
@@ -93,13 +104,12 @@ cd PRISM/scripts/FermiGridPRISMScripts
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/tauswap --no-fakedata-dials -a ELepEHad --syst-descriptor "nosyst" -F -b
 
 # Add state files
-./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHad/StatOnly/NDFHC 41703844.0 DONE
-./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHad/StatOnly/NDRHC 41640757.0
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHad/StatOnly/Hadded
 ```
 
 ## 2D state file production
 
-Below is an example of submit a 2D (ELepEHado) state file production job to FermiGrid with only flux systematic.
+Below is an example of submit a 2D (ELepEHad) state file production job to FermiGrid with only flux systematic.
 
 The memory consumption is larger than 1D, 40GB/job. Default binning is ```lep_default```. (does it need to be?)
 
@@ -142,14 +152,10 @@ FD RHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadRe
 ## List of up-to-date state files:
 
 ```
-# Sep 9 after major merge of YOLO and main branch: EvisReco
-/pnfs/dune/persistent/users/chasnip/CAFAnaStateFiles/PRISMState_FHC_RHC_EVisReco_FluxXSecDet_9Sep22.root
+# ELepEHad
+/pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHad/StatOnly/Hadded_AllChannel_State_ELepEHad_StatOnly.42052729.0.root
 
-# Intrinsic nue Flux+xsec bin: lep_default (Aug 17, obselete after code merge):
-root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/IntrinsicNue_Syst_nodet/hadd_state_IntrinsicNue_nodet_withxseccorr.root
-
-# ELepEHadReco (xsec only, obselete)
-/pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/ELepEHadReco_Axis_lep_default_Binning_hadd_state_xsec_syst_only.root
+root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHad/StatOnly/Hadded_AllChannel_State_ELepEHad_StatOnly.42052729.0.root
 ```
 
 ## How to Hadd ND CAF files produced by grid/production team

@@ -75,13 +75,11 @@ make
 Link samples:
 ```
 # If want unlink symlink: unlink SKMCSplines  (do not use rm!!!)
-ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_skatm /autofs/nccs-svm1_home1/wshi/MaCh3/MaCh3/inputs/skatm/SKMC
-ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_skatm_spline /autofs/nccs-svm1_home1/wshi/MaCh3/MaCh3/inputs/skatm/SKMCSplines
-ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_t2kbeam /autofs/nccs-svm1_home1/wshi/MaCh3/MaCh3/inputs/SK_19b_13av7_fitqun20
-ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_t2kbeam_spline /autofs/nccs-svm1_home1/wshi/MaCh3/MaCh3/inputs/SK_19b_13av7_splines20
+ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_skatm /gpfs/alpine/phy171/proj-shared/wshi/MaCh3/MaCh3/inputs/skatm/SKMC
+ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_skatm_spline /gpfs/alpine/phy171/proj-shared/wshi/MaCh3/MaCh3/inputs/skatm/SKMCSplines
+ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_t2kbeam /gpfs/alpine/phy171/proj-shared/wshi/MaCh3/MaCh3/inputs/SK_19b_13av7_fitqun20
+ln -s /gpfs/alpine/phy171/proj-shared/junjiejiang/MaCh3_Storage/m3_input_mcmc_t2kbeam_spline /gpfs/alpine/phy171/proj-shared/wshi/MaCh3/MaCh3/inputs/SK_19b_13av7_splines20
 ```
-
-Copy and link P6Data and P6MC -- to do.
 
 Whenever want to run executables, do (if relog-in)
 ```
@@ -135,7 +133,8 @@ Open new batch job file ```vi myjob.lsf``` and use the [high-memory queue](https
 #BSUB -o SystLLHScan.%J
 #BSUB -e SystLLHScan.%J
 
-cd /ccs/home/wshi/MaCh3/MaCh3
+cd /gpfs/alpine/phy171/proj-shared/wshi/MaCh3/MaCh3
+source setup.sh
 date
 jsrun -n 12 -a 1 -c 1 -g 0 ./AtmJointFit_Bin/SystLLHScan configs/AtmosphericConfigs/AtmConfig.cfg
 wait
@@ -152,10 +151,11 @@ Or to run the fit:
 #BSUB -o JointAtmFit.%J
 #BSUB -e JointAtmFit.%J
 
-cd /ccs/home/wshi/MaCh3/MaCh3
-export OMP_NUM_THREADS=8
+cd /gpfs/alpine/phy171/proj-shared/wshi/MaCh3/MaCh3
+source setup.sh
+export OMP_NUM_THREADS=1
 date
-jsrun -n 12 -a 1 -c 8 -g 0 ./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
+jsrun -n 7 -a 1 -c 6 -g 0 ./AtmJointFit_Bin/JointAtmFit configs/AtmosphericConfigs/AtmConfig.cfg
 wait
 ```
 
