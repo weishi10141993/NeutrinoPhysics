@@ -132,6 +132,7 @@ Open new batch job file ```vi myjob.lsf``` and use the [high-memory queue](https
 #BSUB -J SystLLHScan
 #BSUB -o SystLLHScan.%J
 #BSUB -e SystLLHScan.%J
+#BSUB -u wei.shi.1@stonybrook.edu 
 
 cd /gpfs/alpine/phy171/proj-shared/wshi/MaCh3/MaCh3
 source setup.sh
@@ -150,6 +151,7 @@ Or to run the fit:
 #BSUB -J JointAtmFit
 #BSUB -o JointAtmFit.%J
 #BSUB -e JointAtmFit.%J
+#BSUB -u wei.shi.1@stonybrook.edu
 
 cd /gpfs/alpine/phy171/proj-shared/wshi/MaCh3/MaCh3
 source setup.sh
