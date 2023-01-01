@@ -72,7 +72,7 @@ MakePRISMPredInterps -o NDRHCState_stat_only.root -N-nub root://fndca1.fnal.gov:
 
 Example of produce PRISM prediction:
 ```
-export CAFANA_STAT_ERRS=1
+export CAFANA_STAT_ERRS=1 (add to source script as required by CAFAnaCore)
 kx509
 voms-proxy-init -rfc -noregen -voms dune:/dune/Role=Analysis
 PRISMPrediction --fcl ../../fcl/PRISM/PRISMPred_Grid.fcl
@@ -88,6 +88,9 @@ PRISM_4Flavour_dChi2Scan --fcl fcl/PRISM/PRISMOscScan_Grid.fcl --binx 1 --biny 1
 ./FarmCAFPRISMNodeScript.sh -c PRISM_1DScan_Commands.cmd
 # PRISM 2D fit on grid
 ./FarmCAFPRISMNodeScript.sh -c PRISM_2DScan_Commands.cmd
+
+# Missing proton fake data fit, set in PRISMOscScan_Grid.fcl:
+use_fake_data: true
 ```
 
 The --binx and --biny inputs for the fitting script are optional and are only used for when submitting many jobs in parallel to the grid.
@@ -108,9 +111,9 @@ cd PRISM/scripts/FermiGridPRISMScripts
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -N -b
 
 # FD FHC
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nonswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -F -u  
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nonswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -F -u
 # this runs over nonswap+nueswap as nonswap always need to be included (not clear why)
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nueswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -F -u  
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nueswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -F -u
 # this runs over nonswap+tauswap as nonswap always need to be included (not clear why)
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/tauswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -F -u
 
@@ -122,7 +125,7 @@ cd PRISM/scripts/FermiGridPRISMScripts
 ./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/tauswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -F -b
 
 # Add state files
-./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadVisReco/StatOnly/Hadded
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadVisReco_lep_default_binning_TrueObs_fixed/StatOnly/Hadded
 ```
 
 ## 2D state file production
@@ -157,7 +160,7 @@ Hadd the output state files (can try SBU local cluster with more RAM):
 
 ```
 NDRHC On Axis: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/NDRHCOnAxis
-NDRHC Off Axis: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/NDRHCOffAxis 
+NDRHC Off Axis: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/NDRHCOffAxis
 NDFHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/NDFHC
 FD FHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/FDFHC
 FD RHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/FDRHC
@@ -167,10 +170,9 @@ FD RHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadRe
 
 ## List of up-to-date state files:
 
-2D variable ```ELepEHadVisReco``` for osc fit, with ```prism_default``` binning, stat-only:
-(with binning ```prism_default```, prediction complains ```NDETrue = D * NDERec``` matrix dimension problem, D is 18 by 18, NDERec is 324)
+2D variable ```ELepEHadVisReco``` for osc fit, with ```lep_default``` binning, stat-only, true observable HistAxis match "ELepEHadVisReco":
 ```
-root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadVisReco_prism_default_binning/StatOnly/ELepEHadVisReco_StatOnly_Hadded.root
+root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadVisReco_lep_default_binning_TrueObs_fixed/StatOnly/ELepEHadVisReco_lep_default_binning_TrueObs_fixed_StatOnly_Hadded_State.root
 ```
 
 2D variable ```ELepEHad``` (truth level) for osc fit, with ```prism_default``` binning, stat-only:
