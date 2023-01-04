@@ -81,13 +81,13 @@ PRISMPrediction --fcl ../../fcl/PRISM/PRISMPred_Grid.fcl
 Example of doing PRISM fits:
 ```
 # PRISM 1D fit interactively
-PRISM_4Flavour_dChi2Scan --fcl fcl/PRISM/PRISMOscScan_Grid.fcl --binx 1
+PRISM_4Flavour_dChi2Scan --fcl ../../fcl/PRISM/PRISMOscScan_Grid.fcl --binx 1
 # PRISM 2D fit interactively
-PRISM_4Flavour_dChi2Scan --fcl fcl/PRISM/PRISMOscScan_Grid.fcl --binx 1 --biny 1
+PRISM_4Flavour_dChi2Scan --fcl ../../fcl/PRISM/PRISMOscScan_Grid.fcl --binx 1 --biny 1
 # PRISM 1D fit on grid
 ./FarmCAFPRISMNodeScript.sh -c PRISM_1DScan_Commands.cmd
 # PRISM 2D fit on grid
-./FarmCAFPRISMNodeScript.sh -c PRISM_2DScan_Commands.cmd
+./FarmCAFPRISMNodeScript.sh -c PRISM_2DScan_Commands.cmd   42746008.0
 
 # Missing proton fake data fit, set in PRISMOscScan_Grid.fcl:
 use_fake_data: true

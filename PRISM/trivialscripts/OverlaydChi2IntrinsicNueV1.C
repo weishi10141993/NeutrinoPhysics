@@ -97,7 +97,7 @@ void OverlaydChi2IntrinsicNueV1() {
       delete f2;
     } // end loop over poibins
 
-    // Find minimum Chi2 and the bin
+    // Find minimum Chi2 and the bin --> Probably easiest to use GetMinimumBin?
 	  double min_flagoff(1E15), min_flagon(1E15);
 	  int minbin_flagoff(1), minbin_flagon(1);
 	  // This assumes plots have same number of bins, which is usually true
