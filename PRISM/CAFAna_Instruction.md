@@ -87,7 +87,7 @@ PRISM_4Flavour_dChi2Scan --fcl ../../fcl/PRISM/PRISMOscScan_Grid.fcl --binx 1 --
 # PRISM 1D fit on grid
 ./FarmCAFPRISMNodeScript.sh -c PRISM_1DScan_Commands.cmd
 # PRISM 2D fit on grid
-./FarmCAFPRISMNodeScript.sh -c PRISM_2DScan_Commands.cmd   42746008.0
+./FarmCAFPRISMNodeScript.sh -c PRISM_2DScan_Commands.cmd   
 
 # Missing proton fake data fit, set in PRISMOscScan_Grid.fcl:
 use_fake_data: true
@@ -126,6 +126,27 @@ cd PRISM/scripts/FermiGridPRISMScripts
 
 # Add state files
 ./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadVisReco_lep_default_binning_TrueObs_fixed/StatOnly/Hadded
+```
+
+```
+# Fit ssth23_dmsq32
+Numu_disp: DONE
+Numubar_disp: 42919929.0
+DispJoint
+Nue_app: 64954621.0
+Nuebar_app:
+AppJoint
+NuModeJoint
+NuBarModeJoint
+FourFlavor
+nutau?
+
+# Fit ssth23
+
+# Fit dmsq32
+
+# Fake data fit
+
 ```
 
 ## 2D state file production
