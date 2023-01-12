@@ -11,11 +11,11 @@
 
 void Fit2DVardChi2() {
   // User edit
-  TString FitChannel = "Numu_disp"; // Numu_disp, Numubar_disp
+  TString FitChannel = "AppJoint"; // Numu_disp, Numubar_disp, Nue_app, Nuebar_app, NuModeJoint, NuBarModeJoint, DispJoint, AppJoint, FakeDataNuModeJoint
   TString Syst = "StatOnly"; // StatOnly
 	std::vector<TString> pois {"ssth23_dmsq32"}; //ssth23_dmsq32, dcp_sstth13
-  //TString Dir = "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_binning_TrueObs_fixed"; // File on gpvm
-  TString Dir = "/pnfs/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_binning_TrueObs_fixed"; // File on gpvm
+  //TString Dir = "/pnfs/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_binning_TrueObs_fixed"; // File on gpvm
+  TString Dir = "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_binning_TrueObs_fixed"; // File on gpvm
 	TString AnalysisVar = "ELepEHadVisReco";
 
   // Initialize
@@ -33,11 +33,6 @@ void Fit2DVardChi2() {
   // loop over pois
 	for (int ipoi = 0; ipoi < pois.size(); ipoi++) {
 		PoI = pois.at(ipoi);
-
-		if ( PoI != "ssth23_dmsq32" && PoI != "dcp_sstth13" ) {
-			std::cout << "[ERROR] Unknown PoI: " << PoI << std::endl;
-			abort();
-		}
 
     // set poi bins
     if ( PoI == "ssth23_dmsq32" ) {
@@ -59,21 +54,9 @@ void Fit2DVardChi2() {
 			YAxisHigh = 0.15;
       truepx    = -0.8; // dcp @NO, cf LBL paper2
       truepy    = 0.087; // sstth13
-    }
-
-    // set dChi2 max in plot
-    if ( FitChannel == "Numu_disp" ) {
-      if ( PoI == "ssth23_dmsq32" ) MaxdChi2 = 30;
-  		else if ( PoI == "dcp_sstth13" ) MaxdChi2 = 20;
-    } else if ( FitChannel == "Numubar_disp" ) {
-      if ( PoI == "ssth23_dmsq32" ) MaxdChi2 = 20;
-  		else if ( PoI == "dcp_sstth13" ) MaxdChi2 = 15;
-    } else if ( FitChannel == "DispJoint" ) {
-      if ( PoI == "ssth23_dmsq32" ) MaxdChi2 = 40;
-  		else if ( PoI == "dcp_sstth13" ) MaxdChi2 = 30;
     } else {
-      std::cout << "[ERROR] Unknown FitChannel: " << FitChannel << std::endl;
-			abort();
+      std::cout << "[ERROR] Unknown PoI: " << PoI << std::endl;
+  		abort();
     }
 
     // Summarize
@@ -132,8 +115,6 @@ void Fit2DVardChi2() {
 					abort();
 				}
 
-
-
         delete h_chi2_tmp;
 				f1->Close();
 				delete f1;
@@ -158,6 +139,7 @@ void Fit2DVardChi2() {
           if ( biny+1 < PoiyBins+1 && h_dChi2_2D->GetBinContent(binx, biny+1) != 0 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx, biny+1); tmp_count++;}
 
           if (tmp_count != 0) h_dChi2_2D->SetBinContent(binx, biny, tmp_sum/tmp_count);
+          // if tmp_count is 0, then this failed job remain 0
           // otherwise probably need to find 2nd nearest neighbor? or too many jobs failed
         }
 
@@ -229,8 +211,8 @@ void Fit2DVardChi2() {
       if (FitChannel == "Numu_disp" || FitChannel == "Numubar_disp" || FitChannel == "DispJoint") leg->SetHeader("#theta_{13} = 0.150 #pm 0.002 rad", "C"); // no need to specify dcp in disp chan
       else leg->SetHeader("#splitline{#theta_{13} = 0.15 rad}{#delta_{CP} = -2.53 rad}", "C");
     }
-    leg->AddEntry(bestfitp,     "Best-fit point", "P");
-    leg->AddEntry(truep,        "True point",     "P");
+    leg->AddEntry(bestfitp, "Best-fit point", "P");
+    leg->AddEntry(truep,    "True point",     "P");
     leg->SetBorderSize(0);
     leg->SetFillStyle(0);
     leg->Draw();
@@ -242,10 +224,8 @@ void Fit2DVardChi2() {
     Double_t contour3sigma[1] = {9};
 
     h_dChi2_2D->SetContour(1, contour1sigma); h_dChi2_2D->SetLineStyle(1); h_dChi2_2D->Draw("CONT3");
-    TH2D* h_dChi2_2D_2 = (TH2D*)h_dChi2_2D->Clone();
-    h_dChi2_2D_2->SetContour(1, contour2sigma); h_dChi2_2D_2->SetLineStyle(2); h_dChi2_2D_2->Draw("CONT3 SAME");
-    TH2D* h_dChi2_2D_3 = (TH2D*)h_dChi2_2D->Clone();
-    h_dChi2_2D_3->SetContour(1, contour3sigma); h_dChi2_2D_3->SetLineStyle(3); h_dChi2_2D_3->Draw("CONT3 SAME");
+    TH2D* h_dChi2_2D_2 = (TH2D*)h_dChi2_2D->Clone(); h_dChi2_2D_2->SetContour(1, contour2sigma); h_dChi2_2D_2->SetLineStyle(2); h_dChi2_2D_2->Draw("CONT3 SAME");
+    TH2D* h_dChi2_2D_3 = (TH2D*)h_dChi2_2D->Clone(); h_dChi2_2D_3->SetContour(1, contour3sigma); h_dChi2_2D_3->SetLineStyle(3); h_dChi2_2D_3->Draw("CONT3 SAME");
     c->Update();
 
     bestfitp->Draw();

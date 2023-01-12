@@ -95,6 +95,14 @@ use_fake_data: true
 
 The --binx and --biny inputs for the fitting script are optional and are only used for when submitting many jobs in parallel to the grid.
 
+Summary of computing requirement of osc fit:
+
+```
+## Stat-only fit
+All channels excluding FourFlavor: 60hrs, 2GB Mem, 1GB disk space
+FourFlavor
+```
+
 ## 2D state file production (stat-only)
 
 Below is an example of submit a 2D (```ELepEHadVisReco```) state file production job to FermiGrid without adding any systematic shifts.
@@ -131,22 +139,25 @@ cd PRISM/scripts/FermiGridPRISMScripts
 ```
 # Fit ssth23_dmsq32
 Numu_disp: DONE
-Numubar_disp: 42919929.0
-DispJoint
-Nue_app: 64954621.0
-Nuebar_app:
-AppJoint
-NuModeJoint
-NuBarModeJoint
-FourFlavor
-nutau?
+Numubar_disp: DONE
+DispJoint: DONE
 
-# Fit ssth23
+Nue_app: DONE
+Nuebar_app: DONE
+AppJoint: DONE
 
-# Fit dmsq32
+NuModeJoint: DONE
+NuBarModeJoint: DONE
+FourFlavor: a lot held need more than 60hrs
 
 # Fake data fit
+NuModeJoint: 43083604.0 --> some held
+NuBarModeJoint: 43083651.0--> some held
+FourFlavor: a lot held need more than 60hrs
 
+# Above joint fit excludes nutau
+Nutau_app?
+Nutaubar_app?
 ```
 
 ## 2D state file production

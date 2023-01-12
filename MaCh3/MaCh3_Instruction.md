@@ -63,7 +63,9 @@ source setup_CUDAProb.sh
 source setup_psyche.sh
 source setup_T2KSKTools.sh
 source setup.sh
+
 # Avoid changing math.h header in two C files Prob3++/mosc3.c and Prob3++/mosc.c !!!
+# so go to these two files and change <cmath> back to math.h
 ```
 
 Compile
@@ -121,6 +123,28 @@ python makeConfigs.py
 
 ## Summit Job Submission
 
+Normal nodes:
+
+```
+#!/bin/bash
+#BSUB -P phy171
+#BSUB -W 2:00
+#BSUB -nnodes 1
+#BSUB -J PrintEventRate_Gen
+#BSUB -o PrintEventRate_Gen.%J
+#BSUB -e PrintEventRate_Gen.%J
+#BSUB -B
+#BSUB -N
+#BSUB -u wei.shi.1@stonybrook.edu
+
+cd /gpfs/alpine/phy171/proj-shared/wshi/MaCh3/MaCh3
+source setup.sh
+date
+export OMP_NUM_THREADS=1
+jsrun -n1 -a1 -c4 -g1 ./AtmJointFit_Bin/PrintEventRate configs/AtmosphericConfigs/AtmConfig.cfg
+wait
+```
+
 Open new batch job file ```vi myjob.lsf``` and use the [high-memory queue](https://docs.olcf.ornl.gov/systems/summit_user_guide.html#batch-hm-queue-policy) so that we can get more wall time:
 
 ```
@@ -132,7 +156,7 @@ Open new batch job file ```vi myjob.lsf``` and use the [high-memory queue](https
 #BSUB -J SystLLHScan
 #BSUB -o SystLLHScan.%J
 #BSUB -e SystLLHScan.%J
-#BSUB -u wei.shi.1@stonybrook.edu 
+#BSUB -u wei.shi.1@stonybrook.edu
 
 cd /gpfs/alpine/phy171/proj-shared/wshi/MaCh3/MaCh3
 source setup.sh
@@ -276,8 +300,29 @@ Then run the executables.
 ## Submit jobs
 
 Below is an example. You need to specify the project account and you cannot specify the node name. Also it’s strongly suggested that you specify the memory, otherwise the default mem is so small that your job will probably fail.
+
+Submit job from project dir.
+
 ```
+#!/bin/bash
+
+#SBATCH --time=02:00:00
+#SBATCH --mail-user=wei.shi.1@stonybrook.edu
+#SBATCH --mail-type=ALL
+#SBATCH --job-name=PrintEventRates_AsimovA_Gen
+#SBATCH --output=PrintEventRates_AsimovA_Gen.out
+#SBATCH --error=PrintEventRates_AsimovA_Gen.out
+#SBATCH --mem-per-cpu=4096M  
+#SBATCH --cpus-per-task=16   
+#SBATCH --account=rpp-blairt2k  
+
+cd /home/weishi2/MaCh3/MaCh3
+source setup.sh
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+./AtmJointFit_Bin/PrintEventRate configs/AtmosphericConfigs/AtmConfig.cfg
 ```
+
+Submit job: ```sbatch *.sh```
 
 # On SBU SeaWulf
 
