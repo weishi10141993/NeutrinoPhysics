@@ -4,19 +4,40 @@
 // It first plot the 2D dChi2 with its min subtracted,
 // Then it finds points where the dChi2 crosses 1, 4 and 9
 //
+// It will then overlay with a reference contours (e.g., the stat-only fit)
+//
 // Run this macro:
+// set the grid proxy for reading files via xrootd
+//   kx509
+//   voms-proxy-init -rfc -noregen -voms dune:/dune/Role=Analysis
 // source /cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.24.02/x86_64-centos7-gcc48-opt/bin/thisroot.sh
 // root -l -b -q Fit2DVardChi2.C
 //------------------------------------------------------------------
 
 void Fit2DVardChi2() {
+  //
   // User edit
-  TString FitChannel = "AppJoint"; // Numu_disp, Numubar_disp, Nue_app, Nuebar_app, NuModeJoint, NuBarModeJoint, DispJoint, AppJoint, FakeDataNuModeJoint
-  TString Syst = "StatOnly"; // StatOnly
+  //
+
+  // Fit channel can be:
+  // Numu_disp, Numubar_disp,
+  // Nue_app, Nuebar_app,
+  // NuModeJoint, NuBarModeJoint
+  // AppJoint, DispJoint
+  // FourFlavor
+
+  // FakeDataNumu_disp,
+  // FakeDataNuModeJoint, FakeDataNuBarModeJoint
+  // FakeDataAppJoint, FakeDataDispJoint
+  // FakeDataFourFlavor
+  TString FitChannel = "FourFlavor";
+  TString Syst = "flux_Nov17_0"; // StatOnly, flux_Nov17_<0-24>
 	std::vector<TString> pois {"ssth23_dmsq32"}; //ssth23_dmsq32, dcp_sstth13
-  //TString Dir = "/pnfs/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_binning_TrueObs_fixed"; // File on gpvm
-  TString Dir = "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_binning_TrueObs_fixed"; // File on gpvm
+  TString Dir = "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins"; // File on gpvm
 	TString AnalysisVar = "ELepEHadVisReco";
+  TString SystRef = "StatOnly"; // default to compare with StatOnly
+  bool overlay = true; // overlay with reference contours
+  if (Syst == "StatOnly") overlay = false;
 
   // Initialize
   TString PoI = "undefined";
@@ -60,7 +81,7 @@ void Fit2DVardChi2() {
     }
 
     // Summarize
-		std::cout << "Looking at poi: " << PoI << ", Fit channel: " << FitChannel << std::endl;
+		std::cout << "Looking at poi: " << PoI << ", Fit channel: " << FitChannel << ", syst: " << Syst << ", overlay contours: " << overlay << std::endl;
 
 		// Store dChi2 of all fit points
     TH2D *h_dChi2_2D = new TH2D("h_dChi2_2D", "h_dChi2_2D", PoixBins, XAxisLow, XAxisHigh, PoiyBins, YAxisLow, YAxisHigh);
@@ -73,11 +94,22 @@ void Fit2DVardChi2() {
 			for (int biny = 1; biny <= PoiyBins; biny++) {
 
 				// Input fit result file
-				TFile *f1 = TFile::Open( TString::Format("%s/%s/%s/%s/%s_%s_%s_stat_only_%d_%d.root", Dir.Data(), Syst.Data(), PoI.Data(), FitChannel.Data(), PoI.Data(), FitChannel.Data(), AnalysisVar.Data(), binx, biny ) );
-				if ( f1 == NULL ) continue; // skip if some jobs failed for certain reasons
-				// abort();
+        // file name caveat
+        TFile *f1;
+        if ( Syst == "StatOnly") f1 = TFile::Open( TString::Format("%s/%s/%s/%s/%s_%s_%s_stat_only_%d_%d.root", Dir.Data(), Syst.Data(), PoI.Data(), FitChannel.Data(), PoI.Data(), FitChannel.Data(), AnalysisVar.Data(), binx, biny ) );
+				else f1 = TFile::Open( TString::Format("%s/%s/%s/%s/%s_%s_%s_%s_%d_%d.root", Dir.Data(), Syst.Data(), PoI.Data(), FitChannel.Data(), PoI.Data(), FitChannel.Data(), AnalysisVar.Data(), Syst.Data(), binx, biny ) );
+
+        if ( f1 == NULL ) {
+          std::cout << "Skip not found file" << std::endl;
+          continue; // skip if some jobs failed for certain reasons
+        }
 
 				TH2D *h_chi2_tmp = (TH2D*)f1->Get("fit_nom/dChi2Scan");
+
+        if ( h_chi2_tmp == NULL ) {
+          std::cout << "Skip broken file" << std::endl;
+          continue; // skip is file is not broken
+        }
 
 				binxvalue = h_chi2_tmp->GetXaxis()->GetBinCenter(1);
 				binyvalue = h_chi2_tmp->GetYaxis()->GetBinCenter(1);
@@ -121,26 +153,32 @@ void Fit2DVardChi2() {
 			} // end loop over PoixBins
 		} // end loop over PoiyBins
 
-    // For failed jobs, the bin content is 0, interpolate
+    // For failed jobs, the bin content is 0, interpolate using nearest neighbors
     double tmp_sum;
     int tmp_count;
 		for (int binx = 1; binx <= PoixBins; binx++) {
 			for (int biny = 1; biny <= PoiyBins; biny++) {
 
-        if ( h_dChi2_2D->GetBinContent(binx, biny) == 0 ) {
-          std::cout << "[Info] Interpolate point due to failed jobs. " << std::endl;
+        // Some fit returns chi^2 1e-6, i.e., min chi2 set to fill hist. Fit didn't converge? Not sure why, needs investigation !!!
+        if ( h_dChi2_2D->GetBinContent(binx, biny) == 0 || h_dChi2_2D->GetBinContent(binx, biny) == 1e-06 ) {
+
+          std::cout << "[Info] Interpolate for missing points." << std::endl;
 
           tmp_sum = 0;
           tmp_count = 0;
 
-          if ( binx-1 > 0          && h_dChi2_2D->GetBinContent(binx-1, biny) != 0 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx-1, biny); tmp_count++;}
-          if ( binx+1 < PoixBins+1 && h_dChi2_2D->GetBinContent(binx+1, biny) != 0 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx+1, biny); tmp_count++;}
-          if ( biny-1 > 0          && h_dChi2_2D->GetBinContent(binx, biny-1) != 0 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx, biny-1); tmp_count++;}
-          if ( biny+1 < PoiyBins+1 && h_dChi2_2D->GetBinContent(binx, biny+1) != 0 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx, biny+1); tmp_count++;}
+          if ( binx-1 > 0          && h_dChi2_2D->GetBinContent(binx-1, biny) != 0 && h_dChi2_2D->GetBinContent(binx-1, biny) != 1e-06 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx-1, biny); tmp_count++;}
+          if ( binx+1 < PoixBins+1 && h_dChi2_2D->GetBinContent(binx+1, biny) != 0 && h_dChi2_2D->GetBinContent(binx+1, biny) != 1e-06 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx+1, biny); tmp_count++;}
+          if ( biny-1 > 0          && h_dChi2_2D->GetBinContent(binx, biny-1) != 0 && h_dChi2_2D->GetBinContent(binx, biny-1) != 1e-06 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx, biny-1); tmp_count++;}
+          if ( biny+1 < PoiyBins+1 && h_dChi2_2D->GetBinContent(binx, biny+1) != 0 && h_dChi2_2D->GetBinContent(binx, biny+1) != 1e-06 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx, biny+1); tmp_count++;}
 
-          if (tmp_count != 0) h_dChi2_2D->SetBinContent(binx, biny, tmp_sum/tmp_count);
-          // if tmp_count is 0, then this failed job remain 0
-          // otherwise probably need to find 2nd nearest neighbor? or too many jobs failed
+          if (tmp_count != 0) {
+            h_dChi2_2D->SetBinContent(binx, biny, tmp_sum/tmp_count);
+          } else {
+            // if tmp_count is 0, then this point remains
+            std::cout << "[WARNING] No neighbors available to interpolate, you probably have too many failed jobs." << std::endl;
+          }
+
         }
 
 			}
@@ -170,10 +208,12 @@ void Fit2DVardChi2() {
 			}
 		}
 
+    TFile myPlot(TString::Format("/dune/app/users/weishi/PRISMAnalysis/CAFAna/PRISM/scripts/Fit2DVar_%s_%s_%s.root", FitChannel.Data(), PoI.Data(), Syst.Data()), "RECREATE");
+
 	  TCanvas *c = new TCanvas("c", "c", 800, 600);
 	  c->cd(); c->SetGridx(); c->SetGridy();
     // Plot style
-	  h_dChi2_2D->SetTitle( TString::Format("DUNE-PRISM %s Joint Fit: %s (Exposure: 3.5 yr)",  FitChannel.Data(), Syst.Data() ) );
+	  h_dChi2_2D->SetTitle( TString::Format("DUNE-PRISM %s Fit (Exposure: 3.5 yr)",  FitChannel.Data() ) );
     h_dChi2_2D->GetZaxis()->SetTitle("#Delta #chi^{2}");
 	  h_dChi2_2D->SetStats(0);
 	  if ( PoI == "ssth23_dmsq32" ) {
@@ -208,16 +248,17 @@ void Fit2DVardChi2() {
 
     TLegend *leg = new TLegend(0.12, 0.14, 0.52, 0.26);
     if ( PoI == "ssth23_dmsq32") {
-      if (FitChannel == "Numu_disp" || FitChannel == "Numubar_disp" || FitChannel == "DispJoint") leg->SetHeader("#theta_{13} = 0.150 #pm 0.002 rad", "C"); // no need to specify dcp in disp chan
+      if (FitChannel == "Numu_disp" || FitChannel == "Numubar_disp" || FitChannel == "DispJoint" ||  FitChannel == "FakeDataNumu_disp" || FitChannel == "FakeDataNumubar_disp" || FitChannel == "FakeDataDispJoint") leg->SetHeader("#theta_{13} = 0.150 #pm 0.002 rad", "C"); // no need to specify dcp in disp chan
       else leg->SetHeader("#splitline{#theta_{13} = 0.15 rad}{#delta_{CP} = -2.53 rad}", "C");
     }
-    leg->AddEntry(bestfitp, "Best-fit point", "P");
     leg->AddEntry(truep,    "True point",     "P");
+    leg->AddEntry((TObject*)0,  TString::Format("%s", Syst.Data()), "");
+    leg->AddEntry(bestfitp, "Best-fit point", "P");
     leg->SetBorderSize(0);
     leg->SetFillStyle(0);
     leg->Draw();
 
-		c->SaveAs( TString::Format("/dune/app/users/weishi/PRISMAnalysis/CAFAna/PRISM/scripts/Fit2DVar_%s_%s.root", FitChannel.Data(), PoI.Data() ) );
+    c->Write("Chisq2D");
 
     Double_t contour1sigma[1] = {1};
     Double_t contour2sigma[1] = {4};
@@ -233,19 +274,63 @@ void Fit2DVardChi2() {
 
     TLegend *leg_contour = new TLegend(0.13, 0.13, 0.42, 0.34);
     if ( PoI == "ssth23_dmsq32") {
-      if (FitChannel == "Numu_disp" || FitChannel == "Numubar_disp" || FitChannel == "DispJoint") leg_contour->SetHeader("#theta_{13} = 0.150 #pm 0.002 rad", "C"); // no need to specify dcp in disp chan
+      if (FitChannel == "Numu_disp" || FitChannel == "Numubar_disp" || FitChannel == "DispJoint" ||  FitChannel == "FakeDataNumu_disp" || FitChannel == "FakeDataNumubar_disp" || FitChannel == "FakeDataDispJoint") leg_contour->SetHeader("#theta_{13} = 0.150 #pm 0.002 rad", "C"); // no need to specify dcp in disp chan
       else leg_contour->SetHeader("#splitline{#theta_{13} = 0.15 rad}{#delta_{CP} = -2.53 rad}", "C");
     }
+    leg_contour->AddEntry(truep,        "True point",     "P");
+    leg_contour->AddEntry((TObject*)0,  TString::Format("%s", Syst.Data()), "");
     leg_contour->AddEntry(bestfitp,     "Best-fit point", "P");
     leg_contour->AddEntry(h_dChi2_2D,   "1 #sigma",       "L");
     leg_contour->AddEntry(h_dChi2_2D_2, "2 #sigma",       "L");
     leg_contour->AddEntry(h_dChi2_2D_3, "3 #sigma",       "L");
-    leg_contour->AddEntry(truep,        "True point",     "P");
     leg_contour->SetBorderSize(0);
     leg_contour->SetFillStyle(0);
     leg_contour->Draw();
 
-    c->SaveAs( TString::Format("/dune/app/users/weishi/PRISMAnalysis/CAFAna/PRISM/scripts/Fit2DVar_%s_%s_contour.root", FitChannel.Data(), PoI.Data() ) );
+    c->Write("Contour2D");
+
+    // Overlay with stat only contours
+    if ( overlay ) {
+      TFile *RefContourF;
+      if ( SystRef == "StatOnly") RefContourF = TFile::Open("/dune/app/users/weishi/PRISMAnalysis/CAFAna/PRISM/scripts/Fit2DVar_FourFlavor_ssth23_dmsq32_StatOnly.root");
+      else {
+        std::cout << "[ERROR] Unknown SystRef: " << SystRef << std::endl;
+        abort();
+      }
+
+      TCanvas* RefContourCanvas = (TCanvas*)RefContourF->Get("Contour2D");
+
+      myPlot.cd();
+      TCanvas *coverlay = new TCanvas("coverlay", "coverlay", 800, 600);
+  	  coverlay->cd(); coverlay->SetGridx(); coverlay->SetGridy();
+      TH2D* Refsig1 = (TH2D*)RefContourCanvas->GetPrimitive("h_dChi2_2D");            Refsig1->Draw("CONT3");
+      TH2D* Refsig2 = (TH2D*)Refsig1->Clone(); Refsig2->SetContour(1, contour2sigma); Refsig2->SetLineStyle(2); Refsig2->Draw("CONT3 SAME");
+      TH2D* Refsig3 = (TH2D*)Refsig1->Clone(); Refsig3->SetContour(1, contour3sigma); Refsig3->SetLineStyle(3); Refsig3->Draw("CONT3 SAME");
+
+      // Draw the stat only best fit marker as well
+      // somehow it's name is just TMarker !
+      TMarker* RefBestFit = (TMarker*)RefContourCanvas->GetPrimitive("TMarker"); RefBestFit->SetMarkerColor(1); RefBestFit->Draw("SAME");
+
+      // Draw current contours and fit points
+      h_dChi2_2D->SetLineColor(2);   h_dChi2_2D->Draw("CONT3 SAME");
+      h_dChi2_2D_2->SetLineColor(2); h_dChi2_2D_2->Draw("CONT3 SAME");
+      h_dChi2_2D_3->SetLineColor(2); h_dChi2_2D_3->Draw("CONT3 SAME");
+
+      bestfitp->SetMarkerColor(2); bestfitp->Draw();
+      truep->SetMarkerColor(4);    truep->Draw();
+      // Add legend
+      leg_contour->AddEntry((TObject*)0, TString::Format("%s", SystRef.Data()), "");
+      leg_contour->AddEntry(RefBestFit,  "Best-fit point", "P");
+      leg_contour->AddEntry(Refsig1,     "1 #sigma",       "L");
+      leg_contour->AddEntry(Refsig2,     "2 #sigma",       "L");
+      leg_contour->AddEntry(Refsig3,     "3 #sigma",       "L");
+      leg_contour->Draw();
+
+      coverlay->Write("ContourOverlay");
+      RefContourF->Close();
+    }
+
+    myPlot.Close();
 
 	} // end poi
 

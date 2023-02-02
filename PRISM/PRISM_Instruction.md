@@ -1,218 +1,90 @@
-# Instruction for DUNE-PRISM analysis setup from DUNE FNAL machines (dunegpvm*)
+Notes:
 
-## Build CAFAna analysis code
+# New state prod with half had bins
 
-[First time only]
-
-```
-kinit -f weishi@FNAL.GOV                 # use your FNAL kerberos password
-ssh -X weishi@dunegpvm03.fnal.gov        
-cd /dune/app/users/weishi
-mkdir PRISMAnalysis
-cd PRISMAnalysis
-git clone https://github.com/weishi10141993/lblpwgtools.git -b feature/prism
-cd CAFAna
-# Build the code, the -u option rely on relevant dependencies from FNAL scisoft
-./standalone_configure_and_build.sh -u -r --db
-
-# set up work area environment
-source build/Linux/CAFAnaEnv.sh
-```
-
-To recompile, normally:
-```
-cd /dune/app/users/weishi/PRISMAnalysis/CAFAna/build
-make install -j 4
-```
-
-The following is seldom used. It removes old compile and recompile from scratch:
-```
-./standalone_configure_and_build.sh -u -r --db -f
-```
-
-## ND CAF files
-
-New ND CAF files with half stops:
-```
-ND FHC: /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC
-ND RHC: /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC
-```
-Raw CAF files (pre-hadded) in LBL dir
-```
-/pnfs/dune/persistent/physicsgroups/dunelbl/abooth/PRISM/Production/Simulation/ND_CAFMaker/v7/CAF
-```
-
-## FD CAF files
+## Stat only
 
 ```
-/pnfs/dune/persistent/users/chasnip/CAF_MC_FILES_4FLAVOUR/
-
-# Copied separately under:
-/pnfs/dune/persistent/users/weishi/FDCAF/FHC
-
-# Note: the nue or tauswap state file production actually runs over nonswap+nueswap as nonswap always need to be included (not clear why) so the relevant folder have two FD files
-```
-
-## How to run apps after CAFAna code merge (Since Sep 23, 2022)
-
-Below are examples of producing stat-only state files interactively without submitting a job for testing purposes:
-
-```
-cd PRISM/app
-
-# FDFHC
-MakePRISMPredInterps -o FDFHCState_stat_only.root -F-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nonswap.root -Fe-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_nueswap.root -Ft-nu /dune/data/users/chasnip/OffAxisCAFs/FD_FHC_tauswap.root --bin-descriptor lep_default --no-fakedata-dials -A ELepEHadVisReco --UseSelection --syst-descriptor "nosyst"
-
-# NDFHC
-MakePRISMPredInterps -o NDFHCState_stat_only.root -N-nu /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC/CAFv7_0m_132_FHC.root -A ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" --no-fakedata-dials --UseSelection
-
-# NDRHC
-MakePRISMPredInterps -o NDRHCState_stat_only.root -N-nub root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC/CAFv7_280kA_0m_118_RHC.root -A ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" --no-fakedata-dials --UseSelection
-```
-
-Example of produce PRISM prediction:
-```
-export CAFANA_STAT_ERRS=1 (add to source script as required by CAFAnaCore)
-kx509
-voms-proxy-init -rfc -noregen -voms dune:/dune/Role=Analysis
-PRISMPrediction --fcl ../../fcl/PRISM/PRISMPred_Grid.fcl
-```
-
-Example of doing PRISM fits:
-```
-# PRISM 1D fit interactively
-PRISM_4Flavour_dChi2Scan --fcl ../../fcl/PRISM/PRISMOscScan_Grid.fcl --binx 1
-# PRISM 2D fit interactively
-PRISM_4Flavour_dChi2Scan --fcl ../../fcl/PRISM/PRISMOscScan_Grid.fcl --binx 1 --biny 1
-# PRISM 1D fit on grid
-./FarmCAFPRISMNodeScript.sh -c PRISM_1DScan_Commands.cmd
-# PRISM 2D fit on grid
-./FarmCAFPRISMNodeScript.sh -c PRISM_2DScan_Commands.cmd   
-
-# Missing proton fake data fit, set in PRISMOscScan_Grid.fcl:
-use_fake_data: true
-```
-
-The --binx and --biny inputs for the fitting script are optional and are only used for when submitting many jobs in parallel to the grid.
-
-Summary of computing requirement of osc fit:
-
-```
-## Stat-only fit
-All channels excluding FourFlavor: 60hrs, 2GB Mem, 1GB disk space
-FourFlavor
-```
-
-## 2D state file production (stat-only)
-
-Below is an example of submit a 2D (```ELepEHadVisReco```) state file production job to FermiGrid without adding any systematic shifts.
-
-For stat-only production, 1GB memory, 1GB disk space is enough. Default binning is ```lep_default```.
-
-```
-cd PRISM/scripts/FermiGridPRISMScripts
-
-# ND FHC
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -N -u
-
-# ND RHC
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -N -b
-
-# FD FHC
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nonswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -F -u
-# this runs over nonswap+nueswap as nonswap always need to be included (not clear why)
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nueswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -F -u
-# this runs over nonswap+tauswap as nonswap always need to be included (not clear why)
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/tauswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -F -u
-
-# FD RHC
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/nonswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -F -b
-# this runs over nonswap+nueswap as nonswap always need to be included (not clear why)
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/nueswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -F -b
-# this runs over nonswap+tauswap as nonswap always need to be included (not clear why)
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/tauswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "nosyst" -F -b
-
-# Add state files
-./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadVisReco_lep_default_binning_TrueObs_fixed/StatOnly/Hadded
-```
-
-```
-# Fit ssth23_dmsq32
-Numu_disp: DONE
-Numubar_disp: DONE
-DispJoint: DONE
-
+# Asimov-like fit: ssth23_dmsq32
 Nue_app: DONE
-Nuebar_app: DONE
-AppJoint: DONE
-
-NuModeJoint: DONE
-NuBarModeJoint: DONE
-FourFlavor: a lot held need more than 60hrs
+FourFlavor: DONE
 
 # Fake data fit
-NuModeJoint: 43083604.0 --> some held
-NuBarModeJoint: 43083651.0--> some held
-FourFlavor: a lot held need more than 60hrs
+FakeDataFourFlavor: DONE
+FakeDataNuBarModeJoint: DONE
+FakeDataDispJoint: DONE
+FakeDataNumu_disp: DONE
+FakeDataNumubar_disp: DONE
+FakeDataNue_app: DONE
+FakeDataNuebar_app: DONE
 
 # Above joint fit excludes nutau
 Nutau_app?
 Nutaubar_app?
+
+FakeDataNuBarModeJoint/FakeDataDispJoint: with double EHad bins, saw filled min point 1e-6, Ciaran found for negative pred, chi2 failed, need to fix how chi2 is calculated, file 27_11/12/13
 ```
 
-## 2D state file production
+## Flux Syst
 
-Below is an example of submit a 2D state file production job to FermiGrid with only flux systematic.
+```
+# Input flux shift file: flux_shifts_OffAxis.root as of Jan 18, 2023
+CAFAna numbering scheme:
+flux_Nov17_0  - BeamOffsetX
+flux_Nov17_1  - BeamSigma
+flux_Nov17_2  - BeamThetaPhi
+flux_Nov17_3  - BeamTheta
+flux_Nov17_4  - DPR
+flux_Nov17_5  - Horn1XShift
+flux_Nov17_6  - Horn1YShift
+flux_Nov17_7  - Horn2XShift
+flux_Nov17_8  - Horn2YShift
+flux_Nov17_9  - HornCurrent
+flux_Nov17_10 - POTCounting
+flux_Nov17_11 - TargetDensity
+flux_Nov17_12 - WL
 
-The memory consumption is larger than 1D, 40GB/job. Default binning is ```lep_default```.
+# Input flux shift file: flux_shifts_OffAxis2022.root
+will be labelled by Sept21, not ready to use yet as of Jan 18, 2023
+```
 
+```
+# Single Flux Syst:  flux_Nov17_0
+FourFlavor: DONE
+
+# 25 flyx syst
+1 job: 43798404.0
+```
+
+Produce state file with all flux systs (flux_Nov17_<0-24>):
 ```
 cd PRISM/scripts/FermiGridPRISMScripts
 
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -N -u
+# ND FHC
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "noxsec:nodet" -N -u
 
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -N -b
+# ND RHC
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "noxsec:nodet" -N -b
 
-# FD FHC only
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nonswap --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -F -u  
-# this actually runs over nonswap+nueswap as nonswap always need to be included (not clear why)
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nueswap --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -F -u  
-# this actually runs over nonswap+tauswap as nonswap always need to be included (not clear why)
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/tauswap --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -F -u
+# FD FHC  
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nonswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "noxsec:nodet" -F -u
+# this runs over nonswap+nueswap as nonswap always need to be included (not clear why)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nueswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "noxsec:nodet" -F -u
+# this runs over nonswap+tauswap as nonswap always need to be included (not clear why)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/tauswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "noxsec:nodet" -F -u
 
-# FD RHC only
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/nonswap --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -F -b
-# this actually runs over nonswap+nueswap as nonswap always need to be included (not clear why)
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/nueswap --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -F -b
-# this actually runs over nonswap+tauswap as nonswap always need to be included (not clear why)
-./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/tauswap --no-fakedata-dials -a ELepEHadReco --syst-descriptor "noflux:xsec:nodet" -F -b
+# FD RHC
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/nonswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "noxsec:nodet" -F -b
+# this runs over nonswap+nueswap as nonswap always need to be included (not clear why)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/nueswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "noxsec:nodet" -F -b
+# this runs over nonswap+tauswap as nonswap always need to be included (not clear why)
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/tauswap --no-fakedata-dials -a ELepEHadVisReco --bin-descriptor lep_default --syst-descriptor "noxsec:nodet" -F -b
 ```
 
-Hadd the output state files (can try SBU local cluster with more RAM):
+Hadd the output state files:
 
 ```
-NDRHC On Axis: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/NDRHCOnAxis
-NDRHC Off Axis: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/NDRHCOffAxis
-NDFHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/NDFHC
-FD FHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/FDFHC
-FD RHC: /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/FDRHC
-
-./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadReco/Hadded (70G RAM needed)
-```
-
-## List of up-to-date state files:
-
-2D variable ```ELepEHadVisReco``` for osc fit, with ```lep_default``` binning, stat-only, true observable HistAxis match "ELepEHadVisReco":
-```
-root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadVisReco_lep_default_binning_TrueObs_fixed/StatOnly/ELepEHadVisReco_lep_default_binning_TrueObs_fixed_StatOnly_Hadded_State.root
-```
-
-2D variable ```ELepEHad``` (truth level) for osc fit, with ```prism_default``` binning, stat-only:
-```
-# fit doesbn't work well: [WARN]: When un-runplan weighting histogram found bad bin content: 0 @ -29.75
-/pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHad_prism_default_binning/StatOnly/Hadded_AllChannel_State_ELepEHad_StatOnly.42052729.0.root
-
-root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHad_prism_default_binning/StatOnly/Hadded_AllChannel_State_ELepEHad_StatOnly.42052729.0.root
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadVisReco_lep_default_HalfHadbins/fluxsyst_Nov17/Hadded
 ```
 
 ## How to Hadd ND CAF files produced by grid/production team
