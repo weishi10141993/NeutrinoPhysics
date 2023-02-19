@@ -10,7 +10,8 @@ ENDLINE=4
 echo "Input file start line ${STARTLINE}, end line ${ENDLINE}, total files: ${TOTALIN}"
 
 # Set the output location for copyback
-OUTDIR=/pnfs/dune/persistent/users/${GRID_USER}/myFDntuples
+#OUTDIR=/pnfs/dune/persistent/users/${GRID_USER}/myFDntuples
+OUTDIR=/pnfs/dune/scratch/users/${GRID_USER}/myFDntuples
 
 # Let's rename the output file so it's unique in case we send multiple jobs.
 OUTFILE=myntuple_${CLUSTER}_${PROCESS}_$(date -u +%Y%m%dT%H%M%SZ).root

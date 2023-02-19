@@ -15,6 +15,9 @@ echo "Check work dir _CONDOR_JOB_IWD: ls -l ${_CONDOR_JOB_IWD}"
 ls -l ${_CONDOR_JOB_IWD}
 cd ${_CONDOR_JOB_IWD}
 
+echo "See where are at: pwd"
+pwd
+
 # Copy the untarred folder and remove the CVMFS linked read-only version
 # because recompile need to modify files
 # which can't be done in the CVMFS read-only version

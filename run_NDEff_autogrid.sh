@@ -3,7 +3,8 @@
 echo "Running on $(hostname) at ${GLIDEIN_Site}. GLIDEIN_DUNESite = ${GLIDEIN_DUNESite}"
 
 # Set the output location for copyback
-OUTDIR=/pnfs/dune/persistent/users/${GRID_USER}/FDGeoEffinND
+#OUTDIR=/pnfs/dune/persistent/users/${GRID_USER}/FDGeoEffinND
+OUTDIR=/pnfs/dune/scratch/users/${GRID_USER}/FDGeoEffinND
 
 # Make sure we see what we expect
 echo "See where are at: pwd"
@@ -18,9 +19,12 @@ echo "ls -l CONDOR_DIR_INPUT: ${CONDOR_DIR_INPUT}"
 # Tarball is copied and untarred into a directory on the worker node, accessed via this CONDOR_DIR_INPUT environment variable
 ls -l $CONDOR_DIR_INPUT
 
-if [ -e ${CONDOR_DIR_INPUT}/setupNDEff-grid.sh ]; then
-  echo "Start to run . ${CONDOR_DIR_INPUT}/setupNDEff-grid.sh"
-  . ${CONDOR_DIR_INPUT}/setupNDEff-grid.sh
+echo "ls -l INPUT_TAR_DIR_LOCAL: ${INPUT_TAR_DIR_LOCAL}"
+ls -l $INPUT_TAR_DIR_LOCAL
+
+if [ -e ${INPUT_TAR_DIR_LOCAL}/setupNDEff-grid.sh ]; then
+  echo "Start to run . ${INPUT_TAR_DIR_LOCAL}/setupNDEff-grid.sh"
+  . ${INPUT_TAR_DIR_LOCAL}/setupNDEff-grid.sh
 else
   echo "Error, setup script not found. Exiting."
   exit 1
@@ -62,7 +66,7 @@ myinfile=""
 (( LINE_N = ${PROCESS} + 1 ))
 
 # Loop over ntuple list in txt file
-for ifile in $(cat ${CONDOR_DIR_INPUT}/myFDntuples.txt | head -${LINE_N} | tail -1); do
+for ifile in $(cat ${INPUT_TAR_DIR_LOCAL}/myFDntuples.txt | head -${LINE_N} | tail -1); do
   myinfile=${ifile}
 done
 
