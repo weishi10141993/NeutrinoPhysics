@@ -15,7 +15,7 @@ from sys import argv
 # The code is currently quite slow, so it uses multiprocessing to speed things up
 from multiprocessing import Pool
 # SET NUMBER OF PROCESSORS HERE
-NUM_PROCS = 40
+NUM_PROCS = 50
 
 import torch
 from muonEffModel import muonEffModel
@@ -81,16 +81,16 @@ def isContained(x, y, z) :
     return True
 
 treeVarsToRead = ['isCC',
-                  'nuPDG',
-                  'Ev',
-                  'LepE',
+                  #'nuPDG',
+                  #'Ev',
+                  #'LepE',
                   "LepPDG",
                   'LepMomX',
-                  'LepMomY', 
+                  'LepMomY',
                   'LepMomZ',
-                  'NuMomX',
-                  'NuMomY', 
-                  'NuMomZ',
+                  #'NuMomX',
+                  #'NuMomY',
+                  #'NuMomZ',
                   'vtx_x',
                   'vtx_y',
                   'vtx_z',
@@ -101,15 +101,25 @@ treeVarsToRead = ['isCC',
                   'Ehad_veto',
                   'muon_endpoint']
 
+list_of_directories=["0mgsimple","0m","1.75m","2m","4m","5.75m","8m","9.75m","12m","13.75m","16m","17.75m","20m","21.75m","24m","25.75m",\
+                    "26.75m","28m","28.25m","28.5m","0mgsimpleRHC","0mRHC","1.75mRHC","2mRHC","4mRHC","5.75mRHC","8mRHC","9.75mRHC","12mRHC",\
+                    "13.75mRHC","16mRHC" "17.75mRHC","20mRHC","21.75mRHC","24mRHC","25.75mRHC","26.75mRHC","28mRHC","28.25mRHC","28.5mRHC"]
+
 #CAF_FHC_fName="/home/barwu/repos/MuonEffNN/FHC.1001666.CAF.root"
 #CAF_FHC_fName="/storage/shared/cvilela/CAF/ND_v7/03/FHC.10030*.CAF.root"
 #CAF_FHC_fName="/storage/shared/cvilela/CAF/ND_v7/*/FHC.*.CAF.root"
-CAF_FHC_fName="/storage/shared/cvilela/CAF/ND_v7/0"+argv[1]+"/FHC.100"+argv[1]+"*.CAF.root"
-#CAF_FHC_fName="/storage/shared/cvilela/CAF/ND_v7/00/FHC.1000[1-2]*.CAF.root"
+#CAF_FHC_fName="/storage/shared/cvilela/CAF/ND_v7/0"+argv[1]+"/FHC.100"+argv[1]+"*.CAF.root"
+#CAF_FHC_fName="/storage/shared/cvilela/CAF/ND_v7/00/FHC.1000[1-2]*.CAF.root"E
 #CAF_FHC_fName="/storage/shared/cvilela/CAF/ND_v7/0"+argv[1]+"/FHC.100"+argv[1]+argv[2]+"*.CAF.root"
 #CAF_RHC_fName="/storage/shared/cvilela/CAF/ND_v7/0"+argv[1]+"/RHC.100"+argv[1]+argv[2]+"*.CAF.root"
-allFiles=glob(CAF_FHC_fName)
+#allFiles=glob(CAF_FHC_fName)
 #allFiles+=glob(CAF_RHC_fName)
+#prism_CAF_files="/storage/shared/wshi/CAFs/NDFHC_PRISM/"+argv[1]+argv[2]+"/FHC.10"+argv[1]+argv[2]+"*.CAF.root"
+#prism_CAF_files="/storage/shared/wshi/CAFs/NDFHC_PRISM/2[0,1,2]/FHC.102[0,1,2]*.CAF.root"
+prism_CAF_files="/storage/shared/barwu/10thTry/NDCAF/4m/18/FHC.5018262.CAF.root"
+#more_CAF_files="/storage/shared/barwu/10thTry/NDCAF/4m/20/FHC.5020*.CAF.root"
+allFiles=glob(prism_CAF_files) #file #s range from 0-29
+#allFiles+=glob(more_CAF_files)
 #cpu processing is set up later in the script
 
 """
@@ -121,7 +131,7 @@ for file_num in file_list:
     print(d,n)
     allFiles.append("/storage/shared/cvilela/CAF/ND_v7/0"+d+"/FHC."+str(n)+".CAF.root")
 file_list.close()
-""" #discovered that there are 76 CAF files without TTrees
+""" #discovered that there are 76 CAF files without TTrees in Dr. Vilela's CAF files
 
 # Same set of throws is used for every 100 events
 N_EVENTS_PER_THROW = 100
@@ -141,7 +151,8 @@ def processFiles(f):
     # Analyse one file at a time, otherwise memory explodes!
     #f is only 1 file, each file get assigned to a different cpu
     #for f in f_list :
-        output="/home/barwu/repos/MuonEffNN/9thTry/test/"+splitext(basename(f))[0]+"_MuonEff.root" #need to come up with a new place to put the TTrees
+        #output="/home/barwu/repos/MuonEffNN/9thTry/test/"+splitext(basename(f))[0]+"_MuonEff.root" #need to come up with a new place to put the TTrees
+        output="/storage/shared/wshi/files4baron/"+splitext(basename(f))[0]+"_Eff.root"
         if exists(output)==True:
             #print("testing")
             return None
@@ -152,10 +163,10 @@ def processFiles(f):
             #fUprootIn = uproot.open(f)
             #CAF = fUprootIn['caf']
         except exceptions.KeyInFileError: #leave except condition specification so that code crashes when there is another exception condition
-            #print("Couldn't find CAF TTree in file {0}. Skipping.".format(f))
+            print("Couldn't find CAF TTree in file {0}. Skipping.".format(f))
             return None
             #continue
-        #print(f)
+        print(f)
 
         # Figure out what events pass the fiducial volume cut
         if APPLY_FV_CUT :
@@ -193,8 +204,7 @@ def processFiles(f):
                                  geoThrows["geoEffThrowsY"][int(i_event/N_EVENTS_PER_THROW)]-offset[1],
                                  geoThrows["geoEffThrowsZ"][int(i_event/N_EVENTS_PER_THROW)]-offset[2])
 
-            # Count how many throws were in the FV. Will be useful later.
-            NthrowsInFV = sum(throws_FV)
+            NthrowsInFV = sum(throws_FV) # Count how many throws were in the FV. Will be useful later.
             if NthrowsInFV==0 and APPLY_FV_CUT:
                 effs[i_event]=-1.
                 effs_tracker[i_event]=-1.
@@ -220,7 +230,6 @@ def processFiles(f):
                     thisEff += np.sum(bitfield)
 
                 # Get variables needed to evaluate muon neural network for each throw.
-                
                 # Get new XYZ from throws
                 # x is not randomized. This is a convoluted way of repeating vtx_x the correct number of times
                 throw_x = [CAF["vtx_x"][i_event]]*len(geoThrows["geoEffThrowsY"][int(i_event/N_EVENTS_PER_THROW)][i_bitfield*64:(i_bitfield+1)*64])
@@ -247,13 +256,13 @@ def processFiles(f):
                 decayToVertex = [CAF["vtx_x"][i_event] - decayXdetCoord,
                                  CAF["vtx_y"][i_event] - decayYdetCoord,
                                  CAF["vtx_z"][i_event] - decayZdetCoord]
-                
+
                 # Vector from neutrino production point to randomly thrown vertex.
                 decayToTranslated = [ [throw_x[i] - decayXdetCoord, throw_y[i] - decayYdetCoord, throw_z[i] - decayZdetCoord] for i in range(len(throw_x)) ]
 
                 magDecayToVertex = np.sqrt(np.sum(np.square(decayToVertex)))
                 magDecayToTranslated = np.sqrt(np.sum(np.square(decayToTranslated), axis = 1))
-                
+
                 translationAngle = np.dot(decayToTranslated, decayToVertex)
                 translationAngle = np.divide(translationAngle, np.multiply(magDecayToVertex,magDecayToTranslated));
                 #for angleval in translationAngle:
@@ -268,7 +277,7 @@ def processFiles(f):
                 decayToTranslated = [ thisV/np.linalg.norm(thisV) for thisV in decayToTranslated ]
 
                 phi_rot_vec = np.multiply(decayToTranslated, throw_phi[...,None])
-                
+
                 this_px = CAF["LepMomX"][i_event]
                 this_py = CAF["LepMomY"][i_event]
                 this_pz = CAF["LepMomZ"][i_event]
@@ -318,7 +327,7 @@ def processFiles(f):
                     thisEff_tracker += np.sum(nnTracker)
                     thisEff_contained += np.sum(nnContained)
                     thisEff_combined += np.sum(combinedEfficiency)
-                    
+
             # After looping through all throws, divide by number of throws in the fiducial volume to get average efficiency.
             if APPLY_FV_CUT :
                 effs[i_event] = float(thisEff)/NthrowsInFV
@@ -332,41 +341,23 @@ def processFiles(f):
                 effs_combined[i_event] = float(thisEff_combined)/(78.*64)
             #print("still running")
 
-        # What follows is all related to making histograms with matplotlib
+        # This used to be used for matplotlib, but I don't use that for histogram-making.
         fv = np.logical_and(CAF["inFV"], CAF["isCC"])
         numu = np.absolute(CAF["LepPDG"]) == 13
         fv = np.logical_and(fv, numu)
         no_weird_events = np.absolute(np.sum(CAF["muon_endpoint"], axis = 1)) > 0.
         fv = np.logical_and(fv, no_weird_events)
-        
+
         had_containment = CAF["Ehad_veto"] < 30
         sel = np.logical_and(had_containment, fv)
         sel_tracker = np.logical_and(CAF['muon_tracker'] > 0, fv)
-        
+
         isContained_vec = np.vectorize(isContained)
         sel_contained = np.logical_and(isContained_vec(CAF["muon_endpoint"][:,0], CAF["muon_endpoint"][:,1], CAF["muon_endpoint"][:,2]), fv)
-        
+
         sel_combined = np.logical_and(np.logical_or(sel_tracker, sel_contained), sel)
-        
-        print("Number in FV {0}, number contained {1}, number in FV and contained {2}".format(sum(fv), sum(had_containment), sum(sel)))
-    
-        effs_sel = effs[sel]
-        print("HADRON")
-        print(effs_sel)
-        effs_sel_inv = np.reciprocal(effs_sel)
-    
-        effs_sel_tracker = effs_tracker[sel_tracker]
-        effs_sel_tracker_inv = np.reciprocal(effs_sel_tracker)
 
-        effs_sel_tracker_inv[effs_sel_tracker_inv > 500] = 500
-        
-        effs_sel_contained = effs_contained[sel_contained]
-        effs_sel_contained_inv = np.reciprocal(effs_sel_contained)
-
-        effs_sel_contained_inv[effs_sel_contained_inv > 500] = 500
-    
-        effs_sel_combined = effs_combined[sel_combined]
-        effs_sel_combined_inv = np.reciprocal(effs_sel_combined)
+        #print("Number in FV {0}, number contained {1}, number in FV and contained {2}".format(sum(fv), sum(had_containment), sum(sel)))
 
         i=0
         while i<len(effs):
@@ -397,32 +388,32 @@ def processFiles(f):
         #output="/home/barwu/repos/MuonEffNN/9thTry/test/"+splitext(basename(f))[0]+"_MuonEff.root" #need to come up with a new place to put the TTrees
         with recreate(output) as tree:
             tree["event_data"]=newtree({#'LepMomX':np.float64,
-                                                #'LepMomY':np.float64, 
-                                                #'LepMomZ':np.float64,
-                                                #'NuMomX':np.float64,
-                                                #'NuMomY':np.float64, 
-                                                #'NuMomZ':np.float64,
-                                                #'vtx_x':np.float64,
-                                                #'vtx_y':np.float64,
-                                                #'vtx_z':np.float64,
-                                                'isCC':np.int32,
-                                                'inFV':np.int32,
-                                                #'Ev':np.int32,
-                                                #'LepE':np.float64,
-                                                #'LepNuAngle':np.float64,
-                                                'cos_LepNuAngle':np.float64,
-                                                'TotMom':np.float64,
-                                                'LongMom':np.float64,
-                                                'muon_contained_eff':np.float64,
-                                                'muon_tracker_eff':np.float64,
-                                                #'muon_selected_eff':np.float64,
-                                                'hadron_selected_eff':np.float64,
-                                                'combined_eff':np.float64,
-                                                'hadron_selected':np.int32,
-                                                'muon_contained':np.int32,
-                                                'muon_tracker':np.int32,
-                                                'muon_selected':np.int32,
-                                                'combined':np.int32})
+                                        #'LepMomY':np.float64,
+                                        #'LepMomZ':np.float64,
+                                        #'NuMomX':np.float64,
+                                        #'NuMomY':np.float64,
+                                        #'NuMomZ':np.float64,
+                                        #'vtx_x':np.float64,
+                                        #'vtx_y':np.float64,
+                                        #'vtx_z':np.float64,
+                                        'isCC':np.int32,
+                                        'inFV':np.int32,
+                                        #'Ev':np.int32,
+                                        #'LepE':np.float64,
+                                        #'LepNuAngle':np.float64,
+                                        'cos_LepNuAngle':np.float64,
+                                        'TotMom':np.float64,
+                                        'LongMom':np.float64,
+                                        'muon_contained_eff':np.float64,
+                                        'muon_tracker_eff':np.float64,
+                                        #'muon_selected_eff':np.float64,
+                                        'hadron_selected_eff':np.float64,
+                                        'combined_eff':np.float64,
+                                        'hadron_selected':np.int32,
+                                        'muon_contained':np.int32,
+                                        'muon_tracker':np.int32,
+                                        'muon_selected':np.int32,
+                                        'combined':np.int32})
 
             extend_dict={}
             #for var in ['LepMomX','LepMomY','LepMomZ','NuMomX','NuMomY','NuMomZ','vtx_x','vtx_y','vtx_z','isCC','Ev','LepE','LepNuAngle']: extend_dict[var]=CAF[var]
@@ -447,19 +438,12 @@ def processFiles(f):
 
             tree["event_data"].extend(extend_dict)
 
-        #print("TRACKER")
-        #print(effs_sel_tracker)
-        #print("CONTAINED")
-        #print(effs_sel_contained)
-        #print("COMBINED")
-        #print(effs_sel_combined)
-
 if __name__ == "__main__" :
 
     net = muonEffModel()
-    net.load_state_dict(torch.load("/home/barwu/repos/MuonEffNN/8thTry/muonEff30.nn", map_location=torch.device('cpu')))
+    net.load_state_dict(torch.load("/home/wshi/repos/MuonEffNN/muonEff30.nn", map_location=torch.device('cpu')))
     net.eval()
-    
+
     #if len(allFiles) < NUM_PROCS :
         #print("Fewer files than processes, setting NUM_PROC to {0}".format(len(allFiles)))
         #NUM_PROCS = len(allFiles)
@@ -471,5 +455,6 @@ if __name__ == "__main__" :
     pool.map(processFiles, allFiles)
         #don't use multiprocessing for debugging
     #for file in allFiles:
-     #   processFiles(file)
+    #   processFiles(file)
     #processFiles("/storage/shared/cvilela/CAF/ND_v7/00/FHC.1000999.CAF.root")
+    #processFiles("/storage/shared/wshi/CAFs/NDFHC_PRISM/03/FHC.1003999.CAF.root")

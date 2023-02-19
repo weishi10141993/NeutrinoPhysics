@@ -17,6 +17,9 @@ fi
 echo "Check work dir _CONDOR_JOB_IWD: ls -l ${_CONDOR_JOB_IWD}"
 ls -l ${_CONDOR_JOB_IWD}
 
+echo "See where are we: pwd"
+pwd
+
 # Copy the untarred folder and remove the CVMFS linked read-only version
 # because later mrbsetenv needs to modify larsoft-v09_22_02 in build* directory
 # which can't be done in the CVMFS read-only version
@@ -28,6 +31,9 @@ rm -rf ${DIRECTORY}
 
 echo "rename copied version: mv ${DIRECTORY}_copy ${DIRECTORY}"
 mv ${DIRECTORY}_copy ${DIRECTORY}
+
+echo "Check work dir again _CONDOR_JOB_IWD: ls -l ${_CONDOR_JOB_IWD}"
+ls -l ${_CONDOR_JOB_IWD}
 
 echo "Started set up grid"
 # INPUT_TAR_DIR_LOCAL is /srv/no_xfer/0/TRANSFERRED_INPUT_FILES/FDEff

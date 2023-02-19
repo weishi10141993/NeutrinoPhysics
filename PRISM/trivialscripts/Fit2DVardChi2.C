@@ -31,9 +31,13 @@ void Fit2DVardChi2() {
   // FakeDataAppJoint, FakeDataDispJoint
   // FakeDataFourFlavor
   TString FitChannel = "FourFlavor";
-  TString Syst = "flux_Nov17_0"; // StatOnly, flux_Nov17_<0-24>
+  TString Syst = "flux_Nov17_7"; // StatOnly, flux_Nov17_<0-24>
 	std::vector<TString> pois {"ssth23_dmsq32"}; //ssth23_dmsq32, dcp_sstth13
-  TString Dir = "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins"; // File on gpvm
+  TString Dir;
+  if ( Syst == "StatOnly") Dir = "https://fndcadoor.fnal.gov:2880/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins"; // File on gpvm
+  else Dir = "https://fndcadoor.fnal.gov:2880/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins/fluxsyst_Nov17"; // File on gpvm
+  //if ( Syst == "StatOnly") Dir = "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins"; // File on gpvm
+  //else Dir = "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins/fluxsyst_Nov17"; // File on gpvm
 	TString AnalysisVar = "ELepEHadVisReco";
   TString SystRef = "StatOnly"; // default to compare with StatOnly
   bool overlay = true; // overlay with reference contours
@@ -44,6 +48,20 @@ void Fit2DVardChi2() {
 	float MaxdChi2 = 100000;
   int PoixBins = 50; // number of bins for poi x
 	int PoiyBins = 50; // .......................y
+
+  // Define two region of interest to minimize number of fits
+  // outside this region fill high chi2: 9999
+  bool restrictedroi = true;
+  int RoIAxBinlow = 9;
+  int RoIAxBinhigh = 14;
+	int RoIAyBinlow = 25;
+	int RoIAyBinhigh = 34;
+
+  int RoIBxBinlow = 27;
+  int RoIBxBinhigh = 44;
+	int RoIByBinlow = 17;
+	int RoIByBinhigh = 44;
+
   float XAxisLow = 0; // range of poi to plot, reset below
   float XAxisHigh = 100;
 	float YAxisLow = 0; // range of poi to plot, reset below
@@ -93,11 +111,18 @@ void Fit2DVardChi2() {
     for (int binx = 1; binx <= PoixBins; binx++) {
 			for (int biny = 1; biny <= PoiyBins; biny++) {
 
+        // Set chi2 to high value for region outside RoIs
+        if ( restrictedroi ) {
+          if ( ! ( binx > RoIAxBinlow && binx < RoIAxBinhigh && biny > RoIAyBinlow && biny < RoIAyBinhigh) && ! ( binx > RoIBxBinlow && binx < RoIBxBinhigh && biny > RoIByBinlow && biny < RoIByBinhigh) ) {
+            h_dChi2_2D->SetBinContent(binx, biny, 9999.);
+          }
+        }
+
 				// Input fit result file
         // file name caveat
         TFile *f1;
         if ( Syst == "StatOnly") f1 = TFile::Open( TString::Format("%s/%s/%s/%s/%s_%s_%s_stat_only_%d_%d.root", Dir.Data(), Syst.Data(), PoI.Data(), FitChannel.Data(), PoI.Data(), FitChannel.Data(), AnalysisVar.Data(), binx, biny ) );
-				else f1 = TFile::Open( TString::Format("%s/%s/%s/%s/%s_%s_%s_%s_%d_%d.root", Dir.Data(), Syst.Data(), PoI.Data(), FitChannel.Data(), PoI.Data(), FitChannel.Data(), AnalysisVar.Data(), Syst.Data(), binx, biny ) );
+        else f1 = TFile::Open( TString::Format("%s/%s/%s/%s/%s_%s_%s_%s_%d_%d.root", Dir.Data(), Syst.Data(), PoI.Data(), FitChannel.Data(), PoI.Data(), FitChannel.Data(), AnalysisVar.Data(), Syst.Data(), binx, biny ) );
 
         if ( f1 == NULL ) {
           std::cout << "Skip not found file" << std::endl;
@@ -122,6 +147,7 @@ void Fit2DVardChi2() {
         }
 
 				h_dChi2_2D->SetBinContent(binx, biny, chi2);
+
 				/*
 				std::cout << "h_dChi2_2D->GetXaxis()->GetBinCenter(binx) - binxvalue: " << h_dChi2_2D->GetXaxis()->GetBinCenter(binx) - binxvalue << std::endl;
 				std::cout << "h_dChi2_2D->GetXaxis()->GetBinCenter(binx): " << setprecision(12) << h_dChi2_2D->GetXaxis()->GetBinCenter(binx) << std::endl; // THIS is having some extra floating numbers
@@ -153,13 +179,19 @@ void Fit2DVardChi2() {
 			} // end loop over PoixBins
 		} // end loop over PoiyBins
 
+    //
+    // Before interpolate see what the original plot looks like
+    //
+    //....
+
     // For failed jobs, the bin content is 0, interpolate using nearest neighbors
+    // except don't use chi2 outside RoIs
     double tmp_sum;
     int tmp_count;
 		for (int binx = 1; binx <= PoixBins; binx++) {
 			for (int biny = 1; biny <= PoiyBins; biny++) {
 
-        // Some fit returns chi^2 1e-6, i.e., min chi2 set to fill hist. Fit didn't converge? Not sure why, needs investigation !!!
+        // Some fit returns chi^2 1e-6, i.e., min chi2 set to fill hist. Related to chi2 can't be calculated properly for negative bins
         if ( h_dChi2_2D->GetBinContent(binx, biny) == 0 || h_dChi2_2D->GetBinContent(binx, biny) == 1e-06 ) {
 
           std::cout << "[Info] Interpolate for missing points." << std::endl;
@@ -167,10 +199,11 @@ void Fit2DVardChi2() {
           tmp_sum = 0;
           tmp_count = 0;
 
-          if ( binx-1 > 0          && h_dChi2_2D->GetBinContent(binx-1, biny) != 0 && h_dChi2_2D->GetBinContent(binx-1, biny) != 1e-06 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx-1, biny); tmp_count++;}
-          if ( binx+1 < PoixBins+1 && h_dChi2_2D->GetBinContent(binx+1, biny) != 0 && h_dChi2_2D->GetBinContent(binx+1, biny) != 1e-06 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx+1, biny); tmp_count++;}
-          if ( biny-1 > 0          && h_dChi2_2D->GetBinContent(binx, biny-1) != 0 && h_dChi2_2D->GetBinContent(binx, biny-1) != 1e-06 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx, biny-1); tmp_count++;}
-          if ( biny+1 < PoiyBins+1 && h_dChi2_2D->GetBinContent(binx, biny+1) != 0 && h_dChi2_2D->GetBinContent(binx, biny+1) != 1e-06 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx, biny+1); tmp_count++;}
+          // Also avoid using points outside RoIs
+          if ( binx-1 > 0          && h_dChi2_2D->GetBinContent(binx-1, biny) != 0 && h_dChi2_2D->GetBinContent(binx-1, biny) != 1e-06 && h_dChi2_2D->GetBinContent(binx-1, biny) != 9999 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx-1, biny); tmp_count++;}
+          if ( binx+1 < PoixBins+1 && h_dChi2_2D->GetBinContent(binx+1, biny) != 0 && h_dChi2_2D->GetBinContent(binx+1, biny) != 1e-06 && h_dChi2_2D->GetBinContent(binx+1, biny) != 9999 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx+1, biny); tmp_count++;}
+          if ( biny-1 > 0          && h_dChi2_2D->GetBinContent(binx, biny-1) != 0 && h_dChi2_2D->GetBinContent(binx, biny-1) != 1e-06 && h_dChi2_2D->GetBinContent(binx, biny-1) != 9999 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx, biny-1); tmp_count++;}
+          if ( biny+1 < PoiyBins+1 && h_dChi2_2D->GetBinContent(binx, biny+1) != 0 && h_dChi2_2D->GetBinContent(binx, biny+1) != 1e-06 && h_dChi2_2D->GetBinContent(binx, biny+1) != 9999 ) { tmp_sum += h_dChi2_2D->GetBinContent(binx, biny+1); tmp_count++;}
 
           if (tmp_count != 0) {
             h_dChi2_2D->SetBinContent(binx, biny, tmp_sum/tmp_count);

@@ -1,7 +1,7 @@
 Notes:
 
 # New state prod with half had bins
-
+32jobs/machine nnhome, 2 thread
 ## Stat only
 
 ```
@@ -49,11 +49,19 @@ will be labelled by Sept21, not ready to use yet as of Jan 18, 2023
 ```
 
 ```
-# Single Flux Syst:  flux_Nov17_0
-FourFlavor: DONE
+# 25 flux syst, FourFlavor fit
+flux_Nov17_0: DONE
+flux_Nov17_1: DONE
+flux_Nov17_2: DONE
 
-# 25 flyx syst
-1 job: 43798404.0
+flux_Nov17_4:
+flux_Nov17_5: DONE
+
+flux_Nov17_7: 
+
+flux_Nov17_9:
+
+./FarmCAFPRISMNodeScript.sh -c PRISM_2DScan_Commands.cmd
 ```
 
 Produce state file with all flux systs (flux_Nov17_<0-24>):
