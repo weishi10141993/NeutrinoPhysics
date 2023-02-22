@@ -11,11 +11,12 @@ from uproot3 import recreate, newtree
 import numpy as np
 from glob import glob
 from sys import argv
+import sys
 
 # The code is currently quite slow, so it uses multiprocessing to speed things up
-from multiprocessing import Pool
+#from multiprocessing import Pool
 # SET NUMBER OF PROCESSORS HERE
-NUM_PROCS = 50
+#NUM_PROCS = 50
 
 import torch
 from muonEffModel import muonEffModel
@@ -25,6 +26,8 @@ from scipy.interpolate import interp1d
 #import math
 
 #from pickle import dump
+
+a = str(sys.argv[1])
 
 # ND coordinate offset.
 offset = [ 0., 5.5, 411. ]
@@ -116,9 +119,19 @@ list_of_directories=["0mgsimple","0m","1.75m","2m","4m","5.75m","8m","9.75m","12
 #allFiles+=glob(CAF_RHC_fName)
 #prism_CAF_files="/storage/shared/wshi/CAFs/NDFHC_PRISM/"+argv[1]+argv[2]+"/FHC.10"+argv[1]+argv[2]+"*.CAF.root"
 #prism_CAF_files="/storage/shared/wshi/CAFs/NDFHC_PRISM/2[0,1,2]/FHC.102[0,1,2]*.CAF.root"
-prism_CAF_files="/storage/shared/barwu/10thTry/NDCAF/4m/18/FHC.5018262.CAF.root"
+
+# Avoid accessing /pnfs directly on dunegpvm
+#prism_CAF_files="/pnfs/dune/persistent/physicsgroups/dunelbl/abooth/PRISM/Production/Simulation/ND_CAFMaker/v7/CAF/4m/18/FHC.5018262.CAF.root"
+#prism_CAF_files="root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/physicsgroups/dunelbl/abooth/PRISM/Production/Simulation/ND_CAFMaker/v7/CAF/4m/18/FHC.5018262.CAF.root"
+
 #more_CAF_files="/storage/shared/barwu/10thTry/NDCAF/4m/20/FHC.5020*.CAF.root"
-allFiles=glob(prism_CAF_files) #file #s range from 0-29
+#allFiles=glob(prism_CAF_files) #file #s range from 0-29
+#allFiles="root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/physicsgroups/dunelbl/abooth/PRISM/Production/Simulation/ND_CAFMaker/v7/CAF/4m/18/FHC.5018262.CAF.root"
+#allFiles="https://fndcadoor.fnal.gov:2880//dune/persistent/physicsgroups/dunelbl/abooth/PRISM/Production/Simulation/ND_CAFMaker/v7/CAF/4m/18/FHC.5018262.CAF.root"
+#print("Finish glob input")
+#print("1", prism_CAF_files)
+#print("2", allFiles)
+
 #allFiles+=glob(more_CAF_files)
 #cpu processing is set up later in the script
 
@@ -152,7 +165,7 @@ def processFiles(f):
     #f is only 1 file, each file get assigned to a different cpu
     #for f in f_list :
         #output="/home/barwu/repos/MuonEffNN/9thTry/test/"+splitext(basename(f))[0]+"_MuonEff.root" #need to come up with a new place to put the TTrees
-        output="/storage/shared/wshi/files4baron/"+splitext(basename(f))[0]+"_Eff.root"
+        output="./"+splitext(basename(f))[0]+"_Eff.root"
         if exists(output)==True:
             #print("testing")
             return None
@@ -441,7 +454,7 @@ def processFiles(f):
 if __name__ == "__main__" :
 
     net = muonEffModel()
-    net.load_state_dict(torch.load("/home/wshi/repos/MuonEffNN/muonEff30.nn", map_location=torch.device('cpu')))
+    net.load_state_dict(torch.load("./muonEff30.nn", map_location=torch.device('cpu')))
     net.eval()
 
     #if len(allFiles) < NUM_PROCS :
@@ -451,10 +464,11 @@ if __name__ == "__main__" :
     #filesPerProc = int(np.ceil(float(len(allFiles))/NUM_PROCS))
     #print(filesPerProc, NUM_PROCS)
 
-    pool=Pool(NUM_PROCS)
-    pool.map(processFiles, allFiles)
-        #don't use multiprocessing for debugging
+    #pool=Pool(NUM_PROCS)
+    #pool.map(processFiles, allFiles)
+
+    #don't use multiprocessing for debugging
     #for file in allFiles:
     #   processFiles(file)
-    #processFiles("/storage/shared/cvilela/CAF/ND_v7/00/FHC.1000999.CAF.root")
+    processFiles(a)
     #processFiles("/storage/shared/wshi/CAFs/NDFHC_PRISM/03/FHC.1003999.CAF.root")

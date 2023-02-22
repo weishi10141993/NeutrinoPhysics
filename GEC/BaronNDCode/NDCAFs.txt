@@ -1,0 +1,1 @@
+root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/physicsgroups/dunelbl/abooth/PRISM/Production/Simulation/ND_CAFMaker/v7/CAF/4m/18/FHC.5018262.CAF.root
