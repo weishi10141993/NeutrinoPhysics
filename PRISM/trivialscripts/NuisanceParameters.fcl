@@ -2,7 +2,7 @@
 nuisance_parameter_sets: {
 
 	fluxFocussing: [
-		flux_Nov17_5
+		flux_Nov17_7
 	]
 
 	fluxHadProd5: [

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PNFS_PATH_APPEND=Fit_ELepEHadVisReco_lep_default_HalfHadbins/fluxsyst_Nov17/flux_Nov17_5/ssth23_dmsq32/FourFlavor
+PNFS_PATH_APPEND=Fit_ELepEHadVisReco_lep_default_HalfHadbins/fluxsyst_Nov17/flux_Nov17_7/ssth23_dmsq32/FourFlavor
 CAFE_COMMAND_FILE="CAFECommands.cmd"
 INPUT_STATE_FILE=""
 SCRIPT_TO_INCLUDE=""
