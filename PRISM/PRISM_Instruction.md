@@ -1,7 +1,11 @@
 Notes:
 
 # New state prod with half had bins
-32jobs/machine nnhome, 2 thread
+./FarmCAFPRISMNodeScript.sh -c PRISM_2DScan_Commands.cmd
+57385593.0 write to persistent fit numu
+57385594.0 write to scratch fit numu  --> input file too big?
+try ship file or copy file from persistent
+
 ## Stat only
 
 ```
@@ -57,7 +61,7 @@ flux_Nov17_2: DONE
 flux_Nov17_4:
 flux_Nov17_5: DONE
 
-flux_Nov17_7: 
+flux_Nov17_7:
 
 flux_Nov17_9:
 
