@@ -1,8 +1,8 @@
 # Integrate FD CAF maker with PRISM GEC FD code from DUNE FNAL machines (dunegpvm*)
 
-## Setup using develop branch
+## Setup using duneana develop branch
 
-## Setup using a specific dunesw version v09_58_01d00
+## Setup using a specific duneana version (v09_58_01d00)
 
 ```
 mkdir GECFDCAF
@@ -14,27 +14,10 @@ setup dunesw v09_58_01d00 -q e20:debug
 mrb newDev
 source /dune/app/users/weishi/GECFDCAF/localProducts_larsoft_v09_58_01_debug_e20/setup
 
-# Clone code packages
-cd srcs
-
-# Compile GEC code first
-git clone --recurse-submodules -b FD_Wei https://github.com/weishi10141993/DUNE_ND_GeoEff.git
-cd DUNE_ND_GeoEff
-
-# The following will replaces the setup.sh in DUNE_ND_GeoEff
-# these versions won't conflict with the dunesw and duneana below
-setup cmake v3_24_1
-setup gcc v9_3_0
-setup eigen v3_4_0
-setup python v3_9_2
-export PYTHONPATH=${PYTHONPATH}:${PWD}/lib/
-
-cmake -DPYTHON_EXECUTABLE:FILEPATH=`which python` .
-make -j geoEff
-
+# Get FD maker code
 cd /dune/app/users/weishi/GECFDCAF/srcs
 
-# On local laptop, go to local copy and sync the changes in CAFMaker_module.cc and CMakeList.txt
+# On local laptop, go to local copy and sync the changes in CAFMaker
 cd ${LAPTOP_WORK_DIR}/duneana
 rsync -e ssh -avSz  ./* weishi@dunegpvm13.fnal.gov:/dune/app/users/weishi/GECFDCAF/srcs/duneana
 
@@ -43,13 +26,13 @@ rsync -e ssh -avSz  ./* weishi@dunegpvm13.fnal.gov:/dune/app/users/weishi/GECFDC
 # last update was Aug 19, 2022 on this tagged version, same on develop branch
 # although this should be pushed to develop branch for future tagged version!
 
-# Use this fcl
-cp /dune/app/users/weishi/select_ana_dune10kt_nu.fcl ./duneana/duneana/CAFMaker
+# Build GEC code inside CAFMaker
+cd duneana/duneana/CAFMaker
+./build.sh
 
-# Add to cmakelist
+# Build/rebuild FD CAF maker code
+cd /dune/app/users/weishi/GECFDCAF/srcs
 mrb uc
-
-# Build/rebuild the code
 cd ${MRB_BUILDDIR}       
 mrb z
 mrbsetenv
@@ -66,7 +49,7 @@ Relogin:
 ```
 source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
 setup dunesw v09_58_01d00 -q e20:debug
-source /dune/app/users/weishi/GECFDCAF/localProducts_larsoft_v09_58_01d00_e20_debug/setup
+source /dune/app/users/weishi/GECFDCAF/localProducts_larsoft_v09_58_01_debug_e20/setup
 mrbsetenv
 ```
 
@@ -76,64 +59,6 @@ cd ${MRB_BUILDDIR}
 mrb z                               
 mrbsetenv                            
 mrb b
-```
-
-## Run FD CAFMaker standalone (no GEC)
-
-```
-mkdir GECFDCAF
-cd GECFDCAF
-
-source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
-setup dunesw v09_58_01d00 -q e20:debug
-
-mrb newDev -v v09_58_01d00 -q e20:debug
-source /dune/app/users/weishi/GECFDCAF/localProducts_larsoft_v09_58_01d00_e20_debug/setup
-
-# Clone code packages
-cd srcs
-
-# Setup dunesw that will include many fcl files
-# Need to set the tag to v09_58_01d00 as the develop branch keeps moving
-git clone https://github.com/DUNE/dunesw.git -b v09_58_01d00
-
-# The above git clone can also be replaced by:
-# mrb g dunesw
-# cd dunesw
-# git checkout tags/v09_58_01d00
-
-# On local laptop, go to local copy and sync
-cd duneana
-rsync -e ssh -avSz  ./* weishi@dunegpvm13.fnal.gov:/dune/app/users/weishi/GECFDCAF/srcs/duneana
-# After committed
-# git clone https://github.com/weishi10141993/duneana.git -b v09_58_01d00
-
-# Use this fcl
-cd srcs
-cp /dune/app/users/weishi/select_ana_dune10kt_nu.fcl ./duneana/duneana/CAFMaker
-
-# Add to cmakelist
-mrb uc
-
-# Build/rebuild the code
-cd ${MRB_BUILDDIR}       
-mrb z
-mrbsetenv
-mrb b
-```
-
-Run CAF Maker interactively:
-```
-cd /dune/app/users/weishi/GECFDCAF/srcs/duneana/duneana/CAFMaker
-lar -c select_ana_dune10kt_nu.fcl -n 10 /pnfs/dune/tape_backed/dunepro/mcc11/protodune/mc/full-reconstructed/07/51/31/11/nu_dune10kt_1x2x6_13009312_0_20181104T221530_gen_g4_detsim_reco.root
-```
-
-Relogin:
-```
-source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
-setup dunesw v09_58_01d00 -q e20:debug
-source /dune/app/users/weishi/GECFDCAF/localProducts_larsoft_v09_58_01d00_e20_debug/setup
-mrbsetenv
 ```
 
 ## Run TDR version FD CAFMaker (dune tpc on redmine)
