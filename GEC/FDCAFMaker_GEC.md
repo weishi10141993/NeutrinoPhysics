@@ -1,8 +1,8 @@
 # Integrate FD CAF maker with PRISM GEC FD code from DUNE FNAL machines (dunegpvm*)
 
-## Setup
+## Setup using develop branch
 
-Similar to NDCAF, idea is to have FD CAF process hadronic hits info and then use random throw code on these hits and save throw results to caftree.
+## Setup using a specific dunesw version v09_58_01d00
 
 ```
 mkdir GECFDCAF
@@ -11,8 +11,8 @@ cd GECFDCAF
 source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
 setup dunesw v09_58_01d00 -q e20:debug
 
-mrb newDev -v v09_58_01d00 -q e20:debug
-source /dune/app/users/weishi/GECFDCAF/localProducts_larsoft_v09_58_01d00_e20_debug/setup
+mrb newDev
+source /dune/app/users/weishi/GECFDCAF/localProducts_larsoft_v09_58_01_debug_e20/setup
 
 # Clone code packages
 cd srcs
@@ -21,7 +21,8 @@ cd srcs
 git clone --recurse-submodules -b FD_Wei https://github.com/weishi10141993/DUNE_ND_GeoEff.git
 cd DUNE_ND_GeoEff
 
-# The following will replaces the setup.sh
+# The following will replaces the setup.sh in DUNE_ND_GeoEff
+# these versions won't conflict with the dunesw and duneana below
 setup cmake v3_24_1
 setup gcc v9_3_0
 setup eigen v3_4_0
@@ -33,15 +34,14 @@ make -j geoEff
 
 cd /dune/app/users/weishi/GECFDCAF/srcs
 
-# Setup dunesw that will include many fcl files
-# Need to set the tag to v09_58_01d00 as the develop branch keeps moving
-git clone https://github.com/DUNE/dunesw.git -b v09_58_01d00
-
-# On local laptop, go to local copy and sync
-cd duneana
+# On local laptop, go to local copy and sync the changes in CAFMaker_module.cc and CMakeList.txt
+cd ${LAPTOP_WORK_DIR}/duneana
 rsync -e ssh -avSz  ./* weishi@dunegpvm13.fnal.gov:/dune/app/users/weishi/GECFDCAF/srcs/duneana
-# After the local changes are pushed:
-# git clone https://github.com/weishi10141993/duneana.git -b v09_58_01d00
+
+# After the local changes are pushed, replace the above with:
+#   git clone https://github.com/weishi10141993/duneana.git -b v09_58_01d00  
+# last update was Aug 19, 2022 on this tagged version, same on develop branch
+# although this should be pushed to develop branch for future tagged version!
 
 # Use this fcl
 cp /dune/app/users/weishi/select_ana_dune10kt_nu.fcl ./duneana/duneana/CAFMaker
