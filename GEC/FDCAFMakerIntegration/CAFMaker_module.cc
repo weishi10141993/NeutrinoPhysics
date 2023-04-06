@@ -10,32 +10,49 @@
 #ifndef CAFMaker_H
 #define CAFMaker_H
 
-
 // Library methods
 // this needs to come first before std headers to avoid _POSIX_C_SOURCE redefition error
 #include "DUNE_ND_GeoEff/include/geoEff.h"
+#include "DUNE_ND_GeoEff/app/Helpers.h"
 
 // Generic C++ includes
 #include <iostream>
+#include <iomanip>
+using namespace std;
+#include <string>
+#include <algorithm>
+#include <stdlib.h>
+#include <vector>
+#include <math.h>
 
 // Framework includes
 #include "art/Framework/Core/ModuleMacros.h"
 #include "art/Framework/Core/EDAnalyzer.h"
 #include "art/Framework/Principal/Event.h"
+#include "art/Framework/Principal/Handle.h"
+#include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "art_root_io/TFileService.h"
 #include "art/Framework/Principal/SubRun.h"
 #include "fhiclcpp/ParameterSet.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
-#include "art_root_io/TFileService.h"
+#include "canvas/Utilities/Exception.h"
 
 #include "duneanaobj/StandardRecord/StandardRecord.h"
 #include "duneanaobj/StandardRecord/SRGlobal.h"
-
 #include "duneanaobj/StandardRecord/Flat/FlatRecord.h"
 
 //#include "Utils/AppInit.h"
 #include "nusimdata/SimulationBase/GTruth.h"
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "nusimdata/SimulationBase/MCFlux.h"
+#include "nusimdata/SimulationBase/MCParticle.h"
+
+#include "larcore/CoreUtils/ServiceUtil.h"
+#include "larcore/Geometry/Geometry.h"
+#include "larcorealg/Geometry/GeometryCore.h"
+#include "larcoreobj/SimpleTypesAndConstants/geo_types.h"
+#include "lardataobj/Simulation/SimChannel.h"
+#include "larsim/Simulation/LArG4Parameters.h"
 #include "larcoreobj/SummaryData/POTSummary.h"
 #include "dunereco/FDSensOpt/FDSensOptData/MVASelectPID.h"
 #include "dunereco/FDSensOpt/FDSensOptData/EnergyRecoOutput.h"
@@ -54,6 +71,11 @@
 #include "TTree.h"
 #include "TH1D.h"
 #include "TH2D.h"
+#include "TRandom3.h"
+#include "TGraph.h"
+#include "TSystem.h"
+#include "TROOT.h"
+#include "TInterpreter.h"
 
 // pdg
 #include "Framework/ParticleData/PDGCodes.h"
@@ -106,6 +128,77 @@ namespace caf {
 
       systtools::provider_list_t fSystProviders;
 
+      // DUNE-PRISM needed definition
+      geo::GeometryCore const* geom;
+
+      // A separate tree to store random throws of translation and rotation for DUNE-PRISM analysis
+      TTree* ThrowsFD = 0;
+      int seed;
+      vector<float> throwVtxY;
+      vector<float> throwVtxZ;
+      vector<float> throwRot;
+
+      // A separate tree to store FD event geometric efficiency at ND
+      TTree* ThrowResultsFD = 0;
+
+      // Decay point (neutrino production point) in beam coordinate
+      float decayZbeamCoord;
+      // Decay point (neutrino production point) in detector coordinate
+      float decayXdetCoord;
+      float decayYdetCoord;
+      float decayZdetCoord;
+      // Primary muon info
+      double Sim_mu_start_vx;
+      double Sim_mu_start_vy;
+      double Sim_mu_start_vz;
+      double Sim_mu_start_px;
+      double Sim_mu_start_py;
+      double Sim_mu_start_pz;
+      // Hadronic hits
+      int SimTrackID;
+      int Sim_n_hadronic_Edep; // GEANT4 level simulated for now
+      double Sim_Ehad_veto; // Total hadronic deposited energy in FD veto region
+      vector<float> Sim_hadronic_hit_x;
+      vector<float> Sim_hadronic_hit_y;
+      vector<float> Sim_hadronic_hit_z;
+      vector<float> Sim_hadronic_hit_Edep;
+      // Feed to geoeff
+      vector<float> HadronHitEdeps; // MeV
+      vector<float> HadronHitPoss;  // [cm]
+      // These number defs should reside in DUNE ND GEO code so that we can control !!!
+      // ND LAr detector off-axis choices for each FD evt, unit: cm
+      vector<double> ND_LAr_dtctr_pos_vec = {-2800, -2575, -2400, -2175, -2000, -1775, -1600, -1375, -1200, -975, -800, -575, -400, -175, 0};
+      // Vtx x choices for each FD evt in ND LAr: unit: cm
+      vector<double> ND_vtx_vx_vec = {-299, -292, -285, -278, -271, -264, -216, -168, -120, -72, -24, 24, 72, 120, 168, 216, 264, 271, 278, 285, 292, 299};
+
+      // Intermediate vars
+
+      // Step 3
+      double ND_OffAxis_Unrotated_Sim_mu_start_pos[3]; // Position of the muon trajectory at start point [cm]
+      vector<double> ND_OffAxis_Unrotated_Sim_mu_start_v; // Vector of ND_OffAxis_Unrotated_Sim_mu_start_pos in (x1,y1,z1,x2,y2,z2,......) order
+      vector<vector<double>> ND_OffAxis_Unrotated_Sim_mu_start_v_vtx; // nested vector: <vtx_pos<ND_OffAxis_Unrotated_Sim_mu_start_pos>>
+      vector<vector<vector<double>>> ND_OffAxis_Unrotated_Sim_mu_start_v_LAr; // nested vector: <ND_LAr_pos<vtx_pos<ND_OffAxis_Unrotated_Sim_mu_start_pos>>>
+
+      vector<double> ND_OffAxis_Unrotated_Sim_hadronic_hit_v; // Position of each energy deposit [cm]
+      vector<vector<double>> ND_OffAxis_Unrotated_Sim_hadronic_hits_v; // Position of each energy deposit [cm] : <ihadhit < ND_OffAxis_Unrotated_Sim_hadronic_hit_v>>
+
+      // Step 4
+      double ND_OffAxis_Sim_mu_start_mom[3]; // Momentum of the muon trajectory at start point on the x-axis [GeV]
+      vector<double> ND_OffAxis_Sim_mu_start_p; // Vector of ND_OffAxis_Sim_mu_start_mom in (x1,y1,z1,x2,y2,z2,......) order
+      vector<vector<double>> ND_OffAxis_Sim_mu_start_p_vtx; // nested vector: <vtx_pos<ND_OffAxis_Sim_mu_start_mom>>
+      vector<vector<vector<double>>> ND_OffAxis_Sim_mu_start_p_LAr; // nested vector: <ND_LAr_pos<vtx_pos<ND_OffAxis_Sim_mu_start_mom>>>
+
+      vector<double> ND_OffAxis_Sim_hadronic_hit_v; //order is differert from previous
+      vector<vector<double>> ND_OffAxis_Sim_hadronic_hits_v; // Position of each energy deposit [cm]: <ihadhit < hadronic hits xyz>>
+
+      // Step 5
+      // Nested vector (vetoSize > vetoEnergy > 64_bit_throw_result)
+      std::vector<std::vector<std::vector<uint64_t>>> hadron_throw_result;
+      // vtx_pos > vetoSize > vetoEnergy > 64_bit_throw_result
+      std::vector<std::vector<std::vector<std::vector<uint64_t>>>> hadron_throw_result_vtx;
+      // LAr_pos > vtx_pos > vetoSize > vetoEnergy > 64_bit_throw_result
+      std::vector<std::vector<std::vector<std::vector<std::vector<uint64_t>>>>> hadron_throw_result_LAr;
+
   }; // class CAFMaker
 
 
@@ -147,6 +240,9 @@ namespace caf {
       fFlatFile = new TFile("flatcaf.root", "RECREATE", "",
                             ROOT::CompressionSettings(ROOT::kLZ4, 1));
     }
+
+    geom = lar::providerFrom<geo::Geometry>();
+
   }
 
   //------------------------------------------------------------------------------
@@ -164,6 +260,28 @@ namespace caf {
       // Create the branch. We will update the address before we write the tree
       caf::StandardRecord* rec = 0;
       fTree->Branch("rec", &rec);
+
+      ThrowsFD = new TTree("geoEffThrows", "geoEffThrows");
+      ThrowsFD->Branch("seed",      &seed);
+      ThrowsFD->Branch("throwVtxY", &throwVtxY);
+      ThrowsFD->Branch("throwVtxZ", &throwVtxZ);
+      ThrowsFD->Branch("throwRot",  &throwRot);
+
+      // A separate tree to store throwresult and muon stuff for NN
+
+      // Generate new dictionary for nested vectors to write to TTree
+      gInterpreter->GenerateDictionary("vector<vector<vector<double> > >", "vector");
+      gInterpreter->GenerateDictionary("vector<vector<vector<vector<vector<uint64_t> > > > >", "vector");
+
+      ThrowResultsFD = new TTree("throwResults", "throwResults");
+      ThrowResultsFD->Branch("FD_Sim_mu_start_vx",                  &Sim_mu_start_vx,               "FD_Sim_mu_start_vx/D"); // for FD fiducial volume cut
+      ThrowResultsFD->Branch("FD_Sim_mu_start_vy",                  &Sim_mu_start_vy,               "FD_Sim_mu_start_vy/D");
+      ThrowResultsFD->Branch("FD_Sim_mu_start_vz",                  &Sim_mu_start_vz,               "FD_Sim_mu_start_vz/D");
+      ThrowResultsFD->Branch("FD_Sim_n_hadronic_hits",              &Sim_n_hadronic_Edep,           "FD_Sim_n_hadronic_hits/I"); // for offline analysis cut
+      ThrowResultsFD->Branch("FD_Sim_Ehad_veto",                    &Sim_Ehad_veto,                 "FD_Sim_Ehad_veto/D");
+      ThrowResultsFD->Branch("FD_evt_NDLAr_OffAxis_Sim_mu_start_v", &ND_OffAxis_Unrotated_Sim_mu_start_v_LAr); // for lepton NN
+      ThrowResultsFD->Branch("FD_evt_NDLAr_OffAxis_Sim_mu_start_p", &ND_OffAxis_Sim_mu_start_p_LAr);
+      ThrowResultsFD->Branch("FD_evt_hadron_throw_result_NDLAr",    &hadron_throw_result_LAr); // for FD hadronic GEC in ND
     }
 
     if(fFlatFile){
@@ -404,7 +522,7 @@ namespace caf {
       sr.eOther = 0.;
 
       for( int p = 0; p < truth[i]->NParticles(); p++ ) {
-        if( truth[i]->GetParticle(p).StatusCode() == genie::kIStHadronInTheNucleus ) {
+        if( truth[i]->GetParticle(p).StatusCode() == genie::kIStStableFinalState ) {
 
           int pdg = truth[i]->GetParticle(p).PdgCode();
           double ke = truth[i]->GetParticle(p).E() - truth[i]->GetParticle(p).Mass();
@@ -478,18 +596,320 @@ namespace caf {
       }
     } // loop through MC truth i
 
-    // Here starts to add PRISM GEC input
+    // ============================================================
+    // DUNE-PRISM geometric efficiency correction starts here
+    // If want to modify this section,
+    // contact DUNE-PRISM group or Wei Shi: wei.shi.1@stonybrook.edu
+    // ============================================================
+
+    // Process Sim MCparticles info at GEANT 4 level
+    auto particleHandle = evt.getValidHandle<std::vector<simb::MCParticle>>("largeant");
+    if ( ! particleHandle ) mf::LogWarning("CAFMaker") << "No MCParticle.";
+    // Create a map pf MCParticle to its track ID, to be used below
+    std::map<int, const simb::MCParticle*> particleMap;
+
+    Sim_mu_start_vx = -9999.;
+    Sim_mu_start_vy = -9999.;
+    Sim_mu_start_vz = -9999.;
+    Sim_mu_start_px = -9999.;
+    Sim_mu_start_py = -9999.;
+    Sim_mu_start_pz = -9999.;
+
+    // Loop over MCParticle
+    for ( auto const& particle : (*particleHandle) ) {
+      SimTrackID = particle.TrackId();
+      particleMap[SimTrackID] = &particle;
+
+      // Primary muon in the event
+      if ( particle.Process() == "primary" && abs(particle.PdgCode()) == 13 ) {
+
+        // For trajectories, as for vectors and arrays, the first point is #0, not #1.
+        Sim_mu_start_vx = particle.Vx(0);
+        Sim_mu_start_vy = particle.Vy(0);
+        Sim_mu_start_vz = particle.Vz(0);
+        Sim_mu_start_px = particle.Px(0);
+        Sim_mu_start_py = particle.Py(0);
+        Sim_mu_start_pz = particle.Pz(0);
+
+      } // end primary muon
+
+    } // end loop over MCParticle
+
+    // Get all the simulated channels for the event. These channels
+    // include the energy deposited for each simulated track.
+    auto simChannelHandle = evt.getValidHandle<std::vector<sim::SimChannel>>("largeant");
+    if ( ! simChannelHandle ) mf::LogWarning("CAFMaker") << "No SimChannel.";
+
+    Sim_n_hadronic_Edep = 0;
+    Sim_Ehad_veto       = 0.;
+    Sim_hadronic_hit_x.clear();
+    Sim_hadronic_hit_y.clear();
+    Sim_hadronic_hit_z.clear();
+    Sim_hadronic_hit_Edep.clear();
+
+    // Loop over the SimChannel objects in the event to look at the energy deposited by particle's track.
+    for ( auto const& channel : (*simChannelHandle) ) {
+      // Get the numeric ID associated with this channel.
+      auto const channelNumber = channel.Channel();
+
+      // Each channel has a map inside it that connects a time slice to energy deposits in the detector.
+      // The full type of this map is std::map<unsigned short, std::vector<sim::IDE>>; we'll use "auto" here
+      auto const& timeSlices = channel.TDCIDEMap();
+      for ( auto const& timeSlice : timeSlices ) {
+        // For the timeSlices map, the 'first' is a time slice number; The 'second' is a vector of IDE objects.
+        auto const& energyDeposits = timeSlice.second;
+
+        // An "energy deposit" object stores how much charge/energy was deposited in a small volume, by which particle, and where.
+        // The type of 'energyDeposit' will be sim::IDE, here use auto.
+        for ( auto const& energyDeposit : energyDeposits )
+        {
+          auto search = particleMap.find( energyDeposit.trackID );
+          if ( search == particleMap.end() ) continue;
+
+          // "search" points to a pair in the map: <track ID, MCParticle*>
+          const simb::MCParticle& particle = *((*search).second);
+
+          // If it's not a primary lepton, count as hadronic energy deposit
+          if ( ! ( particle.Process() == "primary" && ( abs(particle.PdgCode()) == 11 || abs(particle.PdgCode()) == 13 || abs(particle.PdgCode()) == 15 ) ) ){
+
+            // Here navigate via channel -> wire -> plane ID, and require planeID to be 0.
+            // But apparently other methods exist as well
+            std::vector<geo::WireID> const Wires = geom->ChannelToWire(channelNumber);
+            if ( Wires[0].planeID().Plane == 0 ) {
+
+              // Store position and E for each deposit
+              Sim_hadronic_hit_x.push_back(energyDeposit.x);
+              Sim_hadronic_hit_y.push_back(energyDeposit.y);
+              Sim_hadronic_hit_z.push_back(energyDeposit.z);
+              Sim_hadronic_hit_Edep.push_back(energyDeposit.energy);
+            } // end if access plane
+
+          } // end if hadronic
+
+        } // end loop over energyDeposit
+
+      } // end loop over timeslice
+
+    } // end loop over channel
+
+    Sim_n_hadronic_Edep = Sim_hadronic_hit_x.size();
+
+    // Calculate FD hadronic energy in 30cm veto region
+    for ( int ihadhit = 0; ihadhit < Sim_n_hadronic_Edep; ihadhit++ ){
+      // Veto region size: 30 cm from the active volume
+      if ( ( Sim_hadronic_hit_x.at(ihadhit) > FDActiveVol_min[0] && Sim_hadronic_hit_x.at(ihadhit) < FDActiveVol_min[0] + 30 ) ||
+           ( Sim_hadronic_hit_y.at(ihadhit) > FDActiveVol_min[1] && Sim_hadronic_hit_y.at(ihadhit) < FDActiveVol_min[1] + 30 ) ||
+           ( Sim_hadronic_hit_z.at(ihadhit) > FDActiveVol_min[2] && Sim_hadronic_hit_z.at(ihadhit) < FDActiveVol_min[2] + 30 ) ||
+           ( Sim_hadronic_hit_x.at(ihadhit) > FDActiveVol_max[0] - 30 && Sim_hadronic_hit_x.at(ihadhit) < FDActiveVol_max[0] ) ||
+           ( Sim_hadronic_hit_y.at(ihadhit) > FDActiveVol_max[1] - 30 && Sim_hadronic_hit_y.at(ihadhit) < FDActiveVol_max[1] ) ||
+           ( Sim_hadronic_hit_z.at(ihadhit) > FDActiveVol_max[2] - 30 && Sim_hadronic_hit_z.at(ihadhit) < FDActiveVol_max[2] ) )
+           Sim_Ehad_veto += Sim_hadronic_hit_Edep.at(ihadhit);
+    } // end loop over hadron E deposits
+
     //
+    // Now all inputs are ready, start geo eff calculation
+    //
+
+    // Mean neutrino production point (beam coordinate) on z axis as a function of ND off-axis position
+    int nOffAxisPoints = sizeof(OffAxisPoints)/sizeof(double);
+    int nmeanPDPZ = sizeof(meanPDPZ)/sizeof(double);
+    if( nOffAxisPoints != nmeanPDPZ ) {
+      std::cout << "[ERROR]: Number of offaxis points and decay positions doesn't match " << std::endl;
+      abort();
+    }
+    TGraph* gDecayZ = new TGraph(nOffAxisPoints, OffAxisPoints, meanPDPZ);
+
+    //
+    // Get beam parameters: hardcoded here !!! Eventually should read this number from XML file and/or reside in ND geo code
+    //
+
+    double beamLineRotation = -0.101; // unit: rad, clockwise rotate beamline around ND local x axis
+    double beamRefDetCoord[3] = {0.0, 0.05387, 6.6}; // unit: m, NDLAr detector coordinate origin is (0, 0, 0)
+    double detRefBeamCoord[3] = {0., 0., 574.}; // unit: m, beam coordinate origin is (0, 0, 0)
+    decayXdetCoord = beamRefDetCoord[0] - detRefBeamCoord[0]; // Calculate neutrino production x in detector coordinate
+
     // Initialize geometric efficiency module
-    //
-    geoEff * eff = new geoEff(314, true); // set verbose to true for debug
-    eff->setNthrows(4096);
+    random_device rd; // generate random seed number
+    seed = rd();
+    geoEff * eff = new geoEff(seed, false);
+    eff->setNthrows(N_throws);
     // Rotate w.r.t. neutrino direction, rather than fixed beam direction
     eff->setUseFixedBeamDir(false);
     // 30 cm veto
     eff->setVetoSizes(vector<float>(1, 30.));
     // 30 MeV
     eff->setVetoEnergyThresholds(vector<float>(1, 30.));
+    // Active detector dimensions for ND
+    eff->setActiveX(NDActiveVol_min[0], NDActiveVol_max[0]);
+    eff->setActiveY(NDActiveVol_min[1], NDActiveVol_max[1]);
+    eff->setActiveZ(NDActiveVol_min[2], NDActiveVol_max[2]);
+    // Range for translation throws. Use full active volume but fix X.
+    eff->setRangeX(-1, -1);
+    eff->setRandomizeX(false);
+    eff->setRangeY(NDActiveVol_min[1], NDActiveVol_max[1]);
+    eff->setRangeZ(NDActiveVol_min[2], NDActiveVol_max[2]);
+    // Set offset between MC coordinate system and det volumes
+    eff->setOffsetX(NDLAr_OnAxis_offset[0]);
+    eff->setOffsetY(NDLAr_OnAxis_offset[1]);
+    eff->setOffsetZ(NDLAr_OnAxis_offset[2]);
+
+    // Produce N random throws defined at setNthrows(N)
+    // Same throws applied for hadron below
+    eff->throwTransforms();
+    throwVtxY.clear();
+    throwVtxZ.clear();
+    throwRot.clear();
+    throwVtxY = eff->getCurrentThrowTranslationsY();
+    throwVtxZ = eff->getCurrentThrowTranslationsZ();
+    throwRot  = eff->getCurrentThrowRotations();
+    ThrowsFD->Fill();
+
+    //
+    // Step 1 - FD to ND: correct for earth curvature
+    // Step 2 - Put FD event at the beam center in ND LAr
+    //
+
+    // First do these two steps for muon
+    // Step 1 for muon
+    // New position and momentum after earth curvature corr.
+    double ND_RandomVtx_Sim_mu_start_v[3];
+    double ND_RandomVtx_Sim_mu_start_p[3];
+    double FD_Sim_mu_start_v[3] = {Sim_mu_start_vx, Sim_mu_start_vy, Sim_mu_start_vz};
+    double FD_Sim_mu_start_p[3] = {Sim_mu_start_px, Sim_mu_start_py, Sim_mu_start_pz};
+    for(int i=0; i<3; i++) ND_RandomVtx_Sim_mu_start_v[i] = eff->getEarthCurvature(FD_Sim_mu_start_v, beamLineRotation, i);
+    for(int i=0; i<3; i++) ND_RandomVtx_Sim_mu_start_p[i] = eff->getEarthCurvature(FD_Sim_mu_start_p, beamLineRotation, i);
+    // Step 2 for muon
+    // No operation on muon momentum as it conserves in translation
+    double ND_OnAxis_Sim_mu_start_v[3] = {beamRefDetCoord[0]*100., beamRefDetCoord[1]*100., beamRefDetCoord[2]*100.};
+
+    // Then do these two steps for hadronic hits
+    double ND_RandomVtx_Sim_hadronic_hit_v[3]; // New position of each energy deposit [cm] after earth curvature corr.
+    vector<double> ND_OnAxis_Sim_hadronic_hit_v; // New position of each energy deposit [cm] after translation to beam center at ND LAr
+    vector<vector<double>> ND_OnAxis_Sim_hadronic_hits_v; // all deposits pos
+
+    for ( int ihadhit = 0; ihadhit < Sim_n_hadronic_Edep; ihadhit++ ){
+      // Step 1 for each hadronic hit
+      double Sim_hadronic_hit_pos[3] = {Sim_hadronic_hit_x.at(ihadhit), Sim_hadronic_hit_y.at(ihadhit), Sim_hadronic_hit_z.at(ihadhit)};
+      for (int i =0; i<3; i++) ND_RandomVtx_Sim_hadronic_hit_v[i] = eff->getEarthCurvature(Sim_hadronic_hit_pos, beamLineRotation, i);
+      // Step 2 for each hadronic hit
+      for (int i =0; i<3; i++) ND_OnAxis_Sim_hadronic_hit_v.emplace_back(eff->getTranslations(ND_RandomVtx_Sim_hadronic_hit_v, ND_RandomVtx_Sim_mu_start_v, ND_OnAxis_Sim_mu_start_v, i));
+      ND_OnAxis_Sim_hadronic_hits_v.emplace_back(ND_OnAxis_Sim_hadronic_hit_v);
+      ND_OnAxis_Sim_hadronic_hit_v.clear();
+    }
+
+    // Set On-axis vertex where beam crosses ND LAr center
+    eff->setOnAxisVertex(ND_OnAxis_Sim_mu_start_v[0], ND_OnAxis_Sim_mu_start_v[1], ND_OnAxis_Sim_mu_start_v[2]);
+
+    // Put FD event in many ND LAr positions
+    for ( double i_ND_off_axis_pos : ND_LAr_dtctr_pos_vec ){
+      eff->setOffsetX(NDLAr_OnAxis_offset[0] + i_ND_off_axis_pos); // update offset since we moved the detector
+
+      // Also put FD event in many positions in ND LAr
+      for ( double i_vtx_vx : ND_vtx_vx_vec ) {
+
+        // Interpolate event neutrino production point (in beam coordinate)
+        decayZbeamCoord = gDecayZ->Eval( i_ND_off_axis_pos + i_vtx_vx - detRefBeamCoord[0] );
+
+        // Calculate neutrino production point in detector coordinate
+        decayYdetCoord = beamRefDetCoord[1] - detRefBeamCoord[1]*cos(beamLineRotation) + ( decayZbeamCoord - detRefBeamCoord[2] )*sin(beamLineRotation);
+        decayZdetCoord = beamRefDetCoord[2] + detRefBeamCoord[1]*sin(beamLineRotation) + ( decayZbeamCoord - detRefBeamCoord[2] )*cos(beamLineRotation);
+        // Set production point in unit: cm
+        eff->setDecayPos(decayXdetCoord*100., decayYdetCoord*100., decayZdetCoord*100.);
+
+        //
+        // Step 3 - translate FD event from OnAxis NDLAr to OffAxis NDLAr (but no rotation yet --> next step)
+        //
+
+        // Momentum conserves at this step, only affect positions
+        ND_OffAxis_Unrotated_Sim_mu_start_pos[0] = ND_OnAxis_Sim_mu_start_v[0] + i_ND_off_axis_pos + i_vtx_vx;
+        ND_OffAxis_Unrotated_Sim_mu_start_pos[1] = ND_OnAxis_Sim_mu_start_v[1];
+        ND_OffAxis_Unrotated_Sim_mu_start_pos[2] = ND_OnAxis_Sim_mu_start_v[2];
+
+        ND_OffAxis_Unrotated_Sim_mu_start_v.emplace_back(ND_OffAxis_Unrotated_Sim_mu_start_pos[0]);
+        ND_OffAxis_Unrotated_Sim_mu_start_v.emplace_back(ND_OffAxis_Unrotated_Sim_mu_start_pos[1]);
+        ND_OffAxis_Unrotated_Sim_mu_start_v.emplace_back(ND_OffAxis_Unrotated_Sim_mu_start_pos[2]);
+        ND_OffAxis_Unrotated_Sim_mu_start_v_vtx.emplace_back(ND_OffAxis_Unrotated_Sim_mu_start_v);
+        ND_OffAxis_Unrotated_Sim_mu_start_v.clear();
+
+        // Translation doesn't affect muon p, no operation (still ND_RandomVtx_Sim_mu_start_p)
+
+        for ( int ihadhit = 0; ihadhit < Sim_n_hadronic_Edep; ihadhit++ ){
+          double ND_OnAxis_Sim_hadronic_hit_pos[3] = {ND_OnAxis_Sim_hadronic_hits_v[ihadhit][0], ND_OnAxis_Sim_hadronic_hits_v[ihadhit][1], ND_OnAxis_Sim_hadronic_hits_v[ihadhit][2]};
+          for (int i =0; i<3; i++) ND_OffAxis_Unrotated_Sim_hadronic_hit_v.emplace_back(eff->getTranslations(ND_OnAxis_Sim_hadronic_hit_pos, ND_OnAxis_Sim_mu_start_v, ND_OffAxis_Unrotated_Sim_mu_start_pos, i));
+          ND_OffAxis_Unrotated_Sim_hadronic_hits_v.emplace_back(ND_OffAxis_Unrotated_Sim_hadronic_hit_v);
+          ND_OffAxis_Unrotated_Sim_hadronic_hit_v.clear();
+        }
+
+        //
+        // Step 4 - Complete step 3 by properly rotate the FD event
+        //
+
+        // Muon start point remain the same as step 3: ND_OffAxis_Unrotated_Sim_mu_start_pos
+        eff->setOffAxisVertex(ND_OffAxis_Unrotated_Sim_mu_start_pos[0], ND_OffAxis_Unrotated_Sim_mu_start_pos[1], ND_OffAxis_Unrotated_Sim_mu_start_pos[2]);
+
+        eff->setMuStartP(ND_RandomVtx_Sim_mu_start_p[0], ND_RandomVtx_Sim_mu_start_p[1], ND_RandomVtx_Sim_mu_start_p[2]); // because p is not impacted in step 2 & 3
+        for(int i=0; i<3; i++) ND_OffAxis_Sim_mu_start_mom[i] = eff->getOffAxisMuStartP(i);
+        ND_OffAxis_Sim_mu_start_p.emplace_back(ND_OffAxis_Sim_mu_start_mom[0]);
+        ND_OffAxis_Sim_mu_start_p.emplace_back(ND_OffAxis_Sim_mu_start_mom[1]);
+        ND_OffAxis_Sim_mu_start_p.emplace_back(ND_OffAxis_Sim_mu_start_mom[2]);
+        ND_OffAxis_Sim_mu_start_p_vtx.emplace_back(ND_OffAxis_Sim_mu_start_p);
+        ND_OffAxis_Sim_mu_start_p.clear();
+
+        for ( int ihadhit = 0; ihadhit < Sim_n_hadronic_Edep; ihadhit++ ){
+          eff->setHadronHitV(ND_OffAxis_Unrotated_Sim_hadronic_hits_v[ihadhit][0], ND_OffAxis_Unrotated_Sim_hadronic_hits_v[ihadhit][1], ND_OffAxis_Unrotated_Sim_hadronic_hits_v[ihadhit][2]);
+          for (int i =0; i<3; i++) ND_OffAxis_Sim_hadronic_hit_v.emplace_back(eff->getOffAxisHadronHitV(i));
+          ND_OffAxis_Sim_hadronic_hits_v.emplace_back(ND_OffAxis_Sim_hadronic_hit_v);
+          ND_OffAxis_Sim_hadronic_hit_v.clear();
+        }
+
+        //
+        // Step 5 - Generate random throws for FD event
+        //
+        HadronHitEdeps.clear();
+        HadronHitPoss.clear();
+        HadronHitEdeps.reserve(Sim_n_hadronic_Edep);
+        HadronHitPoss.reserve(Sim_n_hadronic_Edep*3);
+
+        for ( int ihadhit = 0; ihadhit < Sim_n_hadronic_Edep; ihadhit++ ){
+          for (int i =0; i<3; i++) HadronHitPoss.emplace_back(ND_OffAxis_Sim_hadronic_hits_v[ihadhit][i]);
+          HadronHitEdeps.emplace_back( Sim_hadronic_hit_Edep.at(ihadhit) );
+        }
+
+        eff->setVertex(ND_OffAxis_Unrotated_Sim_mu_start_pos[0], ND_OffAxis_Unrotated_Sim_mu_start_pos[1], ND_OffAxis_Unrotated_Sim_mu_start_pos[2]);
+        eff->setHitSegEdeps(HadronHitEdeps);
+        eff->setHitSegPoss(HadronHitPoss);
+
+        // Set offset between MC coordinate system and det volumes
+        eff->setOffAxisOffsetX(i_ND_off_axis_pos); // make sure had veto is correct
+        eff->setOffAxisOffsetY(NDLAr_OnAxis_offset[1]);
+        eff->setOffAxisOffsetZ(NDLAr_OnAxis_offset[2]);
+        // Get hadron containment result after everything is set to ND coordinate sys
+        // Do random throws regardless whether FD evt is contained in ND volume by setting a false flag
+        hadron_throw_result = eff->getHadronContainmentThrows(false); // Every 64 throw results stored into a 64 bit unsigned int: 0101101...
+
+        hadron_throw_result_vtx.emplace_back(hadron_throw_result);
+        hadron_throw_result.clear();
+
+        ND_OffAxis_Unrotated_Sim_hadronic_hits_v.clear();
+        ND_OffAxis_Sim_hadronic_hits_v.clear();
+
+      } // end loop over ND_vtx_vx_vec
+
+      // These will write to FD CAF
+      ND_OffAxis_Unrotated_Sim_mu_start_v_LAr.emplace_back(ND_OffAxis_Unrotated_Sim_mu_start_v_vtx);
+      ND_OffAxis_Unrotated_Sim_mu_start_v_vtx.clear();
+      ND_OffAxis_Sim_mu_start_p_LAr.emplace_back(ND_OffAxis_Sim_mu_start_p_vtx);
+      ND_OffAxis_Sim_mu_start_p_vtx.clear();
+      hadron_throw_result_LAr.emplace_back(hadron_throw_result_vtx);
+      hadron_throw_result_vtx.clear();
+
+    } // end loop over ND_LAr_dtctr_pos_vec
+
+    ThrowResultsFD->Fill();
+
+    // =====================================================
+    // Here ends DUNE-PRISM geometric efficiency correction
+    // =====================================================
 
     if(fTree){
       fTree->Fill();
@@ -516,6 +936,8 @@ namespace caf {
       fOutFile->cd();
       fTree->Write();
       fMetaTree->Write();
+      ThrowsFD->Write();
+      ThrowResultsFD->Write();
       fOutFile->Close();
     }
 
