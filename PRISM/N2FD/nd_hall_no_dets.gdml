@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="ASCII"?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
+  <define>
+    <position unit="cm" name="elevatorBlock2Position" x="0.0" y="0.0" z="-15.240000000000002"/>
+    <position unit="cm" name="elevatorBlock3Position" x="0.0" y="0.0" z="238.24"/>
+    <position unit="cm" name="craneRail11Position" x="0.0" y="0.0" z="0.0"/>
+    <position unit="cm" name="craneRailBlock12Position" x="30.4801" y="-35.5599" z="0.0"/>
+    <rotation unit="degree" name="craneRailBlock12Rot" x="0" y="0" z="56.31"/>
+    <position unit="cm" name="craneRailBlock13Position" x="10.16" y="45.8785" z="0.0"/>
+    <position unit="cm" name="craneRail21Position" x="0.0" y="0.0" z="0.0"/>
+    <position unit="cm" name="craneRailBlock22Position" x="30.4801" y="-35.5599" z="0.0"/>
+    <rotation unit="degree" name="craneRailBlock22Rot" x="0" y="0" z="56.31"/>
+    <position unit="cm" name="craneRailBlock23Position" x="10.16" y="45.8785" z="0.0"/>
+    <position unit="cm" name="egressHallwayInnerPosition" x="15.240000000000002" y="-15.2415" z="0.0"/>
+    <position unit="cm" name="egressHallwayPosition" x="0.0" y="0.0" z="0.0"/>
+    <position unit="cm" name="egressHallwayDoorPosition" x="-76.2" y="-45.5615" z="335.28000000000003"/>
+    <position unit="cm" name="cryoTube1Position" x="-17.78" y="0.0" z="0.0"/>
+    <position unit="cm" name="cryoTube2Position" x="33.02" y="0.0" z="0.0"/>
+    <position unit="cm" name="cryoTube3Position" x="33.02" y="-23.064" z="0.0"/>
+    <position unit="cm" name="cryoTube4Position" x="17.380000000000003" y="23.749000000000002" z="0.0"/>
+    <position unit="cm" name="cryoTube5Position" x="17.380000000000003" y="-23.749000000000002" z="0.0"/>
+    <position unit="cm" name="NDHallSpaceAirVol2Position" x="1848.48" y="-229.99999999999997" z="1477.5"/>
+    <position unit="cm" name="NDHallSpace3AirVolPosition" x="-2469.0" y="459.5" z="0.0"/>
+    <position unit="cm" name="NDHallAirVolSpace4Position" x="0.0" y="361.66200000000003" z="0.0"/>
+    <position unit="cm" name="NDHallAirVolSpace5Position" x="335.28000000000003" y="-640.08" z="-975.24"/>
+    <position unit="cm" name="NDHallAirVolSpace6Position" x="-2651.88" y="-30.455000000000002" z="-784.2600000000001"/>
+    <position unit="cm" name="NDHallAirVolSpace7Position" x="-2758.56" y="137.18" z="-563.23"/>
+    <position unit="cm" name="elevatorBlock_lv_pos" x="-2697.2400000000002" y="459.5" z="0.0"/>
+    <rotation unit="degree" name="elevatorBlock_lv_rot" x="0" y="-90" z="0"/>
+    <position unit="cm" name="craneRail1_lv_pos" x="0.0" y="463.72" z="939.68"/>
+    <rotation unit="degree" name="craneRail1_lv_rot" x="0" y="-90" z="0"/>
+    <position unit="cm" name="craneRail2_lv_pos" x="0.0" y="463.72" z="-939.68"/>
+    <rotation unit="degree" name="craneRail2_lv_rot" x="0" y="90" z="0"/>
+    <position unit="cm" name="egressHallway_lv_pos" x="0.0" y="-594.518" z="-868.5600000000001"/>
+    <rotation unit="degree" name="egressHallway_lv_rot" x="0" y="-90" z="0"/>
+    <position unit="cm" name="volfullCryoTubeBox_pos" x="5.089" y="-353.66700000000003" z="-784.2600000000001"/>
+    <rotation unit="degree" name="volfullCryoTubeBox_rot" x="0" y="-90" z="0"/>
+    <position unit="cm" name="volDetEnclosure_pos" x="289.5" y="-320.0" z="11982.5"/>
+    <rotation unit="degree" name="volDetEnclosure_rot" x="0" y="0" z="0"/>
+    <rotation unit="degree" name="noRotate" x="0" y="0" z="0"/>
+    <rotation unit="degree" name="r90aboutX" x="90" y="0" z="0"/>
+    <rotation unit="degree" name="rminus90aboutX" x="-90" y="0" z="0"/>
+    <rotation unit="degree" name="r90aboutY" x="0" y="90" z="0"/>
+    <rotation unit="degree" name="r180aboutY" x="0" y="180" z="0"/>
+    <rotation unit="degree" name="r180aboutZ" x="0" y="0" z="180"/>
+    <rotation unit="degree" name="rminus90aboutY" x="0" y="-90" z="0"/>
+    <rotation unit="degree" name="r90aboutZ" x="0" y="0" z="90"/>
+    <rotation unit="degree" name="r90aboutXZ" x="90" y="0" z="90"/>
+    <rotation unit="degree" name="r90aboutYZ" x="0" y="90" z="90"/>
+    <rotation unit="degree" name="r90aboutXminusZ" x="-90" y="0" z="90"/>
+    <rotation unit="degree" name="r90aboutYminusZ" x="0" y="-90" z="90"/>
+    <rotation unit="degree" name="r90aboutX90aboutY" x="90" y="90" z="0"/>
+    <rotation unit="degree" name="r90aboutX180aboutY" x="90" y="180" z="0"/>
+    <position unit="cm" name="rockBox_lv_pos" x="-2137.9" y="420.52700000000004" z="-11022.5"/>
+    <rotation unit="degree" name="rockBox_lv_rot" x="0" y="0" z="0"/>
+    <position name="center"/>
+    <rotation name="identity"/>
+  </define>
+  <materials>
+    <element name="hydrogen" Z="1" formula="H">
+      <atom value="1.00791"/>
+    </element>
+    <isotope name="boron11" Z="5" N="11">
+      <atom type="A" value="11.0"/>
+    </isotope>
+    <element name="boron">
+      <fraction ref="boron11" n="1.0"/>
+    </element>
+    <element name="carbon" Z="6" formula="C">
+      <atom value="12.0107"/>
+    </element>
+    <element name="nitrogen" Z="7" formula="N">
+      <atom value="14.0671"/>
+    </element>
+    <element name="oxygen" Z="8" formula="O">
+      <atom value="15.999"/>
+    </element>
+    <element name="fluorine" Z="9" formula="F">
+      <atom value="18.9984"/>
+    </element>
+    <element name="sodium" Z="11" formula="Na">
+      <atom value="22.99"/>
+    </element>
+    <element name="magnesium" Z="12" formula="Mg">
+      <atom value="24.305"/>
+    </element>
+    <element name="aluminum" Z="13" formula="Al">
+      <atom value="26.9815"/>
+    </element>
+    <element name="silicon" Z="14" formula="Si">
+      <atom value="28.0855"/>
+    </element>
+    <element name="phosphorus" Z="15" formula="P">
+      <atom value="30.973"/>
+    </element>
+    <element name="sulfur" Z="16" formula="S">
+      <atom value="32.065"/>
+    </element>
+    <element name="argon" Z="18" formula="Ar">
+      <atom value="39.948"/>
+    </element>
+    <element name="potassium" Z="19" formula="K">
+      <atom value="39.0983"/>
+    </element>
+    <element name="calcium" Z="20" formula="Ca">
+      <atom value="40.078"/>
+    </element>
+    <element name="titanium" Z="22" formula="Ti">
+      <atom value="47.867"/>
+    </element>
+    <element name="chromium" Z="24" formula="Cr">
+      <atom value="51.9961"/>
+    </element>
+    <element name="manganese" Z="25" formula="Mn">
+      <atom value="54.938"/>
+    </element>
+    <element name="iron" Z="26" formula="Fe">
+      <atom value="55.845"/>
+    </element>
+    <element name="nickel" Z="28" formula="Ni">
+      <atom value="58.6934"/>
+    </element>
+    <element name="tungsten" Z="74" formula="W">
+      <atom value="183.84"/>
+    </element>
+    <element name="gold" Z="79" formula="Au">
+      <atom value="196.966"/>
+    </element>
+    <isotope name="copper63" Z="29" N="63">
+      <atom type="A" value="62.93"/>
+    </isotope>
+    <isotope name="copper65" Z="29" N="65">
+      <atom type="A" value="64.93"/>
+    </isotope>
+    <element name="copper">
+      <fraction ref="copper63" n="0.6917"/>
+      <fraction ref="copper65" n="0.3083"/>
+    </element>
+    <isotope name="zinc64" Z="30" N="64">
+      <atom type="A" value="63.93"/>
+    </isotope>
+    <element name="zinc">
+      <fraction ref="zinc64" n="1.0"/>
+    </element>
+    <element name="bromine" Z="35" formula="Br">
+      <atom value="79.904"/>
+    </element>
+    <element name="xenon" Z="54" formula="Xe">
+      <atom value="131.293"/>
+    </element>
+    <element name="lead" Z="82" formula="Pb">
+      <atom value="207.2"/>
+    </element>
+    <material name="SiO2" formula="">
+      <D value="2.2"/>
+      <composite ref="silicon" n="1"/>
+      <composite ref="oxygen" n="2"/>
+    </material>
+    <material name="FeO" formula="">
+      <D value="5.745"/>
+      <composite ref="iron" n="1"/>
+      <composite ref="oxygen" n="1"/>
+    </material>
+    <material name="Al2O3" formula="">
+      <D value="3.97"/>
+      <composite ref="aluminum" n="2"/>
+      <composite ref="oxygen" n="3"/>
+    </material>
+    <material name="MgO" formula="">
+      <D value="3.58"/>
+      <composite ref="magnesium" n="1"/>
+      <composite ref="oxygen" n="1"/>
+    </material>
+    <material name="CO2" formula="">
+      <D value="1.562"/>
+      <composite ref="carbon" n="1"/>
+      <composite ref="oxygen" n="2"/>
+    </material>
+    <material name="CaO" formula="">
+      <D value="3.35"/>
+      <composite ref="calcium" n="1"/>
+      <composite ref="oxygen" n="1"/>
+    </material>
+    <material name="Na2O" formula="">
+      <D value="2.27"/>
+      <composite ref="sodium" n="2"/>
+      <composite ref="oxygen" n="1"/>
+    </material>
+    <material name="P2O5" formula="">
+      <D value="1.562"/>
+      <composite ref="phosphorus" n="2"/>
+      <composite ref="oxygen" n="5"/>
+    </material>
+    <material name="TiO2" formula="">
+      <D value="4.23"/>
+      <composite ref="titanium" n="1"/>
+      <composite ref="oxygen" n="2"/>
+    </material>
+    <material name="Fe2O3" formula="">
+      <D value="5.24"/>
+      <composite ref="iron" n="2"/>
+      <composite ref="oxygen" n="3"/>
+    </material>
+    <material name="Rock" formula="">
+      <D value="2.82"/>
+      <fraction ref="SiO2" n="0.5267"/>
+      <fraction ref="FeO" n="0.1174"/>
+      <fraction ref="Al2O3" n="0.1025"/>
+      <fraction ref="oxygen" n="0.0771"/>
+      <fraction ref="MgO" n="0.0473"/>
+      <fraction ref="CO2" n="0.0422"/>
+      <fraction ref="CaO" n="0.0382"/>
+      <fraction ref="carbon" n="0.024"/>
+      <fraction ref="sulfur" n="0.0186"/>
+      <fraction ref="Na2O" n="0.0053"/>
+      <fraction ref="P2O5" n="0.0007"/>
+    </material>
+    <material name="Dirt" formula="">
+      <D value="1.7"/>
+      <fraction ref="oxygen" n="0.438"/>
+      <fraction ref="silicon" n="0.257"/>
+      <fraction ref="sodium" n="0.222"/>
+      <fraction ref="aluminum" n="0.049"/>
+      <fraction ref="iron" n="0.019"/>
+      <fraction ref="potassium" n="0.015"/>
+    </material>
+    <material name="Air" formula="">
+      <D value="0.001225"/>
+      <fraction ref="nitrogen" n="0.781154"/>
+      <fraction ref="oxygen" n="0.209476"/>
+      <fraction ref="argon" n="0.00934"/>
+    </material>
+    <material name="Air35C" formula="">
+      <D value="0.00115"/>
+      <fraction ref="nitrogen" n="0.781154"/>
+      <fraction ref="oxygen" n="0.209476"/>
+      <fraction ref="argon" n="0.00934"/>
+    </material>
+    <material name="Vacuum_cryo" formula="">
+      <D value="1.15e-08"/>
+      <fraction ref="nitrogen" n="0.781154"/>
+      <fraction ref="oxygen" n="0.209476"/>
+      <fraction ref="argon" n="0.00934"/>
+    </material>
+    <material name="Bakelite" formula="">
+      <D value="1.25"/>
+      <fraction ref="hydrogen" n="0.057441"/>
+      <fraction ref="carbon" n="0.774591"/>
+      <fraction ref="oxygen" n="0.167968"/>
+    </material>
+    <material name="Honeycomb" formula="">
+      <D value="0.94"/>
+      <fraction ref="hydrogen" n="0.143711"/>
+      <fraction ref="carbon" n="0.856289"/>
+    </material>
+    <material name="C3H6" formula="">
+      <D value="0.946"/>
+      <composite ref="carbon" n="3"/>
+      <composite ref="hydrogen" n="6"/>
+    </material>
+    <material name="RadiatorBlend" formula="">
+      <D value="0.1586875"/>
+      <fraction ref="Air" n="0.006432978863069372"/>
+      <fraction ref="C3H6" n="0.9935670211369306"/>
+    </material>
+    <material name="RadiatorBlendNewConf" formula="">
+      <D value="0.19018"/>
+      <fraction ref="Air" n="0.005153012935114054"/>
+      <fraction ref="C3H6" n="0.994846987064886"/>
+    </material>
+    <material name="stGas_Xe" formula="">
+      <D value="0.004692544642857144"/>
+      <fraction ref="CO2" n="0.3"/>
+      <fraction ref="argon" n="0.7"/>
+    </material>
+    <material name="stGas_Xe19" formula="">
+      <D value="0.008915834821428574"/>
+      <fraction ref="CO2" n="0.3"/>
+      <fraction ref="argon" n="0.7"/>
+    </material>
+    <material name="straw_avg_ArXe" formula="">
+      <D value="0.020918592"/>
+      <fraction ref="CO2" n="0.3"/>
+      <fraction ref="argon" n="0.7"/>
+    </material>
+    <material name="Water" formula="">
+      <D value="1.0"/>
+      <composite ref="oxygen" n="1"/>
+      <composite ref="hydrogen" n="2"/>
+    </material>
+    <material name="ArgonTarget" formula="">
+      <D value="0.2297"/>
+      <composite ref="argon" n="1"/>
+    </material>
+    <material name="Aluminum" formula="">
+      <D value="2.7"/>
+      <composite ref="aluminum" n="1"/>
+    </material>
+    <material name="Copper" formula="">
+      <D value="8.96"/>
+      <composite ref="copper" n="1"/>
+    </material>
+    <material name="MagnetCoil" formula="">
+      <D value="6.94"/>
+      <fraction ref="Copper" n="0.964"/>
+      <fraction ref="Water" n="0.03600000000000003"/>
+    </material>
+    <material name="CarbonFiber" formula="">
+      <D value="1.6"/>
+      <composite ref="carbon" n="1"/>
+    </material>
+    <material name="stGas_Ar" formula="">
+      <D value="0.0018378571428571428"/>
+      <fraction ref="CO2" n="0.3"/>
+      <fraction ref="argon" n="0.7"/>
+    </material>
+    <material name="stGas_Ar19" formula="">
+      <D value="0.003491928571428571"/>
+      <fraction ref="CO2" n="0.3"/>
+      <fraction ref="argon" n="0.7"/>
+    </material>
+    <material name="carbonComposite" formula="">
+      <D value="0.65"/>
+      <fraction ref="carbon" n="0.99"/>
+      <fraction ref="hydrogen" n="0.01"/>
+    </material>
+    <material name="Kapton" formula="">
+      <D value="1.4"/>
+      <composite ref="carbon" n="22"/>
+      <composite ref="oxygen" n="5"/>
+      <composite ref="nitrogen" n="2"/>
+    </material>
+    <material name="Tungsten" formula="">
+      <D value="19.3"/>
+      <composite ref="tungsten" n="1"/>
+    </material>
+    <material name="Gold" formula="">
+      <D value="19.3"/>
+      <composite ref="gold" n="1"/>
+    </material>
+    <material name="Iron" formula="">
+      <D value="7.874"/>
+      <composite ref="iron" n="1"/>
+    </material>
+    <material name="Graphite" formula="">
+      <D value="2.23"/>
+      <composite ref="carbon" n="1"/>
+    </material>
+    <material name="Calcium" formula="">
+      <D value="1.55"/>
+      <composite ref="calcium" n="1"/>
+    </material>
+    <material name="Carbon_fiber" formula="">
+      <D value="1.6"/>
+      <composite ref="carbon" n="1"/>
+    </material>
+    <material name="Steel" formula="">
+      <D value="7.93"/>
+      <fraction ref="iron" n="0.7298"/>
+      <fraction ref="chromium" n="0.1792"/>
+      <fraction ref="nickel" n="0.09"/>
+      <fraction ref="carbon" n="0.001"/>
+    </material>
+    <material name="SteelTMS" formula="">
+      <D value="7.85"/>
+      <fraction ref="iron" n="0.9951"/>
+      <fraction ref="silicon" n="0.0045"/>
+      <fraction ref="carbon" n="0.0004"/>
+    </material>
+    <material name="polycarbonate" formula="">
+      <D value="1.2"/>
+      <composite ref="carbon" n="16"/>
+      <composite ref="hydrogen" n="6"/>
+      <composite ref="oxygen" n="3"/>
+    </material>
+    <material name="sttFrameMix" formula="">
+      <D value="0.235"/>
+      <fraction ref="carbon" n="0.7647058823529412"/>
+      <fraction ref="polycarbonate" n="0.23529411764705882"/>
+    </material>
+    <material name="fibrous_glass" formula="">
+      <D value="1.0"/>
+      <fraction ref="SiO2" n="0.6"/>
+      <fraction ref="CaO" n="0.224"/>
+      <fraction ref="Al2O3" n="0.118"/>
+      <fraction ref="MgO" n="0.034"/>
+      <fraction ref="TiO2" n="0.013"/>
+      <fraction ref="Na2O" n="0.01"/>
+      <fraction ref="Fe2O3" n="0.001"/>
+    </material>
+    <material name="Fiberglass" formula="">
+      <D value="0.7"/>
+      <fraction ref="SiO2" n="0.6"/>
+      <fraction ref="CaO" n="0.224"/>
+      <fraction ref="Al2O3" n="0.118"/>
+      <fraction ref="MgO" n="0.034"/>
+      <fraction ref="TiO2" n="0.013"/>
+      <fraction ref="Na2O" n="0.01"/>
+      <fraction ref="Fe2O3" n="0.001"/>
+    </material>
+    <material name="CH2FCF3" formula="">
+      <D value="0.00425"/>
+      <composite ref="carbon" n="2"/>
+      <composite ref="hydrogen" n="2"/>
+      <composite ref="fluorine" n="4"/>
+    </material>
+    <material name="C4H10" formula="">
+      <D value="0.00251"/>
+      <composite ref="carbon" n="4"/>
+      <composite ref="hydrogen" n="10"/>
+    </material>
+    <material name="SF6" formula="">
+      <D value="0.00617"/>
+      <composite ref="sulfur" n="4"/>
+      <composite ref="fluorine" n="6"/>
+    </material>
+    <material name="rpcGas" formula="">
+      <D value="0.001784"/>
+      <fraction ref="argon" n="0.75"/>
+      <fraction ref="CH2FCF3" n="0.2"/>
+      <fraction ref="C4H10" n="0.04"/>
+      <fraction ref="SF6" n="0.01"/>
+    </material>
+    <material name="epoxy_resin" formula="">
+      <D value="1.125"/>
+      <composite ref="carbon" n="38"/>
+      <composite ref="hydrogen" n="40"/>
+      <composite ref="oxygen" n="6"/>
+    </material>
+    <material name="SSteel304" formula="">
+      <D value="7.9"/>
+      <fraction ref="carbon" n="0.0008"/>
+      <fraction ref="manganese" n="0.02"/>
+      <fraction ref="phosphorus" n="0.00045"/>
+      <fraction ref="sulfur" n="0.0003"/>
+      <fraction ref="silicon" n="0.0075"/>
+      <fraction ref="chromium" n="0.18"/>
+      <fraction ref="nickel" n="0.08"/>
+      <fraction ref="nitrogen" n="0.001"/>
+      <fraction ref="iron" n="0.70995"/>
+    </material>
+    <material name="CalciumSilicate" formula="">
+      <D value="0.6"/>
+      <composite ref="calcium" n="1"/>
+      <composite ref="oxygen" n="3"/>
+      <composite ref="silicon" n="1"/>
+    </material>
+    <material name="CarbonSteel" formula="">
+      <D value="7.9"/>
+      <fraction ref="carbon" n="0.003"/>
+      <fraction ref="copper" n="0.0025"/>
+      <fraction ref="iron" n="0.98"/>
+      <fraction ref="manganese" n="0.0103"/>
+      <fraction ref="phosphorus" n="0.0009"/>
+      <fraction ref="silicon" n="0.0028"/>
+      <fraction ref="sulfur" n="0.0005"/>
+    </material>
+    <material name="LowDensityCarbonSteel" formula="">
+      <D value="0.754"/>
+      <fraction ref="carbon" n="0.003"/>
+      <fraction ref="copper" n="0.0025"/>
+      <fraction ref="iron" n="0.98"/>
+      <fraction ref="manganese" n="0.0103"/>
+      <fraction ref="phosphorus" n="0.0009"/>
+      <fraction ref="silicon" n="0.0028"/>
+      <fraction ref="sulfur" n="0.0005"/>
+    </material>
+    <material name="ReifConcrete" formula="">
+      <D value="2.5"/>
+      <fraction ref="CaO" n="0.6661"/>
+      <fraction ref="SiO2" n="0.2345"/>
+      <fraction ref="Al2O3" n="0.0445"/>
+      <fraction ref="Fe2O3" n="0.0307"/>
+      <fraction ref="MgO" n="0.0242"/>
+    </material>
+    <material name="Polyurethane" formula="">
+      <D value="0.065"/>
+      <composite ref="carbon" n="27"/>
+      <composite ref="hydrogen" n="36"/>
+      <composite ref="nitrogen" n="2"/>
+      <composite ref="oxygen" n="10"/>
+    </material>
+    <material name="PolyurethaneFoam" formula="">
+      <D value="0.09"/>
+      <composite ref="carbon" n="27"/>
+      <composite ref="hydrogen" n="36"/>
+      <composite ref="nitrogen" n="2"/>
+      <composite ref="oxygen" n="10"/>
+    </material>
+    <material name="Epoxy" formula="">
+      <D value="1.25"/>
+      <composite ref="carbon" n="6"/>
+      <composite ref="hydrogen" n="6"/>
+      <composite ref="oxygen" n="1"/>
+    </material>
+    <material name="Glass" formula="">
+      <D value="2.7"/>
+      <fraction ref="silicon" n="0.2743"/>
+      <fraction ref="boron" n="0.0166"/>
+      <fraction ref="aluminum" n="0.0207"/>
+      <fraction ref="sodium" n="0.0449"/>
+      <fraction ref="potassium" n="0.0821"/>
+      <fraction ref="zinc" n="0.0882"/>
+      <fraction ref="titanium" n="0.0292"/>
+      <fraction ref="oxygen" n="0.444"/>
+    </material>
+    <material name="FR4" formula="">
+      <D value="1.85"/>
+      <fraction ref="Epoxy" n="0.206"/>
+      <fraction ref="Glass" n="0.794"/>
+    </material>
+    <material name="PVT" formula="">
+      <D value="1.023"/>
+      <composite ref="carbon" n="9"/>
+      <composite ref="hydrogen" n="10"/>
+    </material>
+    <material name="Scintillator" formula="">
+      <D value="1.05"/>
+      <fraction ref="carbon" n="0.916"/>
+      <fraction ref="hydrogen" n="0.084"/>
+    </material>
+    <material name="ScintillatorLoadedBoron5" formula="">
+      <D value="1.05"/>
+      <fraction ref="carbon" n="0.866"/>
+      <fraction ref="hydrogen" n="0.084"/>
+      <fraction ref="boron" n="0.05"/>
+    </material>
+    <material name="Oil" formula="">
+      <D value="0.8"/>
+      <fraction ref="carbon" n="0.916"/>
+      <fraction ref="hydrogen" n="0.084"/>
+    </material>
+    <material name="Lead" formula="">
+      <D value="11.342"/>
+      <composite ref="lead" n="1"/>
+    </material>
+    <material name="LAr" formula="">
+      <D value="1.4"/>
+      <composite ref="argon" n="1"/>
+    </material>
+    <material name="GAr" formula="">
+      <D value="0.001784"/>
+      <composite ref="argon" n="1"/>
+    </material>
+    <material name="KLOEEcal" formula="">
+      <D value="5.3"/>
+      <fraction ref="Lead" n="0.42"/>
+      <fraction ref="Scintillator" n="0.48"/>
+      <fraction ref="epoxy_resin" n="0.1"/>
+    </material>
+    <material name="PVF" formula="">
+      <D value="1.71"/>
+      <composite ref="carbon" n="2"/>
+      <composite ref="hydrogen" n="3"/>
+      <composite ref="fluorine" n="1"/>
+    </material>
+    <material name="Kevlar" formula="">
+      <D value="1.45"/>
+      <composite ref="carbon" n="7"/>
+      <composite ref="hydrogen" n="5"/>
+      <composite ref="nitrogen" n="1"/>
+      <composite ref="oxygen" n="1"/>
+    </material>
+    <material name="NomexHoneycomb" formula="">
+      <D value="0.029"/>
+      <composite ref="carbon" n="7"/>
+      <composite ref="hydrogen" n="5"/>
+      <composite ref="nitrogen" n="1"/>
+      <composite ref="oxygen" n="1"/>
+    </material>
+    <material name="Mylar" formula="">
+      <D value="1.39"/>
+      <composite ref="carbon" n="10"/>
+      <composite ref="hydrogen" n="8"/>
+      <composite ref="oxygen" n="4"/>
+    </material>
+    <material name="KevlarPrepreg" formula="">
+      <D value="1.37"/>
+      <fraction ref="Kevlar" n="0.6"/>
+      <fraction ref="epoxy_resin" n="0.4"/>
+    </material>
+    <material name="Methane" formula="">
+      <D value="0.000716"/>
+      <composite ref="carbon" n="1"/>
+      <composite ref="hydrogen" n="4"/>
+    </material>
+    <material name="Ethane" formula="">
+      <D value="0.00134"/>
+      <composite ref="carbon" n="2"/>
+      <composite ref="hydrogen" n="6"/>
+    </material>
+    <material name="CF4" formula="">
+      <D value="0.00393"/>
+      <composite ref="carbon" n="1"/>
+      <composite ref="fluorine" n="4"/>
+    </material>
+    <material name="CH2F2" formula="">
+      <D value="0.00232"/>
+      <composite ref="carbon" n="1"/>
+      <composite ref="hydrogen" n="2"/>
+      <composite ref="fluorine" n="2"/>
+    </material>
+    <material name="DME" formula="">
+      <D value="0.00206"/>
+      <composite ref="carbon" n="2"/>
+      <composite ref="hydrogen" n="6"/>
+      <composite ref="oxygen" n="1"/>
+    </material>
+    <material name="Nitrogen" formula="">
+      <D value="0.000625"/>
+      <composite ref="nitrogen" n="1"/>
+    </material>
+    <material name="NitrogenGas" formula="">
+      <D value="0.0012"/>
+      <composite ref="nitrogen" n="1"/>
+    </material>
+    <material name="HP_Ar" formula="">
+      <D value="0.01784"/>
+      <composite ref="argon" n="1"/>
+    </material>
+    <material name="HP_ArCO2" formula="">
+      <D value="0.01802"/>
+      <fraction ref="HP_Ar" n="0.89"/>
+      <fraction ref="CO2" n="0.11"/>
+    </material>
+    <material name="HP_CO2" formula="">
+      <D value="0.01896125"/>
+      <fraction ref="CO2" n="1.0"/>
+    </material>
+    <material name="HP_ArCH4" formula="">
+      <D value="0.01677"/>
+      <fraction ref="HP_Ar" n="0.957"/>
+      <fraction ref="Methane" n="0.043"/>
+    </material>
+    <material name="HP_ArCF4" formula="">
+      <D value="0.01998"/>
+      <fraction ref="HP_Ar" n="0.801"/>
+      <fraction ref="CF4" n="0.199"/>
+    </material>
+    <material name="NoGas" formula="">
+      <D value="1e-25"/>
+      <fraction ref="argon" n="1.0"/>
+    </material>
+    <material name="Vac" formula="">
+      <D value="1.225e-11"/>
+      <fraction ref="nitrogen" n="0.781154"/>
+      <fraction ref="oxygen" n="0.209476"/>
+      <fraction ref="argon" n="0.00934"/>
+    </material>
+    <material name="G10" formula="">
+      <D value="1.85"/>
+      <fraction ref="Epoxy" n="0.206"/>
+      <fraction ref="Glass" n="0.794"/>
+    </material>
+    <material name="Silicon" formula="">
+      <D value="2.33"/>
+      <composite ref="silicon" n="1"/>
+    </material>
+    <material name="EJ280WLS" formula="">
+      <D value="1.023"/>
+      <composite ref="carbon" n="9"/>
+      <composite ref="hydrogen" n="10"/>
+    </material>
+    <material name="Y11" formula="">
+      <D value="1.023"/>
+      <composite ref="carbon" n="9"/>
+      <composite ref="hydrogen" n="10"/>
+    </material>
+    <material name="Y11C" formula="">
+      <D value="1.023"/>
+      <composite ref="carbon" n="9"/>
+      <composite ref="hydrogen" n="10"/>
+    </material>
+    <material name="ESR" formula="">
+      <D value="1.38"/>
+      <composite ref="carbon" n="10"/>
+      <composite ref="hydrogen" n="8"/>
+      <composite ref="oxygen" n="4"/>
+    </material>
+    <material name="PSA" formula="">
+      <D value="1.18"/>
+      <composite ref="carbon" n="4"/>
+      <composite ref="hydrogen" n="6"/>
+      <composite ref="oxygen" n="2"/>
+    </material>
+    <material name="TPB" formula="">
+      <D value="1.079"/>
+      <composite ref="carbon" n="28"/>
+      <composite ref="hydrogen" n="22"/>
+    </material>
+  </materials>
+  <solids>
+    <box name="elevatorBlock1" lunit="cm" x="1077.0" y="2443.0" z="30.480000000000004"/>
+    <tube name="elevatorBlock2" lunit="cm" aunit="radian" rmin="304.8" rmax="335.28000000000003" z="2443.0" startphi="0.0" deltaphi="3.141592653589793"/>
+    <tube name="elevatorBlock3" lunit="cm" aunit="radian" rmin="579.0" rmax="1000.0" z="2443.0009999999997" startphi="0.0" deltaphi="6.283185307179586"/>
+    <union name="elevatorBlockShapeTemp">
+      <first ref="elevatorBlock1"/>
+      <second ref="elevatorBlock2"/>
+      <positionref ref="elevatorBlock2Position"/>
+      <rotationref ref="r90aboutX180aboutY"/>
+    </union>
+    <subtraction name="elevatorBlockShape">
+      <first ref="elevatorBlockShapeTemp"/>
+      <second ref="elevatorBlock3"/>
+      <positionref ref="elevatorBlock3Position"/>
+      <rotationref ref="r90aboutX180aboutY"/>
+    </subtraction>
+    <box name="craneRailBlock11" lunit="cm" x="40.64" y="91.44" z="4938.0"/>
+    <box name="craneRailBlock12" lunit="cm" x="73.265" y="73.265" z="4938.001"/>
+    <box name="craneRailBlock13" lunit="cm" x="15.240000000000002" y="0.317" z="4938.0"/>
+    <subtraction name="crainRail1ShapeTemp">
+      <first ref="craneRailBlock11"/>
+      <second ref="craneRailBlock12"/>
+      <positionref ref="craneRailBlock12Position"/>
+      <rotationref ref="craneRailBlock12Rot"/>
+    </subtraction>
+    <union name="crainRail1Shape">
+      <first ref="crainRail1ShapeTemp"/>
+      <second ref="craneRailBlock13"/>
+      <positionref ref="craneRailBlock13Position"/>
+      <rotationref ref="identity"/>
+    </union>
+    <box name="craneRailBlock21" lunit="cm" x="40.64" y="91.44" z="4938.0"/>
+    <box name="craneRailBlock22" lunit="cm" x="73.265" y="73.265" z="4938.001"/>
+    <box name="craneRailBlock23" lunit="cm" x="15.240000000000002" y="0.317" z="4938.0"/>
+    <subtraction name="crainRail2ShapeTemp">
+      <first ref="craneRailBlock21"/>
+      <second ref="craneRailBlock22"/>
+      <positionref ref="craneRailBlock22Position"/>
+      <rotationref ref="craneRailBlock22Rot"/>
+    </subtraction>
+    <union name="crainRail2Shape">
+      <first ref="crainRail2ShapeTemp"/>
+      <second ref="craneRailBlock23"/>
+      <positionref ref="craneRailBlock23Position"/>
+      <rotationref ref="identity"/>
+    </union>
+    <box name="egressHallwayInner" lunit="cm" x="152.401" y="304.482" z="4938.01"/>
+    <box name="egressHallwayOuter" lunit="cm" x="182.88" y="334.963" z="4938.0"/>
+    <box name="egressHallwayDoor" lunit="cm" x="30.481" y="243.84000000000003" z="91.44"/>
+    <subtraction name="egressHallwayShapeTemp">
+      <first ref="egressHallwayOuter"/>
+      <second ref="egressHallwayInner"/>
+      <positionref ref="egressHallwayInnerPosition"/>
+      <rotationref ref="identity"/>
+    </subtraction>
+    <subtraction name="egressHallwayShape">
+      <first ref="egressHallwayShapeTemp"/>
+      <second ref="egressHallwayDoor"/>
+      <positionref ref="egressHallwayDoorPosition"/>
+      <rotationref ref="identity"/>
+    </subtraction>
+    <box name="fullCryoTubeBox" lunit="cm" x="96.52000000000001" y="63.918" z="4064.0"/>
+    <tube name="cryoTube1" lunit="cm" aunit="radian" rmin="0.0" rmax="30.480000000000004" z="4064.0" startphi="0.0" deltaphi="6.283185307179586"/>
+    <tube name="cryoTube2" lunit="cm" aunit="radian" rmin="0.0" rmax="15.240000000000002" z="4064.0" startphi="0.0" deltaphi="6.283185307179586"/>
+    <tube name="cryoTube3" lunit="cm" aunit="radian" rmin="0.0" rmax="2.54" z="4064.0" startphi="0.0" deltaphi="6.283185307179586"/>
+    <tube name="cryoTube4" lunit="cm" aunit="radian" rmin="0.0" rmax="8.209999999999999" z="4064.0" startphi="0.0" deltaphi="6.283185307179586"/>
+    <tube name="cryoTube5" lunit="cm" aunit="radian" rmin="0.0" rmax="8.209999999999999" z="4064.0" startphi="0.0" deltaphi="6.283185307179586"/>
+    <box name="NDHallAirVolSpace1" lunit="cm" x="4938.0" y="1524.0" z="1920.0"/>
+    <box name="NDHallAirVolSpace2" lunit="cm" x="961.9999999999999" y="1064.0" z="1035.0"/>
+    <tube name="NDHallAirVolSpace3" lunit="cm" aunit="radian" rmin="0.0" rmax="579.0" z="2443.0" startphi="0.0" deltaphi="6.283185307179586"/>
+    <tube name="NDHallAirVolSpace4" lunit="cm" aunit="radian" rmin="0.0" rmax="1040.1299999999999" z="4939.0" startphi="0.3951366085320594" deltaphi="2.3513250215792807"/>
+    <box name="NDHallAirVolSpace5" lunit="cm" x="91.44" y="243.84000000000003" z="30.480000000000004"/>
+    <box name="NDHallAirVolSpace6" lunit="cm" x="365.76" y="762.0" z="213.36"/>
+    <box name="NDHallAirVolSpace7" lunit="cm" x="152.4" y="426.72" z="228.702"/>
+    <union name="NDHallAirVolTemp1">
+      <first ref="NDHallAirVolSpace1"/>
+      <second ref="NDHallAirVolSpace2"/>
+      <positionref ref="NDHallSpaceAirVol2Position"/>
+      <rotationref ref="identity"/>
+    </union>
+    <union name="NDHallAirVolTemp2">
+      <first ref="NDHallAirVolTemp1"/>
+      <second ref="NDHallAirVolSpace3"/>
+      <positionref ref="NDHallSpace3AirVolPosition"/>
+      <rotationref ref="r90aboutX"/>
+    </union>
+    <union name="NDHallAirVolTemp3">
+      <first ref="NDHallAirVolTemp2"/>
+      <second ref="NDHallAirVolSpace4"/>
+      <positionref ref="NDHallAirVolSpace4Position"/>
+      <rotationref ref="r90aboutY"/>
+    </union>
+    <union name="NDHallAirVolTemp4">
+      <first ref="NDHallAirVolTemp3"/>
+      <second ref="NDHallAirVolSpace5"/>
+      <positionref ref="NDHallAirVolSpace5Position"/>
+      <rotationref ref="identity"/>
+    </union>
+    <union name="NDHallAirVolTemp5">
+      <first ref="NDHallAirVolTemp4"/>
+      <second ref="NDHallAirVolSpace6"/>
+      <positionref ref="NDHallAirVolSpace6Position"/>
+      <rotationref ref="identity"/>
+    </union>
+    <union name="NDHallAirVolShape">
+      <first ref="NDHallAirVolTemp5"/>
+      <second ref="NDHallAirVolSpace7"/>
+      <positionref ref="NDHallAirVolSpace7Position"/>
+      <rotationref ref="identity"/>
+    </union>
+    <box name="RockBoxMain" lunit="cm" x="6517.0" y="3164.0" z="27955.0"/>
+    <box name="World" lunit="cm" x="60000.0" y="60000.0" z="60000.0"/>
+  </solids>
+  <structure>
+    <volume name="elevatorBlock_lv">
+      <materialref ref="Steel"/>
+      <solidref ref="elevatorBlockShape"/>
+    </volume>
+    <volume name="craneRail1_lv">
+      <materialref ref="Steel"/>
+      <solidref ref="crainRail1Shape"/>
+    </volume>
+    <volume name="craneRail2_lv">
+      <materialref ref="Steel"/>
+      <solidref ref="crainRail2Shape"/>
+    </volume>
+    <volume name="egressHallway_lv">
+      <materialref ref="Steel"/>
+      <solidref ref="egressHallwayShape"/>
+    </volume>
+    <volume name="cryoTube1_lv">
+      <materialref ref="Steel"/>
+      <solidref ref="cryoTube1"/>
+    </volume>
+    <volume name="cryoTube2_lv">
+      <materialref ref="Steel"/>
+      <solidref ref="cryoTube2"/>
+    </volume>
+    <volume name="cryoTube3_lv">
+      <materialref ref="Steel"/>
+      <solidref ref="cryoTube3"/>
+    </volume>
+    <volume name="cryoTube4_lv">
+      <materialref ref="Steel"/>
+      <solidref ref="cryoTube4"/>
+    </volume>
+    <volume name="cryoTube5_lv">
+      <materialref ref="Steel"/>
+      <solidref ref="cryoTube5"/>
+    </volume>
+    <volume name="volfullCryoTubeBox">
+      <materialref ref="Air"/>
+      <solidref ref="fullCryoTubeBox"/>
+      <physvol>
+        <volumeref ref="cryoTube1_lv"/>
+        <positionref ref="cryoTube1Position"/>
+        <rotationref ref="identity"/>
+      </physvol>
+      <physvol>
+        <volumeref ref="cryoTube2_lv"/>
+        <positionref ref="cryoTube2Position"/>
+        <rotationref ref="identity"/>
+      </physvol>
+      <physvol>
+        <volumeref ref="cryoTube3_lv"/>
+        <positionref ref="cryoTube3Position"/>
+        <rotationref ref="identity"/>
+      </physvol>
+      <physvol>
+        <volumeref ref="cryoTube4_lv"/>
+        <positionref ref="cryoTube4Position"/>
+        <rotationref ref="identity"/>
+      </physvol>
+      <physvol>
+        <volumeref ref="cryoTube5_lv"/>
+        <positionref ref="cryoTube5Position"/>
+        <rotationref ref="identity"/>
+      </physvol>
+    </volume>
+    <volume name="volDetEnclosure">
+      <materialref ref="Air"/>
+      <solidref ref="NDHallAirVolShape"/>
+      <physvol>
+        <volumeref ref="elevatorBlock_lv"/>
+        <positionref ref="elevatorBlock_lv_pos"/>
+        <rotationref ref="elevatorBlock_lv_rot"/>
+      </physvol>
+      <physvol>
+        <volumeref ref="craneRail1_lv"/>
+        <positionref ref="craneRail1_lv_pos"/>
+        <rotationref ref="craneRail1_lv_rot"/>
+      </physvol>
+      <physvol>
+        <volumeref ref="craneRail2_lv"/>
+        <positionref ref="craneRail2_lv_pos"/>
+        <rotationref ref="craneRail2_lv_rot"/>
+      </physvol>
+      <physvol>
+        <volumeref ref="egressHallway_lv"/>
+        <positionref ref="egressHallway_lv_pos"/>
+        <rotationref ref="egressHallway_lv_rot"/>
+      </physvol>
+      <physvol>
+        <volumeref ref="volfullCryoTubeBox"/>
+        <positionref ref="volfullCryoTubeBox_pos"/>
+        <rotationref ref="volfullCryoTubeBox_rot"/>
+      </physvol>
+    </volume>
+    <volume name="rockBox_lv">
+      <materialref ref="Rock"/>
+      <solidref ref="RockBoxMain"/>
+      <physvol>
+        <volumeref ref="volDetEnclosure"/>
+        <positionref ref="volDetEnclosure_pos"/>
+        <rotationref ref="volDetEnclosure_rot"/>
+      </physvol>
+    </volume>
+    <volume name="volWorld">
+      <materialref ref="Rock"/>
+      <solidref ref="World"/>
+      <physvol>
+        <volumeref ref="rockBox_lv"/>
+        <positionref ref="rockBox_lv_pos"/>
+        <rotationref ref="rockBox_lv_rot"/>
+      </physvol>
+    </volume>
+  </structure>
+  <setup name="Default" version="0">
+    <world ref="volWorld"/>
+  </setup>
+</gdml>
