@@ -54,7 +54,7 @@ gGeoManager->GetTopVolume()->Draw("ogl");
 
 ## Set up edep-sim
 
-Once obtained a GDML file, run edep-sim to simulate event energy deposits.
+Once obtained a GDML file (below use ```SIMPLECRYO.gdml``` as example), run edep-sim to simulate event energy deposits.
 
 ```
 # Setup edep-sim
@@ -68,12 +68,10 @@ setup edepsim v3_2_0 -q e20:prof
 # The following config file generates muons with energy of 10GeV
 wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/PRISM/N2FD/muon-10000.mac
 
-# The nd_hall_no_dets.gdml input file is obtained from above section
-
 edep-sim \
     -C \
-    -g nd_hall_no_dets.gdml \
-    -o edep.123456.root \
+    -g SIMPLECRYO.gdml \
+    -o edep.SIMPLECRYO.root \
     -u \
     -e 100 \
     muon-10000.mac
@@ -91,8 +89,8 @@ wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/PRISM
 source setup.sh
 
 wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/PRISM/N2FD/Edepsim_ana.py
-python3 Edepsim_ana.py edep.123456.root
+python3 Edepsim_ana.py edep.SIMPLECRYO.root
 
 # The first time you may need to install a few packages via pip install, e.g., pip install matplotlib pandas
-# depending on what it complains when you run: python3 Edepsim_ana.py edep.123456.root
+# depending on what it complains when you run: python3 Edepsim_ana.py edep.SIMPLECRYO.root
 ```

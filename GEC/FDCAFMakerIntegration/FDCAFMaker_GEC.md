@@ -1,4 +1,4 @@
-# Integrate FD CAF maker with PRISM GEC FD code from DUNE FNAL machines (dunegpvm*)
+# Run FD CAFMaker with PRISM GEC code from dunegpvm
 
 ## Setup using duneana develop branch
 

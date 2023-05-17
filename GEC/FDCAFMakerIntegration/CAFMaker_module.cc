@@ -103,6 +103,9 @@ namespace caf {
 
     private:
       void AddGlobalTreeToFile(TFile* f, SRGlobal& global);
+      // Ancestor Mother is primary lepton
+      // If this returns true, then the energy deposit is associated with primary lepton
+      bool IsAncestorMotherPrimaryLep(const simb::MCParticle& p1, int primarylep_trkID, std::map<int, const simb::MCParticle*> particleMap);
 
       std::string fMVASelectLabel;
       std::string fMVASelectNueLabel;
@@ -147,15 +150,16 @@ namespace caf {
       float decayXdetCoord;
       float decayYdetCoord;
       float decayZdetCoord;
-      // Primary muon info
-      double Sim_mu_start_vx;
-      double Sim_mu_start_vy;
-      double Sim_mu_start_vz;
-      double Sim_mu_start_px;
-      double Sim_mu_start_py;
-      double Sim_mu_start_pz;
+      // Primary lep info
+      double Sim_lep_start_vx;
+      double Sim_lep_start_vy;
+      double Sim_lep_start_vz;
+      double Sim_lep_start_px;
+      double Sim_lep_start_py;
+      double Sim_lep_start_pz;
       // Hadronic hits
       int SimTrackID;
+      int primarylep_trkID;
       int Sim_n_hadronic_Edep; // GEANT4 level simulated for now
       double Sim_Ehad_veto; // Total hadronic deposited energy in FD veto region
       vector<float> Sim_hadronic_hit_x;
@@ -174,19 +178,19 @@ namespace caf {
       // Intermediate vars
 
       // Step 3
-      double ND_OffAxis_Unrotated_Sim_mu_start_pos[3]; // Position of the muon trajectory at start point [cm]
-      vector<double> ND_OffAxis_Unrotated_Sim_mu_start_v; // Vector of ND_OffAxis_Unrotated_Sim_mu_start_pos in (x1,y1,z1,x2,y2,z2,......) order
-      vector<vector<double>> ND_OffAxis_Unrotated_Sim_mu_start_v_vtx; // nested vector: <vtx_pos<ND_OffAxis_Unrotated_Sim_mu_start_pos>>
-      vector<vector<vector<double>>> ND_OffAxis_Unrotated_Sim_mu_start_v_LAr; // nested vector: <ND_LAr_pos<vtx_pos<ND_OffAxis_Unrotated_Sim_mu_start_pos>>>
+      double ND_OffAxis_Unrotated_Sim_lep_start_pos[3]; // Position of the lepton trajectory at start point [cm]
+      vector<double> ND_OffAxis_Unrotated_Sim_lep_start_v; // Vector of ND_OffAxis_Unrotated_Sim_lep_start_pos in (x1,y1,z1,x2,y2,z2,......) order
+      vector<vector<double>> ND_OffAxis_Unrotated_Sim_lep_start_v_vtx; // nested vector: <vtx_pos<ND_OffAxis_Unrotated_Sim_lep_start_pos>>
+      vector<vector<vector<double>>> ND_OffAxis_Unrotated_Sim_lep_start_v_LAr; // nested vector: <ND_LAr_pos<vtx_pos<ND_OffAxis_Unrotated_Sim_lep_start_pos>>>
 
       vector<double> ND_OffAxis_Unrotated_Sim_hadronic_hit_v; // Position of each energy deposit [cm]
       vector<vector<double>> ND_OffAxis_Unrotated_Sim_hadronic_hits_v; // Position of each energy deposit [cm] : <ihadhit < ND_OffAxis_Unrotated_Sim_hadronic_hit_v>>
 
       // Step 4
-      double ND_OffAxis_Sim_mu_start_mom[3]; // Momentum of the muon trajectory at start point on the x-axis [GeV]
-      vector<double> ND_OffAxis_Sim_mu_start_p; // Vector of ND_OffAxis_Sim_mu_start_mom in (x1,y1,z1,x2,y2,z2,......) order
-      vector<vector<double>> ND_OffAxis_Sim_mu_start_p_vtx; // nested vector: <vtx_pos<ND_OffAxis_Sim_mu_start_mom>>
-      vector<vector<vector<double>>> ND_OffAxis_Sim_mu_start_p_LAr; // nested vector: <ND_LAr_pos<vtx_pos<ND_OffAxis_Sim_mu_start_mom>>>
+      double ND_OffAxis_Sim_lep_start_mom[3]; // Momentum of the lepton trajectory at start point on the x-axis [GeV]
+      vector<double> ND_OffAxis_Sim_lep_start_p; // Vector of ND_OffAxis_Sim_lep_start_mom in (x1,y1,z1,x2,y2,z2,......) order
+      vector<vector<double>> ND_OffAxis_Sim_lep_start_p_vtx; // nested vector: <vtx_pos<ND_OffAxis_Sim_lep_start_mom>>
+      vector<vector<vector<double>>> ND_OffAxis_Sim_lep_start_p_LAr; // nested vector: <ND_LAr_pos<vtx_pos<ND_OffAxis_Sim_lep_start_mom>>>
 
       vector<double> ND_OffAxis_Sim_hadronic_hit_v; //order is differert from previous
       vector<vector<double>> ND_OffAxis_Sim_hadronic_hits_v; // Position of each energy deposit [cm]: <ihadhit < hadronic hits xyz>>
@@ -262,26 +266,25 @@ namespace caf {
       fTree->Branch("rec", &rec);
 
       ThrowsFD = new TTree("geoEffThrows", "geoEffThrows");
-      ThrowsFD->Branch("seed",      &seed);
       ThrowsFD->Branch("throwVtxY", &throwVtxY);
       ThrowsFD->Branch("throwVtxZ", &throwVtxZ);
       ThrowsFD->Branch("throwRot",  &throwRot);
 
-      // A separate tree to store throwresult and muon stuff for NN
+      // A separate tree to store throwresult and lepton stuff for NN
 
       // Generate new dictionary for nested vectors to write to TTree
       gInterpreter->GenerateDictionary("vector<vector<vector<double> > >", "vector");
       gInterpreter->GenerateDictionary("vector<vector<vector<vector<vector<uint64_t> > > > >", "vector");
 
       ThrowResultsFD = new TTree("throwResults", "throwResults");
-      ThrowResultsFD->Branch("FD_Sim_mu_start_vx",                  &Sim_mu_start_vx,               "FD_Sim_mu_start_vx/D"); // for FD fiducial volume cut
-      ThrowResultsFD->Branch("FD_Sim_mu_start_vy",                  &Sim_mu_start_vy,               "FD_Sim_mu_start_vy/D");
-      ThrowResultsFD->Branch("FD_Sim_mu_start_vz",                  &Sim_mu_start_vz,               "FD_Sim_mu_start_vz/D");
-      ThrowResultsFD->Branch("FD_Sim_n_hadronic_hits",              &Sim_n_hadronic_Edep,           "FD_Sim_n_hadronic_hits/I"); // for offline analysis cut
-      ThrowResultsFD->Branch("FD_Sim_Ehad_veto",                    &Sim_Ehad_veto,                 "FD_Sim_Ehad_veto/D");
-      ThrowResultsFD->Branch("FD_evt_NDLAr_OffAxis_Sim_mu_start_v", &ND_OffAxis_Unrotated_Sim_mu_start_v_LAr); // for lepton NN
-      ThrowResultsFD->Branch("FD_evt_NDLAr_OffAxis_Sim_mu_start_p", &ND_OffAxis_Sim_mu_start_p_LAr);
-      ThrowResultsFD->Branch("FD_evt_hadron_throw_result_NDLAr",    &hadron_throw_result_LAr); // for FD hadronic GEC in ND
+      ThrowResultsFD->Branch("FD_Sim_lep_start_vx",                  &Sim_lep_start_vx,               "FD_Sim_lep_start_vx/D"); // for FD fiducial volume cut
+      ThrowResultsFD->Branch("FD_Sim_lep_start_vy",                  &Sim_lep_start_vy,               "FD_Sim_lep_start_vy/D");
+      ThrowResultsFD->Branch("FD_Sim_lep_start_vz",                  &Sim_lep_start_vz,               "FD_Sim_lep_start_vz/D");
+      ThrowResultsFD->Branch("FD_Sim_n_hadronic_hits",               &Sim_n_hadronic_Edep,            "FD_Sim_n_hadronic_hits/I"); // for offline analysis cut
+      ThrowResultsFD->Branch("FD_Sim_Ehad_veto",                     &Sim_Ehad_veto,                  "FD_Sim_Ehad_veto/D");
+      ThrowResultsFD->Branch("FD_evt_NDLAr_OffAxis_Sim_lep_start_v", &ND_OffAxis_Unrotated_Sim_lep_start_v_LAr); // for lepton NN
+      ThrowResultsFD->Branch("FD_evt_NDLAr_OffAxis_Sim_lep_start_p", &ND_OffAxis_Sim_lep_start_p_LAr);
+      ThrowResultsFD->Branch("FD_evt_hadron_throw_result_NDLAr",     &hadron_throw_result_LAr); // for FD hadronic GEC in ND
     }
 
     if(fFlatFile){
@@ -301,7 +304,6 @@ namespace caf {
 
     meta_pot = 0.;
     meta_version = 1;
-
 
     caf::SRGlobal global;
 
@@ -334,6 +336,21 @@ namespace caf {
     globalTree->Fill();
     globalTree->Write();
   }
+
+  //------------------------------------------------------------------------------
+  bool CAFMaker::IsAncestorMotherPrimaryLep(const simb::MCParticle& p1, int primarylep_trkID, std::map<int, const simb::MCParticle*> particleMap) {
+    int MothertrkID = p1.Mother();
+    // Immediate mother is the primary lep
+    if ( MothertrkID == primarylep_trkID )  return true;
+    // Immediate mother is not primary lep, but other primary particles from genie
+    else if ( MothertrkID == 0 ) return false;
+    // Keep looking upstream, find it in particleMap
+    else {
+      auto tmp_search = particleMap.find( MothertrkID ); // this search must be found, can't be null
+      const simb::MCParticle& tmp_mother = *((*tmp_search).second);
+      return IsAncestorMotherPrimaryLep(tmp_mother, primarylep_trkID, particleMap);
+    }
+  } // end GetAncestorMotherTrkID
 
   //------------------------------------------------------------------------------
   void CAFMaker::beginSubRun(const art::SubRun& sr)
@@ -608,30 +625,30 @@ namespace caf {
     // Create a map pf MCParticle to its track ID, to be used below
     std::map<int, const simb::MCParticle*> particleMap;
 
-    Sim_mu_start_vx = -9999.;
-    Sim_mu_start_vy = -9999.;
-    Sim_mu_start_vz = -9999.;
-    Sim_mu_start_px = -9999.;
-    Sim_mu_start_py = -9999.;
-    Sim_mu_start_pz = -9999.;
+    Sim_lep_start_vx = -9999.;
+    Sim_lep_start_vy = -9999.;
+    Sim_lep_start_vz = -9999.;
+    Sim_lep_start_px = -9999.;
+    Sim_lep_start_py = -9999.;
+    Sim_lep_start_pz = -9999.;
 
     // Loop over MCParticle
     for ( auto const& particle : (*particleHandle) ) {
       SimTrackID = particle.TrackId();
       particleMap[SimTrackID] = &particle;
 
-      // Primary muon in the event
-      if ( particle.Process() == "primary" && abs(particle.PdgCode()) == 13 ) {
-
+      // Take note of primary lepton track id, to be used later, should only have one primary lep
+      if ( particle.Process() == "primary" && ( abs(particle.PdgCode()) == 13 || abs(particle.PdgCode()) == 11 || abs(particle.PdgCode()) == 15 ) ) {
+        // the primary lep should always have trk id = 1
+        primarylep_trkID = SimTrackID;
         // For trajectories, as for vectors and arrays, the first point is #0, not #1.
-        Sim_mu_start_vx = particle.Vx(0);
-        Sim_mu_start_vy = particle.Vy(0);
-        Sim_mu_start_vz = particle.Vz(0);
-        Sim_mu_start_px = particle.Px(0);
-        Sim_mu_start_py = particle.Py(0);
-        Sim_mu_start_pz = particle.Pz(0);
-
-      } // end primary muon
+        Sim_lep_start_vx = particle.Vx(0);
+        Sim_lep_start_vy = particle.Vy(0);
+        Sim_lep_start_vz = particle.Vz(0);
+        Sim_lep_start_px = particle.Px(0);
+        Sim_lep_start_py = particle.Py(0);
+        Sim_lep_start_pz = particle.Pz(0);
+      }
 
     } // end loop over MCParticle
 
@@ -663,28 +680,35 @@ namespace caf {
         // The type of 'energyDeposit' will be sim::IDE, here use auto.
         for ( auto const& energyDeposit : energyDeposits )
         {
-          auto search = particleMap.find( energyDeposit.trackID );
-          if ( search == particleMap.end() ) continue;
+          // Here navigate via channel -> wire -> plane ID, and require planeID to be 0.
+          // But apparently other methods exist as well
+          std::vector<geo::WireID> const Wires = geom->ChannelToWire(channelNumber);
+          if ( Wires[0].planeID().Plane == 0 ) {
 
-          // "search" points to a pair in the map: <track ID, MCParticle*>
-          const simb::MCParticle& particle = *((*search).second);
+            // All EM shower are treated as secondary interactions, and their particles are not saved in the MC particle list
+            // Still do the search, but now only for primary lepton (particleMap trkID is always positive)
+            // Also search for EM shower particles from primary lepton, these deposits has trkID that's negative of the primary lepton trkID
+            auto search = particleMap.find( abs(energyDeposit.trackID) );
 
-          // If it's not a primary lepton, count as hadronic energy deposit
-          if ( ! ( particle.Process() == "primary" && ( abs(particle.PdgCode()) == 11 || abs(particle.PdgCode()) == 13 || abs(particle.PdgCode()) == 15 ) ) ){
+            if ( search != particleMap.end() ) { // found match in map
 
-            // Here navigate via channel -> wire -> plane ID, and require planeID to be 0.
-            // But apparently other methods exist as well
-            std::vector<geo::WireID> const Wires = geom->ChannelToWire(channelNumber);
-            if ( Wires[0].planeID().Plane == 0 ) {
+              const simb::MCParticle& particle = *((*search).second);
+              // if the energy deposit is from primary lepton,
+              // or its ancestor mother particle is the primary lepton (e.g., from muon decays)
+              if ( ( particle.Process() == "primary" && ( abs(particle.PdgCode()) == 13 || abs(particle.PdgCode()) == 11 || abs(particle.PdgCode()) == 15 ) ) || IsAncestorMotherPrimaryLep(particle, primarylep_trkID, particleMap) )
+              {
+                // now continue to the next energy deposit
+                continue;
+              } // end lepton dep e
+              // if it's not, do nothing
+            } // end found match
 
-              // Store position and E for each deposit
-              Sim_hadronic_hit_x.push_back(energyDeposit.x);
-              Sim_hadronic_hit_y.push_back(energyDeposit.y);
-              Sim_hadronic_hit_z.push_back(energyDeposit.z);
-              Sim_hadronic_hit_Edep.push_back(energyDeposit.energy);
-            } // end if access plane
-
-          } // end if hadronic
+            // If the energyDeposit made this far, it's counted as hadronic deposits (primary+secondary), do not involve particleMap
+            Sim_hadronic_hit_x.push_back(energyDeposit.x);
+            Sim_hadronic_hit_y.push_back(energyDeposit.y);
+            Sim_hadronic_hit_z.push_back(energyDeposit.z);
+            Sim_hadronic_hit_Edep.push_back(energyDeposit.energy);
+          } // end if access plane
 
         } // end loop over energyDeposit
 
@@ -769,18 +793,18 @@ namespace caf {
     // Step 2 - Put FD event at the beam center in ND LAr
     //
 
-    // First do these two steps for muon
-    // Step 1 for muon
+    // First do these two steps for lepton
+    // Step 1 for lepton
     // New position and momentum after earth curvature corr.
-    double ND_RandomVtx_Sim_mu_start_v[3];
-    double ND_RandomVtx_Sim_mu_start_p[3];
-    double FD_Sim_mu_start_v[3] = {Sim_mu_start_vx, Sim_mu_start_vy, Sim_mu_start_vz};
-    double FD_Sim_mu_start_p[3] = {Sim_mu_start_px, Sim_mu_start_py, Sim_mu_start_pz};
-    for(int i=0; i<3; i++) ND_RandomVtx_Sim_mu_start_v[i] = eff->getEarthCurvature(FD_Sim_mu_start_v, beamLineRotation, i);
-    for(int i=0; i<3; i++) ND_RandomVtx_Sim_mu_start_p[i] = eff->getEarthCurvature(FD_Sim_mu_start_p, beamLineRotation, i);
-    // Step 2 for muon
-    // No operation on muon momentum as it conserves in translation
-    double ND_OnAxis_Sim_mu_start_v[3] = {beamRefDetCoord[0]*100., beamRefDetCoord[1]*100., beamRefDetCoord[2]*100.};
+    double ND_RandomVtx_Sim_lep_start_v[3];
+    double ND_RandomVtx_Sim_lep_start_p[3];
+    double FD_Sim_lep_start_v[3] = {Sim_lep_start_vx, Sim_lep_start_vy, Sim_lep_start_vz};
+    double FD_Sim_lep_start_p[3] = {Sim_lep_start_px, Sim_lep_start_py, Sim_lep_start_pz};
+    for(int i=0; i<3; i++) ND_RandomVtx_Sim_lep_start_v[i] = eff->getEarthCurvature(FD_Sim_lep_start_v, beamLineRotation, i);
+    for(int i=0; i<3; i++) ND_RandomVtx_Sim_lep_start_p[i] = eff->getEarthCurvature(FD_Sim_lep_start_p, beamLineRotation, i);
+    // Step 2 for lepton
+    // No operation on lepton momentum as it conserves in translation
+    double ND_OnAxis_Sim_lep_start_v[3] = {beamRefDetCoord[0]*100., beamRefDetCoord[1]*100., beamRefDetCoord[2]*100.};
 
     // Then do these two steps for hadronic hits
     double ND_RandomVtx_Sim_hadronic_hit_v[3]; // New position of each energy deposit [cm] after earth curvature corr.
@@ -792,13 +816,13 @@ namespace caf {
       double Sim_hadronic_hit_pos[3] = {Sim_hadronic_hit_x.at(ihadhit), Sim_hadronic_hit_y.at(ihadhit), Sim_hadronic_hit_z.at(ihadhit)};
       for (int i =0; i<3; i++) ND_RandomVtx_Sim_hadronic_hit_v[i] = eff->getEarthCurvature(Sim_hadronic_hit_pos, beamLineRotation, i);
       // Step 2 for each hadronic hit
-      for (int i =0; i<3; i++) ND_OnAxis_Sim_hadronic_hit_v.emplace_back(eff->getTranslations(ND_RandomVtx_Sim_hadronic_hit_v, ND_RandomVtx_Sim_mu_start_v, ND_OnAxis_Sim_mu_start_v, i));
+      for (int i =0; i<3; i++) ND_OnAxis_Sim_hadronic_hit_v.emplace_back(eff->getTranslations(ND_RandomVtx_Sim_hadronic_hit_v, ND_RandomVtx_Sim_lep_start_v, ND_OnAxis_Sim_lep_start_v, i));
       ND_OnAxis_Sim_hadronic_hits_v.emplace_back(ND_OnAxis_Sim_hadronic_hit_v);
       ND_OnAxis_Sim_hadronic_hit_v.clear();
     }
 
     // Set On-axis vertex where beam crosses ND LAr center
-    eff->setOnAxisVertex(ND_OnAxis_Sim_mu_start_v[0], ND_OnAxis_Sim_mu_start_v[1], ND_OnAxis_Sim_mu_start_v[2]);
+    eff->setOnAxisVertex(ND_OnAxis_Sim_lep_start_v[0], ND_OnAxis_Sim_lep_start_v[1], ND_OnAxis_Sim_lep_start_v[2]);
 
     // Put FD event in many ND LAr positions
     for ( double i_ND_off_axis_pos : ND_LAr_dtctr_pos_vec ){
@@ -821,21 +845,21 @@ namespace caf {
         //
 
         // Momentum conserves at this step, only affect positions
-        ND_OffAxis_Unrotated_Sim_mu_start_pos[0] = ND_OnAxis_Sim_mu_start_v[0] + i_ND_off_axis_pos + i_vtx_vx;
-        ND_OffAxis_Unrotated_Sim_mu_start_pos[1] = ND_OnAxis_Sim_mu_start_v[1];
-        ND_OffAxis_Unrotated_Sim_mu_start_pos[2] = ND_OnAxis_Sim_mu_start_v[2];
+        ND_OffAxis_Unrotated_Sim_lep_start_pos[0] = ND_OnAxis_Sim_lep_start_v[0] + i_ND_off_axis_pos + i_vtx_vx;
+        ND_OffAxis_Unrotated_Sim_lep_start_pos[1] = ND_OnAxis_Sim_lep_start_v[1];
+        ND_OffAxis_Unrotated_Sim_lep_start_pos[2] = ND_OnAxis_Sim_lep_start_v[2];
 
-        ND_OffAxis_Unrotated_Sim_mu_start_v.emplace_back(ND_OffAxis_Unrotated_Sim_mu_start_pos[0]);
-        ND_OffAxis_Unrotated_Sim_mu_start_v.emplace_back(ND_OffAxis_Unrotated_Sim_mu_start_pos[1]);
-        ND_OffAxis_Unrotated_Sim_mu_start_v.emplace_back(ND_OffAxis_Unrotated_Sim_mu_start_pos[2]);
-        ND_OffAxis_Unrotated_Sim_mu_start_v_vtx.emplace_back(ND_OffAxis_Unrotated_Sim_mu_start_v);
-        ND_OffAxis_Unrotated_Sim_mu_start_v.clear();
+        ND_OffAxis_Unrotated_Sim_lep_start_v.emplace_back(ND_OffAxis_Unrotated_Sim_lep_start_pos[0]);
+        ND_OffAxis_Unrotated_Sim_lep_start_v.emplace_back(ND_OffAxis_Unrotated_Sim_lep_start_pos[1]);
+        ND_OffAxis_Unrotated_Sim_lep_start_v.emplace_back(ND_OffAxis_Unrotated_Sim_lep_start_pos[2]);
+        ND_OffAxis_Unrotated_Sim_lep_start_v_vtx.emplace_back(ND_OffAxis_Unrotated_Sim_lep_start_v);
+        ND_OffAxis_Unrotated_Sim_lep_start_v.clear();
 
-        // Translation doesn't affect muon p, no operation (still ND_RandomVtx_Sim_mu_start_p)
+        // Translation doesn't affect lepton p, no operation (still ND_RandomVtx_Sim_lep_start_p)
 
         for ( int ihadhit = 0; ihadhit < Sim_n_hadronic_Edep; ihadhit++ ){
           double ND_OnAxis_Sim_hadronic_hit_pos[3] = {ND_OnAxis_Sim_hadronic_hits_v[ihadhit][0], ND_OnAxis_Sim_hadronic_hits_v[ihadhit][1], ND_OnAxis_Sim_hadronic_hits_v[ihadhit][2]};
-          for (int i =0; i<3; i++) ND_OffAxis_Unrotated_Sim_hadronic_hit_v.emplace_back(eff->getTranslations(ND_OnAxis_Sim_hadronic_hit_pos, ND_OnAxis_Sim_mu_start_v, ND_OffAxis_Unrotated_Sim_mu_start_pos, i));
+          for (int i =0; i<3; i++) ND_OffAxis_Unrotated_Sim_hadronic_hit_v.emplace_back(eff->getTranslations(ND_OnAxis_Sim_hadronic_hit_pos, ND_OnAxis_Sim_lep_start_v, ND_OffAxis_Unrotated_Sim_lep_start_pos, i));
           ND_OffAxis_Unrotated_Sim_hadronic_hits_v.emplace_back(ND_OffAxis_Unrotated_Sim_hadronic_hit_v);
           ND_OffAxis_Unrotated_Sim_hadronic_hit_v.clear();
         }
@@ -844,16 +868,16 @@ namespace caf {
         // Step 4 - Complete step 3 by properly rotate the FD event
         //
 
-        // Muon start point remain the same as step 3: ND_OffAxis_Unrotated_Sim_mu_start_pos
-        eff->setOffAxisVertex(ND_OffAxis_Unrotated_Sim_mu_start_pos[0], ND_OffAxis_Unrotated_Sim_mu_start_pos[1], ND_OffAxis_Unrotated_Sim_mu_start_pos[2]);
+        // Lepton start point remain the same as step 3: ND_OffAxis_Unrotated_Sim_lep_start_pos
+        eff->setOffAxisVertex(ND_OffAxis_Unrotated_Sim_lep_start_pos[0], ND_OffAxis_Unrotated_Sim_lep_start_pos[1], ND_OffAxis_Unrotated_Sim_lep_start_pos[2]);
 
-        eff->setMuStartP(ND_RandomVtx_Sim_mu_start_p[0], ND_RandomVtx_Sim_mu_start_p[1], ND_RandomVtx_Sim_mu_start_p[2]); // because p is not impacted in step 2 & 3
-        for(int i=0; i<3; i++) ND_OffAxis_Sim_mu_start_mom[i] = eff->getOffAxisMuStartP(i);
-        ND_OffAxis_Sim_mu_start_p.emplace_back(ND_OffAxis_Sim_mu_start_mom[0]);
-        ND_OffAxis_Sim_mu_start_p.emplace_back(ND_OffAxis_Sim_mu_start_mom[1]);
-        ND_OffAxis_Sim_mu_start_p.emplace_back(ND_OffAxis_Sim_mu_start_mom[2]);
-        ND_OffAxis_Sim_mu_start_p_vtx.emplace_back(ND_OffAxis_Sim_mu_start_p);
-        ND_OffAxis_Sim_mu_start_p.clear();
+        eff->setMuStartP(ND_RandomVtx_Sim_lep_start_p[0], ND_RandomVtx_Sim_lep_start_p[1], ND_RandomVtx_Sim_lep_start_p[2]); // because p is not impacted in step 2 & 3
+        for(int i=0; i<3; i++) ND_OffAxis_Sim_lep_start_mom[i] = eff->getOffAxisMuStartP(i);
+        ND_OffAxis_Sim_lep_start_p.emplace_back(ND_OffAxis_Sim_lep_start_mom[0]);
+        ND_OffAxis_Sim_lep_start_p.emplace_back(ND_OffAxis_Sim_lep_start_mom[1]);
+        ND_OffAxis_Sim_lep_start_p.emplace_back(ND_OffAxis_Sim_lep_start_mom[2]);
+        ND_OffAxis_Sim_lep_start_p_vtx.emplace_back(ND_OffAxis_Sim_lep_start_p);
+        ND_OffAxis_Sim_lep_start_p.clear();
 
         for ( int ihadhit = 0; ihadhit < Sim_n_hadronic_Edep; ihadhit++ ){
           eff->setHadronHitV(ND_OffAxis_Unrotated_Sim_hadronic_hits_v[ihadhit][0], ND_OffAxis_Unrotated_Sim_hadronic_hits_v[ihadhit][1], ND_OffAxis_Unrotated_Sim_hadronic_hits_v[ihadhit][2]);
@@ -875,7 +899,7 @@ namespace caf {
           HadronHitEdeps.emplace_back( Sim_hadronic_hit_Edep.at(ihadhit) );
         }
 
-        eff->setVertex(ND_OffAxis_Unrotated_Sim_mu_start_pos[0], ND_OffAxis_Unrotated_Sim_mu_start_pos[1], ND_OffAxis_Unrotated_Sim_mu_start_pos[2]);
+        eff->setVertex(ND_OffAxis_Unrotated_Sim_lep_start_pos[0], ND_OffAxis_Unrotated_Sim_lep_start_pos[1], ND_OffAxis_Unrotated_Sim_lep_start_pos[2]);
         eff->setHitSegEdeps(HadronHitEdeps);
         eff->setHitSegPoss(HadronHitPoss);
 
@@ -896,10 +920,10 @@ namespace caf {
       } // end loop over ND_vtx_vx_vec
 
       // These will write to FD CAF
-      ND_OffAxis_Unrotated_Sim_mu_start_v_LAr.emplace_back(ND_OffAxis_Unrotated_Sim_mu_start_v_vtx);
-      ND_OffAxis_Unrotated_Sim_mu_start_v_vtx.clear();
-      ND_OffAxis_Sim_mu_start_p_LAr.emplace_back(ND_OffAxis_Sim_mu_start_p_vtx);
-      ND_OffAxis_Sim_mu_start_p_vtx.clear();
+      ND_OffAxis_Unrotated_Sim_lep_start_v_LAr.emplace_back(ND_OffAxis_Unrotated_Sim_lep_start_v_vtx);
+      ND_OffAxis_Unrotated_Sim_lep_start_v_vtx.clear();
+      ND_OffAxis_Sim_lep_start_p_LAr.emplace_back(ND_OffAxis_Sim_lep_start_p_vtx);
+      ND_OffAxis_Sim_lep_start_p_vtx.clear();
       hadron_throw_result_LAr.emplace_back(hadron_throw_result_vtx);
       hadron_throw_result_vtx.clear();
 
