@@ -1,13 +1,13 @@
 #
-# Generate a 10000 MeV muon beamed in the down stream direction.
+# Generate a 70000 MeV muon beamed in the downstream direction.
 #
 
 # Define the particle and it's energy.
 /gps/particle mu+
-/gps/energy 10000 MeV
+/gps/energy 70000 MeV
 
 # Set the position of the particle gun.
-/gps/position 0.0 0.0 -10.0 m
+/gps/position 0.0 0.0 -180.0 m
 
 # This generates the direction of the muon.  This aims
 # the particle downstream with the directions uniformly distributed in
