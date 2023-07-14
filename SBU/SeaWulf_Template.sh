@@ -22,6 +22,6 @@ mrbsetenv
 cd /gpfs/projects/McGrewGroup/<usrname>/DUNE/FDEff/srcs/myntuples/myntuples/MyEnergyAnalysis
 
 echo "Started running lar"
-lar -c MyEnergyAnalysis.fcl -o myntuple_myjobnumplaceholder.root -n -1 myinfileplaceholder
+lar -c MyEnergyAnalysis.fcl -T myntuple_myjobnumplaceholder.root -n -1 myinfileplaceholder
 wait
 echo "Job finished"
