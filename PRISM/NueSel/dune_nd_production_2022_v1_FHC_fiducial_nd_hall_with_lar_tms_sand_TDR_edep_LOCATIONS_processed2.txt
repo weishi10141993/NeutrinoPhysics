@@ -1,0 +1,1 @@
+root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/dune/tape_backed/dunepro/neardet/simulated/2022/mc/physics/dune_nd_production_2022_v1/00/00/00/00/neutrino.0_1659367852.edep.root
