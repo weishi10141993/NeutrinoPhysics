@@ -55,7 +55,7 @@ Run legacy FD CAF maker production interactively,
 lar -c ../../fcl/dunefd/mergeana/select_ana_dune10kt_nu.fcl -n 100 root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/dune/tape_backed/dunepro/mcc11/protodune/mc/full-reconstructed/07/51/31/11/nu_dune10kt_1x2x6_13009312_0_20181104T221530_gen_g4_detsim_reco.root
 
 # or in screen mode:
-nohup lar -c ../../fcl/dunefd/mergeana/select_ana_dune10kt_nu.fcl -n 100 root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/dune/tape_backed/dunepro/mcc11/protodune/mc/full-reconstructed/07/51/31/11/nu_dune10kt_1x2x6_13009312_0_20181104T221530_gen_g4_detsim_reco.root >& output.log &
+nohup lar -c ../../fcl/dunefd/mergeana/select_ana_dune10kt_nu.fcl -T caf_legacy_10.root -n -1 root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/dune/tape_backed/dunepro/mcc11/protodune/mc/full-reconstructed/07/86/27/57/nu_dune10kt_1x2x6_13027311_0_20181110T041119_gen_g4_detsim_reco.root >& output10.log &
 ```
 
 Recompile if source code changed,
