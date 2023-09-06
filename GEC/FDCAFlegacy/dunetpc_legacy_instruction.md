@@ -52,6 +52,7 @@ mrb b
 Run legacy FD CAF maker production interactively,
 
 ```
+cd dunetpclegacy/srcs/dunetpc/dune/CAFMaker
 lar -c ../../fcl/dunefd/mergeana/select_ana_dune10kt_nu.fcl -n 100 root://fndca1.fnal.gov:1094/pnfs/fnal.gov/usr/dune/tape_backed/dunepro/mcc11/protodune/mc/full-reconstructed/07/51/31/11/nu_dune10kt_1x2x6_13009312_0_20181104T221530_gen_g4_detsim_reco.root
 
 # or in screen mode:
@@ -79,4 +80,44 @@ unsetup mrb
 setup mrb v4_04_06
 source /dune/app/users/weishi/dunetpclegacy/localProducts_larsoft_v07_09_00_e17_prof/setup
 mrbsetenv
+```
+
+## Run jobs
+
+This assumes you use Fermilab machines (dunegpvm*).
+
+Once the above is compiled and runs without problem interactively, you can start to produce a tarball. First, you need to have a grid setup for the localProducts as the grid job typically runs on a different machine than your working machine,
+
+```
+cd /dune/app/users/weishi/dunetpclegacy/localProducts_larsoft_v07_09_00_e17_prof
+cp setup setup-grid         # make a copy of the setup for grid job
+```
+
+then in ```setup-grid```, change ```/dune/app/users/weishi``` to the worker node working directory ```${_CONDOR_JOB_IWD}```.
+
+Now get txt file that lists of input files and work env set up script:
+
+```
+cd /dune/app/users/weishi
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/FDCAFlegacy/MCC11FDBeamsim/MCC11FDBeamsim_nu_reco.txt --no-check-certificate
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/FDCAFlegacy/setup_FDlegacyCAF-grid.sh --no-check-certificate
+```
+
+Then make the tarball,
+
+```
+tar -czvf dunetpclegacy.tar.gz dunetpclegacy setupFDEffTarBall-grid.sh MCC11FDBeamsim_nu_reco.txt
+
+# Check the tarball *.tar.gz is indeed created and open with: tar -xf *.tar.gz
+```
+
+Now get one of the following grid running scripts
+
+```
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/FDCAFlegacy/run_FDlegacyCAF-autogrid.sh --no-check-certificate
+```
+
+Finally you can submit the job. The following submits N jobs (since we have 9914 files, N=9914 will run 1 files/job),
+```
+jobsub_submit -G dune -N 9914 --memory=5000MB --disk=1GB --expected-lifetime=8h --cpu=1 --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC,OFFSITE --tar_file_name=dropbox:///dune/app/users/weishi/FDEff.tar.gz --use-cvmfs-dropbox -l '+SingularityImage=\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\"' --append_condor_requirements='(TARGET.HAS_Singularity==true&&TARGET.HAS_CVMFS_dune_opensciencegrid_org==true&&TARGET.HAS_CVMFS_larsoft_opensciencegrid_org==true&&TARGET.CVMFS_dune_opensciencegrid_org_REVISION>=1105&&TARGET.HAS_CVMFS_fifeuser1_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser2_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser3_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser4_opensciencegrid_org==true)' file:///dune/app/users/weishi/run_FDEffTarBall_autogrid.sh
 ```
