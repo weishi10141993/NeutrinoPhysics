@@ -46,11 +46,11 @@ void QuickHistPlotter()
   if ( debug ) std::cout << "set input" << std::endl;
   Double_t MaxAbsY = 0.02;
 
-  TString systname = "PlaceHolder";
-  TFile *file0 = TFile::Open( TString::Format("/dune/app/users/weishi/PRISMPred/PRISMPred_EVisReco_%s.root", systname.Data() ) );
+  TString systname = "flux_Nov17_7";
+  TFile *file0 = TFile::Open( TString::Format("/dune/app/users/weishi/PRISMAnalysis/CAFAna/PRISM/app/EVisReco_%s_1sigma_PRISMPred_Numu_disp.root", systname.Data() ) );
 
   // Oscillation channels: FD_nu_numu, FD_nu_nue, FD_nub_numu, FD_nub_nue
-  TString channame = "FD_nub_nue";
+  TString channame = "FD_nu_numu";
   TString chanlabel;
   if ( channame == "FD_nu_numu" ) {
     chanlabel = "#nu_{#mu} #rightarrow #nu_{#mu}";
@@ -85,7 +85,7 @@ void QuickHistPlotter()
   hist2dndnames.push_back("NDNCBkg_293kA");
   hist2dndnames.push_back("NDNCBkg_280kA");
   hist2dndnames.push_back("NDWrongLepBkg_293kA");
-  hist2dndnames.push_back("NDWrongLepBkg_280kA");
+  //hist2dndnames.push_back("NDWrongLepBkg_280kA");
   // Unfolding and smearing matrices
   hist2dndnames.push_back("Unfold_Matrices/ND_SmearingMatrix");
   hist2dndnames.push_back("Unfold_Matrices/FD_SmearingMatrix");
@@ -103,7 +103,7 @@ void QuickHistPlotter()
   TH2F *NDData_293kA_nom = (TH2F*)file0->Get( TString::Format("numu_EvMatch_nom/%s/NDData_293kA", channame.Data() ) )->Clone("NDData_293kA_nom"); // ND data shouldn't change
   TH2F *NDData_280kA_nom = (TH2F*)file0->Get( TString::Format("numu_EvMatch_nom/%s/NDData_280kA", channame.Data() ) )->Clone("NDData_280kA_nom");
 
-  TFile myPlot( TString::Format("/dune/app/users/weishi/Overlay/Overlay_%s.root", systname.Data() ), "RECREATE");
+  TFile myPlot( TString::Format("/dune/app/users/weishi/PRISMAnalysis/CAFAna/PRISM/app/Overlay_%s.root", systname.Data() ), "RECREATE");
   if ( debug ) std::cout << "output" << std::endl;
 
   // Draw 1d hists component

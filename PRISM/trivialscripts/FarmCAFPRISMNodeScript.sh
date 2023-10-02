@@ -1,12 +1,12 @@
 #!/bin/bash
 
-PNFS_PATH_APPEND=Fit_ELepEHadVisReco_lep_default_HalfHadbins/fluxsyst_Nov17/flux_Nov17_7/ssth23_dmsq32/FourFlavor
+PNFS_PATH_APPEND=Fit_ELepEHadVisReco_lep_default_HalfHadbins/fluxsyst_Nov17/flux_Nov17_16/ssth23_dmsq32/FourFlavor
 CAFE_COMMAND_FILE="CAFECommands.cmd"
 INPUT_STATE_FILE=""
 SCRIPT_TO_INCLUDE=""
 RENAME_SUBMIT_SCRIPT=""
 
-LIFETIME_EXP="48h"
+LIFETIME_EXP="60h"
 DISK_EXP="1GB"
 MEM_EXP="35GB"
 

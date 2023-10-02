@@ -5,7 +5,7 @@
 
 BasicPred: {
 
-	output_file: ["ssth23_dmsq32_FourFlavor_ELepEHadVisReco_flux_Nov17_7.root", "UPDATE"]
+	output_file: ["ssth23_dmsq32_FourFlavor_ELepEHadVisReco_flux_Nov17_16.root", "UPDATE"]
 	# Read state file from persistent pool, this may slow down jobs
 	state_file: "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/CAFAnaInputs/StandardState/ELepEHadVisReco_lep_default_HalfHadbins/fluxsyst_Nov17/ELepEHadVisReco_lep_default_HalfHadbins_all_flux_systs_flux_Nov17_0-25_Hadded_State.root"
 	# Read state file from local work dir (use this when you want to ship state file to worker node on grid)

@@ -31,14 +31,17 @@ void Fit2DVardChi2() {
   // FakeDataAppJoint, FakeDataDispJoint
   // FakeDataFourFlavor
   TString FitChannel = "FourFlavor";
-  TString Syst = "flux_Nov17_7"; // StatOnly, flux_Nov17_<0-24>
+  TString Syst = "flux_Nov17_0"; // StatOnly, flux_Nov17_<0-24>
 	std::vector<TString> pois {"ssth23_dmsq32"}; //ssth23_dmsq32, dcp_sstth13
   TString Dir;
-  if ( Syst == "StatOnly") Dir = "https://fndcadoor.fnal.gov:2880/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins"; // File on gpvm
-  else Dir = "https://fndcadoor.fnal.gov:2880/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins/fluxsyst_Nov17"; // File on gpvm
-  //if ( Syst == "StatOnly") Dir = "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins"; // File on gpvm
-  //else Dir = "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins/fluxsyst_Nov17"; // File on gpvm
-	TString AnalysisVar = "ELepEHadVisReco";
+  // ELepEHadVisReco
+  //if ( Syst == "StatOnly") Dir = "https://fndcadoor.fnal.gov:2880/dune/scratch/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins"; // File on gpvm
+  //else Dir = "https://fndcadoor.fnal.gov:2880/dune/scratch/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins/fluxsyst_Nov17";
+  // File from Ciaran using EnuReco: root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/persistent/users/chasnip/CAFAnaStateFiles/PRISMState_EnuReco_NoPionMass_FluxSyst_4Flav_Feb23.root
+  if ( Syst == "StatOnly") Dir = "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/scratch/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins"; // File on gpvm
+  else Dir = "root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/dune/scratch/users/weishi/Fit_ELepEHadVisReco_lep_default_HalfHadbins/fluxsyst_Nov17"; // File on gpvm
+	//TString AnalysisVar = "ELepEHadVisReco";
+  TString AnalysisVar = "EnuReco";
   TString SystRef = "StatOnly"; // default to compare with StatOnly
   bool overlay = true; // overlay with reference contours
   if (Syst == "StatOnly") overlay = false;

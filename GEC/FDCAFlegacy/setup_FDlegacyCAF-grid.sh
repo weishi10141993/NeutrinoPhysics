@@ -11,6 +11,7 @@ echo "larsoft v07_09_00 -q e17:prof is set"
 unsetup mrb
 setup mrb v4_04_06
 echo "mrb v4_04_06 is set"
+
 export WORKDIR=${_CONDOR_JOB_IWD} # if we use the RCDS the localProducts area will be placed in $CONDOR_DIR_INPUT
 if [ ! -d "$WORKDIR" ]; then
   export WORKDIR=`echo ~`
@@ -39,9 +40,6 @@ echo "Check work dir again _CONDOR_JOB_IWD: ls -l ${_CONDOR_JOB_IWD}"
 ls -l ${_CONDOR_JOB_IWD}
 
 echo "Started set up grid"
-# INPUT_TAR_DIR_LOCAL is /srv/no_xfer/0/TRANSFERRED_INPUT_FILES/FDEff
-# copy FDEff to local work dir _CONDOR_JOB_IWD: /srv
-# now is /srv/FDEff/srcs
 
 echo "Check setup-grid exist and source it: ls -l ${_CONDOR_JOB_IWD}/${DIRECTORY}/localProducts*"
 ls -l ${_CONDOR_JOB_IWD}/${DIRECTORY}/localProducts*

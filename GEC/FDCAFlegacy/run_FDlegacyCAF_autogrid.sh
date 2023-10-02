@@ -15,7 +15,7 @@ echo "ls -l CONDOR_DIR_INPUT"
 # Tarball is copied and untarred into a directory on the worker node, accessed via this CONDOR_DIR_INPUT environment variable
 ls -l $CONDOR_DIR_INPUT
 
-echo "ls -l INPUT_TAR_DIR_LOCAL: ${INPUT_TAR_DIR_LOCAL} (should see .sh and the untarred FDEff folder)"
+echo "ls -l INPUT_TAR_DIR_LOCAL: ${INPUT_TAR_DIR_LOCAL} (should see .sh and the untarred dunetpclegacy folder)"
 ls -l $INPUT_TAR_DIR_LOCAL
 
 if [ -e ${INPUT_TAR_DIR_LOCAL}/setup_FDlegacyCAF-grid.sh ]; then
@@ -36,10 +36,6 @@ echo "ls _CONDOR_JOB_IWD"
 ls
 echo "And ls _CONDOR_DIR_INPUT: ${_CONDOR_DIR_INPUT}"
 ls ${_CONDOR_DIR_INPUT}
-
-# Symlink the desired fcl to the current directory
-ln -s ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/srcs/dunetpc/fcl/dunefd/mergeana/select_ana_dune10kt_nu.fcl .
-echo "Did the symlink: ln -s ${INPUT_TAR_DIR_LOCAL}/${DIRECTORY}/srcs/dunetpc/fcl/dunefd/mergeana/select_ana_dune10kt_nu.fcl ."
 
 # Set some other very useful environment variables for xrootd and IFDH
 export IFDH_CP_MAXRETRIES=2
@@ -72,8 +68,29 @@ done
 echo "Got xrootd url: $myinfile"
 
 # Now we should be in the work dir if setup_FDlegacyCAF-grid.sh worked
-echo "lar -c select_ana_dune10kt_nu.fcl -n -1 $myinfile"
-lar -c select_ana_dune10kt_nu.fcl -n -1 $myinfile
+cd ${_CONDOR_JOB_IWD}/${DIRECTORY}/srcs/dunetpc/dune/CAFMaker
+
+echo "echo PYTHONPATH: "
+echo $PYTHONPATH
+export PYTHONPATH=${PWD}/DUNE_ND_GeoEff/lib:${PYTHONPATH}
+echo "echo PYTHONPATH again "
+echo $PYTHONPATH
+
+echo "echo LD_LIBRARY_PATH: "
+echo $LD_LIBRARY_PATH
+# cmake doesn't know some paths if it's compiled on a machine the grid doesn't know
+# add to LD_LIBRARY_PATH:
+#   path to generated dictionaries for nested vectors
+#   path to libgeoEff
+#   path to commonly used libs under /libs64, also append at the very end to avoid version issues.
+#     On gpvm they exist under /lib64 or /usr/lib64, but not available on grid node
+# PWD should be /dunetpc/dune/CAFMaker, this is where nested vectors' dictionaries are located if the program is ran interactively
+export LD_LIBRARY_PATH=${PWD}:${PWD}/DUNE_ND_GeoEff/lib:${LD_LIBRARY_PATH}:${INPUT_TAR_DIR_LOCAL}/lib64
+echo "echo LD_LIBRARY_PATH again: "
+echo $LD_LIBRARY_PATH
+
+echo "lar -c ../../fcl/dunefd/mergeana/select_ana_dune10kt_nu.fcl -n -1 $myinfile"
+lar -c ../../fcl/dunefd/mergeana/select_ana_dune10kt_nu.fcl -n -1 $myinfile
 LAR_RESULT=$?   # check the exit status!!!
 
 if [ $LAR_RESULT -ne 0 ]; then
@@ -82,6 +99,8 @@ if [ $LAR_RESULT -ne 0 ]; then
 fi
 
 echo "Have output"
+echo "ls to see if we can see the output file" # this normally is _CONDOR_JOB_IWD
+ls
 
 # Unique name in case we send multiple jobs.
 OUTFILE=fdcaf_legacy_${CLUSTER}_${PROCESS}.root

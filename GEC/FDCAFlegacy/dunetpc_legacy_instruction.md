@@ -99,25 +99,38 @@ Now get txt file that lists of input files and work env set up script:
 
 ```
 cd /dune/app/users/weishi
-wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/FDCAFlegacy/MCC11FDBeamsim/MCC11FDBeamsim_nu_reco.txt --no-check-certificate
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/FDCAFlegacy/MCC11FDBeamSim/MCC11FDBeamsim_nu_reco.txt --no-check-certificate
 wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/FDCAFlegacy/setup_FDlegacyCAF-grid.sh --no-check-certificate
+# Copy library needed for CAFMaker to run, but can't locate or install on grid node
+cp -r /lib64/ .
 ```
 
 Then make the tarball,
 
 ```
-tar -czvf dunetpclegacy.tar.gz dunetpclegacy setupFDEffTarBall-grid.sh MCC11FDBeamsim_nu_reco.txt
+tar -czvf dunetpclegacy.tar.gz dunetpclegacy setup_FDlegacyCAF-grid.sh MCC11FDBeamsim_nu_reco.txt lib64
 
 # Check the tarball *.tar.gz is indeed created and open with: tar -xf *.tar.gz
 ```
 
-Now get one of the following grid running scripts
+Now get the following grid running script. It's critical to make sure the ```LD_LIBRARY_PATH``` contains all needed libs, it should have
+```
+# 1) geometric efficiency lib: DUNE_ND_GeoEff/lib
+# 2) standard lib64 available on dunegpvm but not on grid: /lib64
+# 3) generated dictionary for nested vector collection AutoDict_vector*: /dunetpc/dune/CAFMAker
+
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/FDCAFlegacy/run_FDlegacyCAF_autogrid.sh --no-check-certificate
+```
+
+Finally you can submit the job. The following submits N jobs (we will run 1 files/job, so N is the number of input files),
+```
+jobsub_submit -G dune -N 2 --memory=2000MB --disk=5GB --expected-lifetime=9h --cpu=1 --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC,OFFSITE --tar_file_name=dropbox:///dune/app/users/weishi/dunetpclegacy.tar.gz --use-cvmfs-dropbox -l '+SingularityImage=\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\"' --append_condor_requirements='(TARGET.HAS_Singularity==true&&TARGET.HAS_CVMFS_dune_opensciencegrid_org==true&&TARGET.HAS_CVMFS_larsoft_opensciencegrid_org==true&&TARGET.CVMFS_dune_opensciencegrid_org_REVISION>=1105&&TARGET.HAS_CVMFS_fifeuser1_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser2_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser3_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser4_opensciencegrid_org==true)' file:///dune/app/users/weishi/run_FDlegacyCAF_autogrid.sh
+```
 
 ```
-wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/FDCAFlegacy/run_FDlegacyCAF-autogrid.sh --no-check-certificate
-```
+# Check job status
+jobsub_q --user weishi
 
-Finally you can submit the job. The following submits N jobs (since we have 9914 files, N=9914 will run 1 files/job),
-```
-jobsub_submit -G dune -N 9914 --memory=5000MB --disk=1GB --expected-lifetime=8h --cpu=1 --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC,OFFSITE --tar_file_name=dropbox:///dune/app/users/weishi/FDEff.tar.gz --use-cvmfs-dropbox -l '+SingularityImage=\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\"' --append_condor_requirements='(TARGET.HAS_Singularity==true&&TARGET.HAS_CVMFS_dune_opensciencegrid_org==true&&TARGET.HAS_CVMFS_larsoft_opensciencegrid_org==true&&TARGET.CVMFS_dune_opensciencegrid_org_REVISION>=1105&&TARGET.HAS_CVMFS_fifeuser1_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser2_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser3_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser4_opensciencegrid_org==true)' file:///dune/app/users/weishi/run_FDEffTarBall_autogrid.sh
+# Remove jobs
+jobsub_rm
 ```

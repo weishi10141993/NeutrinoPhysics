@@ -1,10 +1,6 @@
 Notes:
 
 # New state prod with half had bins
-./FarmCAFPRISMNodeScript.sh -c PRISM_2DScan_Commands.cmd
-57385593.0 write to persistent fit numu
-57385594.0 write to scratch fit numu  --> input file too big?
-try ship file or copy file from persistent
 
 ## Stat only
 
@@ -54,18 +50,73 @@ will be labelled by Sept21, not ready to use yet as of Jan 18, 2023
 
 ```
 # 25 flux syst, FourFlavor fit
+# Beam focusing 0-12
 flux_Nov17_0: DONE
 flux_Nov17_1: DONE
 flux_Nov17_2: DONE
-
-flux_Nov17_4:
+flux_Nov17_3: DONE
+flux_Nov17_4: DONE
 flux_Nov17_5: DONE
+flux_Nov17_6: DONE
+flux_Nov17_7: DONE
+flux_Nov17_8: DONE
+flux_Nov17_9: DONE
+flux_Nov17_10: DONE
+flux_Nov17_11: DONE
+flux_Nov17_12: DONE
 
-flux_Nov17_7:
-
-flux_Nov17_9:
+# Hadron production: 13-24
+flux_Nov17_13: DONE
+flux_Nov17_14: DONE
+flux_Nov17_15: FAIL
+flux_Nov17_16: FAIL
+flux_Nov17_17
+flux_Nov17_18
+flux_Nov17_19
+flux_Nov17_20
+flux_Nov17_21
+flux_Nov17_22
+flux_Nov17_23
+flux_Nov17_24
 
 ./FarmCAFPRISMNodeScript.sh -c PRISM_2DScan_Commands.cmd
+```
+
+Fit with Ciaran's EnuReco file:
+```
+stat only: 678600 DONE
+68225100.0 flux_Nov17_0 DONE
+68225663.0 flux_Nov17_5 DONE
+```
+
+Produce state file with single syst:
+```
+# ND FHC
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/FHC --no-fakedata-dials -a EVisReco --bin-descriptor prism_default --syst-descriptor "list:flux_Nov17_0" -N -u
+
+# ND RHC
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/chasnip/NDCAF_OnAxisHadd/RHC --no-fakedata-dials -a EVisReco --bin-descriptor prism_default --syst-descriptor "list:flux_Nov17_0" -N -b
+
+# FD FHC COPY OLD
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nonswap --no-fakedata-dials -a EVisReco --bin-descriptor prism_default --syst-descriptor "list:flux_Nov17_0" -F -u
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/nueswap --no-fakedata-dials -a EVisReco --bin-descriptor prism_default --syst-descriptor "list:flux_Nov17_0" -F -u
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/FHC/tauswap --no-fakedata-dials -a EVisReco --bin-descriptor prism_default --syst-descriptor "list:flux_Nov17_0" -F -u
+
+# FD RHC
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/nonswap --no-fakedata-dials -a EVisReco --bin-descriptor prism_default --syst-descriptor "list:flux_Nov17_0" -F -b
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/nueswap --no-fakedata-dials -a EVisReco --bin-descriptor prism_default --syst-descriptor "list:flux_Nov17_0" -F -b
+./FarmBuildPRISMInterps.sh -i /pnfs/dune/persistent/users/weishi/FDCAF/RHC/tauswap --no-fakedata-dials -a EVisReco --bin-descriptor prism_default --syst-descriptor "list:flux_Nov17_0" -F -b
+
+# Add state files
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/scratch/users/weishi/DebugFluxFit/EVisReco_prism_default/flux_Nov17_0/NDFHC_batch1  
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/scratch/users/weishi/DebugFluxFit/EVisReco_prism_default/flux_Nov17_0/NDFHC_batch2  
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/scratch/users/weishi/DebugFluxFit/EVisReco_prism_default/flux_Nov17_0/NDFHC_batch3  
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/scratch/users/weishi/DebugFluxFit/EVisReco_prism_default/flux_Nov17_0/FD            
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/scratch/users/weishi/DebugFluxFit/EVisReco_prism_default/flux_Nov17_0/NDRHC_batch1  
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/scratch/users/weishi/DebugFluxFit/EVisReco_prism_default/flux_Nov17_0/NDRHC_batch2  
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/scratch/users/weishi/DebugFluxFit/EVisReco_prism_default/flux_Nov17_0/NDRHC_batch3  
+
+./FarmHaddCafanaGrid.sh -i /pnfs/dune/persistent/users/weishi/DebugFluxFit/EVisReco_prism_default/flux_Nov17_0/Hadd
 ```
 
 Produce state file with all flux systs (flux_Nov17_<0-24>):
