@@ -76,22 +76,29 @@ export PYTHONPATH=${PWD}/DUNE_ND_GeoEff/lib:${PYTHONPATH}
 echo "echo PYTHONPATH again "
 echo $PYTHONPATH
 
+echo "ls -l PWD"
+ls -l ${PWD}
+
 echo "echo LD_LIBRARY_PATH: "
 echo $LD_LIBRARY_PATH
 # cmake doesn't know some paths if it's compiled on a machine the grid doesn't know
 # add to LD_LIBRARY_PATH:
-#   path to generated dictionaries for nested vectors
-#   path to libgeoEff
-#   path to commonly used libs under /libs64, also append at the very end to avoid version issues.
-#     On gpvm they exist under /lib64 or /usr/lib64, but not available on grid node
+#   path to generated dictionaries for nested vectors: ${PWD}
+#   path to libgeoEff: ${PWD}/DUNE_ND_GeoEff/lib
+#   path to commonly used libs under /lib64, also append at the very end to avoid version issues.
+#     On gpvm they exist under /lib64, but not available on grid node: ${INPUT_TAR_DIR_LOCAL}/lib64
 # PWD should be /dunetpc/dune/CAFMaker, this is where nested vectors' dictionaries are located if the program is ran interactively
-export LD_LIBRARY_PATH=${PWD}:${PWD}/DUNE_ND_GeoEff/lib:${LD_LIBRARY_PATH}:${INPUT_TAR_DIR_LOCAL}/lib64
+echo "export LD_LIBRARY_PATH=PWD/DUNE_ND_GeoEff/lib:LD_LIBRARY_PATH:INPUT_TAR_DIR_LOCAL/lib64:PWD"
+export LD_LIBRARY_PATH=${PWD}/DUNE_ND_GeoEff/lib:${LD_LIBRARY_PATH}:${INPUT_TAR_DIR_LOCAL}/lib64:${PWD}
 echo "echo LD_LIBRARY_PATH again: "
 echo $LD_LIBRARY_PATH
 
 echo "lar -c ../../fcl/dunefd/mergeana/select_ana_dune10kt_nu.fcl -n -1 $myinfile"
 lar -c ../../fcl/dunefd/mergeana/select_ana_dune10kt_nu.fcl -n -1 $myinfile
 LAR_RESULT=$?   # check the exit status!!!
+
+echo "ls -l PWD (check dictionaries renewed?)"
+ls -l ${PWD}
 
 if [ $LAR_RESULT -ne 0 ]; then
   echo "lar exited with abnormal status $LAR_RESULT. See error outputs."
