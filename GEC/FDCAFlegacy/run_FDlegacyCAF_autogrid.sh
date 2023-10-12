@@ -3,7 +3,7 @@
 echo "Running on $(hostname) at ${GLIDEIN_Site}. GLIDEIN_DUNESite = ${GLIDEIN_DUNESite}"
 
 # Set the output location for copyback, persistent not writable
-OUTDIR=/pnfs/dune/scratch/users/${GRID_USER}/FDCAFlegacyGECprod
+OUTDIR=/pnfs/dune/scratch/users/${GRID_USER}/FDCAFlegacyGECprod/nu
 
 # Make sure we see what we expect
 echo "See where are at: pwd" # this normally is _CONDOR_JOB_IWD
@@ -46,7 +46,9 @@ export XRD_LOADBALANCERTTL=7200
 export XRD_STREAMTIMEOUT=14400 # may vary for your job/file type
 
 # Make sure the output directory exists
-ifdh ls $OUTDIR 0 # set recursion depth to 0 since we are only checking for the directory; we don't care about the full listing.
+# Do not do ifdh ls on grid!!!
+# Can cause system-wide slowdowns, especially if the directory has too many files in it
+#ifdh ls $OUTDIR 0 # set recursion depth to 0 since we are only checking for the directory; we don't care about the full listing.
 
 if [ $? -ne 0 ]; then
   # if ifdh ls failed, try to make the directory
