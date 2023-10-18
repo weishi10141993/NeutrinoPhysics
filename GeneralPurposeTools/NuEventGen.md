@@ -7,14 +7,18 @@ Usage: ```./GenieGen_MonoE_Flux_Edepsim.sh <energy in GeV> <neutrino PDG code> <
 Target is default to Ar-40 (PDG: 1000180400).
 
 ```
-# This generates 10 events of numu (PDG code: 14) scattered of Ar40 at an energy of 3GeV
+# This generates 10 'CC' events of numu (PDG code: 14) scattered of Ar40 at an energy of 3GeV
 ./GenieGen_MonoE_Flux_Edepsim.sh 3 14 10
 
 # It boils down to this command:
 # gevgen -n 10 -e 3 -p 14 -t 1000180400 --seed 3258 -r 3258 --cross-sections ${GENIEXSECPATH}/gxspl-FNALsmall.xml
 ```
 
-Refer to [Genie manual Sec. 7.3](https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/007/man.pdf) for more options. For more info on Genie output ```rootracker``` format (```DetSimPassThru/gRooTracker``` in edepsim), refer to above manual Sec. 9.5.2.3.
+Refer to [Genie manual Sec. 7.3](https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/007/man.pdf) for more options. The ```--event-generator-list``` [directive](https://github.com/GENIE-MC/Generator/blob/master/config/EventGeneratorListAssembler.xml)  is set to ```CC``` to only generate CC events, DUNE generally uses ```Default+CCMEC```.
+
+For more info on Genie output ```rootracker``` format (```DetSimPassThru/gRooTracker``` in edepsim), refer to above manual Sec. 9.5.2.3.
+
+For more options on scintillation simulation, refer to [edepsim commandlist](https://github.com/ClarkMcGrew/edep-sim/blob/master/doc/edepsim-command.list#L3800).
 
 A simple macro to analyze the edepsim file:
 ```
@@ -23,6 +27,8 @@ setup edepsim v3_2_0 -q e20:prof
 
 python3 Edepsim_ana.py edep.*.root
 ```
+
+Another useful [event display tool](https://github.com/czczc/PyEdep/tree/main#description) by C. Zhang.
 
 ## DUNE neutrino flux event generation with Genie + edepsim setup
 

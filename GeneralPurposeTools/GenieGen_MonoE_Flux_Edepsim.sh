@@ -9,7 +9,7 @@ INPUTS_DIR="sim_inputs"
 
 GEOMETRY="LArBath.gdml"
 TOPVOL="volTPCActive"
-EDEP_MAC="dune-nd.mac"
+EDEP_MAC="dune-fd3.mac"
 
 ENERGY=$1
 NUPDG=$2
@@ -63,7 +63,7 @@ gevgen \
     --message-thresholds Messenger_production.xml \
     --cross-sections ${GENIEXSECPATH}/gxspl-FNALsmall.xml \
     --event-record-print-level 0 \
-    --event-generator-list Default+CCMEC
+    --event-generator-list CC
 
 # Convert the genie output to rootracker
 echo "Running gntpc"
