@@ -24,6 +24,11 @@ import random
 
 from ROOT import gROOT # for creating the output file
 
+def IsFromPrimaryLep(trkid, parentid, primaryleptrkid):
+    if ( trkid == primaryleptrkid ) or ( parentid[trkid] == primaryleptrkid ): return True
+    elif ( parentid[trkid] == -1 ): return False
+    else: return IsFromPrimaryLep(parentid[trkid], parentid, primaryleptrkid)
+
 #########
 # I/O
 #########
@@ -151,6 +156,9 @@ for jentry in range(entries):
     all_genie_p2_list = list()
     all_genie_p3_list = list()
     for p in range(genieTree.StdHepN):
+        # Get only initial state particles
+        if genieTree.StdHepStatus[p] == 0:
+            print("GENIE initial state pdg: ", genieTree.StdHepPdg[p], " status: ", genieTree.StdHepStatus[p], " px: ", genieTree.StdHepP4[p*4 + 0]*gev2mev, " py: ", genieTree.StdHepP4[p*4 + 1]*gev2mev, " pz: ", genieTree.StdHepP4[p*4 + 2]*gev2mev, " E: ", genieTree.StdHepP4[p*4 + 3]*gev2mev)
         # Get only final state particles
         if genieTree.StdHepStatus[p] == 1:
             #print("GENIE pdg: ", genieTree.StdHepPdg[p], " status: ", genieTree.StdHepStatus[p], " p0: ", genieTree.StdHepP4[p*4 + 0]*gev2mev, " p1: ", genieTree.StdHepP4[p*4 + 1]*gev2mev, " p2: ", genieTree.StdHepP4[p*4 + 2]*gev2mev, " p3: ", genieTree.StdHepP4[p*4 + 3]*gev2mev)
@@ -161,7 +169,7 @@ for jentry in range(entries):
             all_genie_p3_list.append(genieTree.StdHepP4[p*4 + 3]*gev2mev)
 
             if abs(genieTree.StdHepPdg[p]) >= 11 and abs(genieTree.StdHepPdg[p]) <= 16:
-                #print("GENIE final lep pdg: ", genieTree.StdHepPdg[p], " status: ", genieTree.StdHepStatus[p], " p0: ", genieTree.StdHepP4[p*4 + 0]*gev2mev, " p1: ", genieTree.StdHepP4[p*4 + 1]*gev2mev, " p2: ", genieTree.StdHepP4[p*4 + 2]*gev2mev, " p3: ", genieTree.StdHepP4[p*4 + 3]*gev2mev)
+                print("GENIE final lep pdg: ", genieTree.StdHepPdg[p], " status: ", genieTree.StdHepStatus[p], " px: ", genieTree.StdHepP4[p*4 + 0]*gev2mev, " py: ", genieTree.StdHepP4[p*4 + 1]*gev2mev, " pz: ", genieTree.StdHepP4[p*4 + 2]*gev2mev, " E: ", genieTree.StdHepP4[p*4 + 3]*gev2mev)
                 Genie_final_lep_pdg[0] = genieTree.StdHepPdg[p]
                 Genie_final_lep_p0_MeV[0] = genieTree.StdHepP4[p*4 + 0]*gev2mev
                 Genie_final_lep_p1_MeV[0] = genieTree.StdHepP4[p*4 + 1]*gev2mev
@@ -185,6 +193,8 @@ for jentry in range(entries):
     # initialize LArBath vertex
     larbath_vtx_cm[0] = 0; larbath_vtx_cm[1] = 0; larbath_vtx_cm[2] = 0;
     nEdeps[0] = 0
+    tot_final_lep_edep = 0
+    tot_final_lep_secondary_edep = 0
 
     #print("number of primaries: ", event.Primaries.size())
     #print("number of trajectories: ", event.Trajectories.size())
@@ -203,7 +213,12 @@ for jentry in range(entries):
                 momx = particle.GetMomentum().X()
                 momy = particle.GetMomentum().Y()
                 momz = particle.GetMomentum().Z()
+                ke   = particle.GetMomentum().E() - particle.GetMomentum().M()
                 PrimaryLepTrackID = particle.GetTrackId()
+                print("edepsim: primary lep TrackID = ", PrimaryLepTrackID)
+                print("edepsim: primary lep PDGCode = ", PDGCode)
+                print("edepsim: primary lep pos x: ", posx, " y: ", posy, " z: ", posz, " [cm]")
+                print("edepsim: primary lep px: ", momx, " py: ", momy, " pz: ", momz, "KE: ", ke, " [MeV]")
                 """
                 print("pos x: ", posx, " y: ", posy, " z: ", posz, " [cm]")
                 print("mom x: ", momx, " y: ", momy, " z: ", momz, " [MeV]")
@@ -216,7 +231,8 @@ for jentry in range(entries):
         # iTraj is same as TrackId, starts from #0
         trajectories_parentid[iTraj] = trajectory.GetParentId()
         trajectories_pdg[iTraj] = trajectory.GetPDGCode()
-        #print("iTraj #", iTraj, " parentID: ", trajectories_parentid[iTraj], " pdg: ", trajectories_pdg[iTraj] )
+        if iTraj == 0:
+            print("edepsim: iTraj #", iTraj, " initial KE: ", trajectory.GetInitialMomentum().E() - trajectory.GetInitialMomentum().M())
 
     for containerName, hitSegments in event.SegmentDetectors:
         # iHit is the index, hitSEgment is the data stored at the index in the second item in event.SegementDectectors
@@ -238,6 +254,7 @@ for jentry in range(entries):
             edep_parentID = trajectories_parentid[edep_trkID]
             edep_pdg = trajectories_pdg[edep_trkID]
             edep = hitSegment.GetEnergyDeposit()
+            secondary_edep = hitSegment.GetSecondaryDeposit() # this should be from non-ionization in edepsim, i.e., scintillation
 
             all_dep_startpos_list.append(edep_start_x)
             all_dep_startpos_list.append(edep_start_y)
@@ -251,6 +268,13 @@ for jentry in range(entries):
             all_dep_parentID_list.append(edep_parentID)
             all_dep_pdg_list.append(edep_pdg)
             all_edep_list.append(edep)
+
+            # edep from primary lepton
+            if IsFromPrimaryLep(edep_trkID, trajectories_parentid, PrimaryLepTrackID) == True:
+                tot_final_lep_edep = tot_final_lep_edep + edep
+                tot_final_lep_secondary_edep =  tot_final_lep_secondary_edep + secondary_edep
+
+    print("edepsim: Final lep total deposited [MeV]: ", tot_final_lep_edep, " Final lep total secondary deposited [MeV]: ", tot_final_lep_secondary_edep)
 
     # for use in processing events before and after transformations
     nEdeps[0] = len(all_edep_list)

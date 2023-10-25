@@ -5,5 +5,13 @@
 /generator/count/fixed/number 1
 /generator/count/set fixed
 /generator/add
-/edep/phys/ionizationModel 0
+/process/msc/UseG4EmSaturation 1
+/process/optical/processActivation Scintillation 1
+/process/optical/scintillation/setYieldFactor 24000
+/process/optical/scintillation/setExcitationRatio 0.21
+/process/optical/scintillation/setByParticleType 1
+/process/optical/scintillation/setTrackInfo 1
+/process/optical/scintillation/setStackPhotons 1
+/process/optical/scintillation/setTrackSecondariesFirst 1
+/edep/material/birksConstant LAr 0.694 mm/MeV
 /edep/update

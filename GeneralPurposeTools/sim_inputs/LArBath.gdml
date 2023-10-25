@@ -405,13 +405,14 @@
       <solidref ref="Cryostat"/>
       <auxiliary auxtype="SensDet" auxvalue="SimEnergyDeposit"/>
       <auxiliary auxtype="StepLimit" auxunit="cm" auxvalue="0.5cm"/>
-      <auxiliary auxtype="Efield" auxunit="V/cm" auxvalue="500*V/cm"/>
+      <auxiliary auxtype="EField" auxunit="V/cm" auxvalue="500V/cm"/>
       <colorref ref="blue"/>
     </volume>
 
     <volume name="volWorld" >
       <materialref ref="LAr"/>
       <solidref ref="World"/>
+      <auxiliary auxtype="EField" auxunit="V/cm" auxvalue="500V/cm"/>
 
       <physvol>
         <volumeref ref="volTPCActive"/>
