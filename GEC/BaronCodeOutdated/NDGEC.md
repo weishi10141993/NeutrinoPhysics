@@ -4,20 +4,20 @@
 
 Download these files
 ```
-mkdir test4baron
-cd test4baron
+mkdir test4flynn
+cd test4flynn
 
-wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/BaronNDCode/new_hadron_muon_mktree.py
-wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/BaronNDCode/setup_NDcombEff.sh
-wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/BaronNDCode/run_NDcombEff.sh
-wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/BaronNDCode/NDCAFs.txt
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/BaronCodeOutdated/new_hadron_muon_mktree.py
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/BaronCodeOutdated/setup_NDcombEff.sh
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/BaronCodeOutdated/run_NDcombEff.sh
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/BaronCodeOutdated/NDCAFs.txt
 
-# A list of these files are also available at: /dune/app/users/weishi/test4baron
+# A list of these files are also available at: /dune/app/users/weishi/test4flynn
 # Make sure do a vimdiff to see what changed in other files compared to those your normally ran and update your files accordingly.
 
 # You will still need your muonEff30.nn and muonEffModel.py. These two files are not changed.
-wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/BaronNDCode/muonEff30.nn
-wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/BaronNDCode/muonEffModel.py
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/BaronCodeOutdated/muonEff30.nn
+wget https://raw.githubusercontent.com/weishi10141993/NeutrinoPhysics/main/GEC/BaronCodeOutdated/muonEffModel.py
 
 # Note the last text file lists all input ND CAFs with xrootd url prefix: root://fndca1.fnal.gov:1094//pnfs/fnal.gov/usr/
 # Otherwise the grid nodes won't be able to access the file.
@@ -42,15 +42,15 @@ source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
 setup dunetpc v09_41_00_02 -q e20:prof
 
 # Only do this once, specify python dependencies install dir (otherwise it defaults to ~/.local/lib/python3.9/site-packages/, not enough quota)
-pip install --target=/dune/app/users/weishi/lib/python3.9/site-packages uproot4
-pip install --target=/dune/app/users/weishi/lib/python3.9/site-packages uproot3
-pip install --target=/dune/app/users/weishi/lib/python3.9/site-packages torch
-pip install --target=/dune/app/users/weishi/lib/python3.9/site-packages scipy
+pip install --target=/dune/app/users/weishi/python3libs uproot4
+pip install --target=/dune/app/users/weishi/python3libs uproot3
+pip install --target=/dune/app/users/weishi/python3libs torch
+pip install --target=/dune/app/users/weishi/python3libs scipy
 
 # Do this every time login
-export PYTHONPATH=/dune/app/users/weishi/lib/python3.9/site-packages:$PYTHONPATH
+export PYTHONPATH=/dune/app/users/weishi/python3libs:$PYTHONPATH
 
-python3 new_hadron_muon_mktree.py /dune/app/users/weishi/FHC.5018262.CAF.root
+python3 new_hadron_muon_mktree.py /dune/app/users/weishi/FHC.1000300.CAF.root
 ```
 
 ### Submit a job
@@ -65,7 +65,7 @@ tar -czvf work.tar.gz setup_NDcombEff.sh NDCAFs.txt new_hadron_muon_mktree.py mu
 # -N 2 means 2 jobs, this is now set as running 1 file per job as I have two files in txt file.
 # If you have X files in your text file, set: -N X
 
-jobsub_submit -G dune -N 2 --memory=1GB --disk=6GB --expected-lifetime=30m --cpu=1 --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC,OFFSITE --tar_file_name=dropbox:///dune/app/users/weishi/test4baron/work.tar.gz --use-cvmfs-dropbox -l '+SingularityImage=\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\"' --append_condor_requirements='(TARGET.HAS_Singularity==true&&TARGET.HAS_CVMFS_dune_opensciencegrid_org==true&&TARGET.HAS_CVMFS_larsoft_opensciencegrid_org==true&&TARGET.CVMFS_dune_opensciencegrid_org_REVISION>=1105&&TARGET.HAS_CVMFS_fifeuser1_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser2_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser3_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser4_opensciencegrid_org==true)' file:///dune/app/users/weishi/test4baron/run_NDcombEff.sh
+jobsub_submit -G dune -N 2 --memory=1GB --disk=6GB --expected-lifetime=30m --cpu=1 --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC,OFFSITE --tar_file_name=dropbox:///dune/app/users/weishi/test4flynn/work.tar.gz --use-cvmfs-dropbox -l '+SingularityImage=\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\"' --append_condor_requirements='(TARGET.HAS_Singularity==true&&TARGET.HAS_CVMFS_dune_opensciencegrid_org==true&&TARGET.HAS_CVMFS_larsoft_opensciencegrid_org==true&&TARGET.CVMFS_dune_opensciencegrid_org_REVISION>=1105&&TARGET.HAS_CVMFS_fifeuser1_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser2_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser3_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser4_opensciencegrid_org==true)' file:///dune/app/users/weishi/test4flynn/run_NDcombEff.sh
 ```
 
 To query the job status: ```jobsub_q <usrname> -G dune```

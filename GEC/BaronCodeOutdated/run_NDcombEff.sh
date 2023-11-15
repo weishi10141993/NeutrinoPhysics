@@ -91,8 +91,8 @@ ifdh cp -D $myinfile ${_CONDOR_JOB_IWD}
 echo "ls -l _CONDOR_JOB_IWD"
 ls -l ${_CONDOR_JOB_IWD}
 
-echo "python3 new_hadron_muon_mktree.py *CAF.root"
-python3 new_hadron_muon_mktree.py *CAF.root
+echo "python3 new_hadron_muon_mktree.py ./*CAF.root"
+python3 new_hadron_muon_mktree.py ./*CAF.root
 LAR_RESULT=$?   # check the exit status!!!
 
 if [ $LAR_RESULT -ne 0 ]; then
