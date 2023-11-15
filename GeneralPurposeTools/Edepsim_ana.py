@@ -29,6 +29,11 @@ def IsFromPrimaryLep(trkid, parentid, primaryleptrkid):
     elif ( parentid[trkid] == -1 ): return False
     else: return IsFromPrimaryLep(parentid[trkid], parentid, primaryleptrkid)
 
+def IsFromPrimaryProton(trkid, parentid, primaryprotontrkid):
+    if ( trkid == primaryprotontrkid ) or ( parentid[trkid] == primaryprotontrkid ): return True
+    elif ( parentid[trkid] == -1 ): return False
+    else: return IsFromPrimaryProton(parentid[trkid], parentid, primaryprotontrkid)
+
 #########
 # I/O
 #########
@@ -168,6 +173,7 @@ for jentry in range(entries):
             all_genie_p2_list.append(genieTree.StdHepP4[p*4 + 2]*gev2mev)
             all_genie_p3_list.append(genieTree.StdHepP4[p*4 + 3]*gev2mev)
 
+            # lepton
             if abs(genieTree.StdHepPdg[p]) >= 11 and abs(genieTree.StdHepPdg[p]) <= 16:
                 print("GENIE final lep pdg: ", genieTree.StdHepPdg[p], " status: ", genieTree.StdHepStatus[p], " px: ", genieTree.StdHepP4[p*4 + 0]*gev2mev, " py: ", genieTree.StdHepP4[p*4 + 1]*gev2mev, " pz: ", genieTree.StdHepP4[p*4 + 2]*gev2mev, " E: ", genieTree.StdHepP4[p*4 + 3]*gev2mev)
                 Genie_final_lep_pdg[0] = genieTree.StdHepPdg[p]
@@ -175,6 +181,10 @@ for jentry in range(entries):
                 Genie_final_lep_p1_MeV[0] = genieTree.StdHepP4[p*4 + 1]*gev2mev
                 Genie_final_lep_p2_MeV[0] = genieTree.StdHepP4[p*4 + 2]*gev2mev
                 Genie_final_lep_p3_MeV[0] = genieTree.StdHepP4[p*4 + 3]*gev2mev
+            # proton
+            if genieTree.StdHepPdg[p] == 2212:
+                print("GENIE final proton pdg: ", genieTree.StdHepPdg[p], " status: ", genieTree.StdHepStatus[p], " px: ", genieTree.StdHepP4[p*4 + 0]*gev2mev, " py: ", genieTree.StdHepP4[p*4 + 1]*gev2mev, " pz: ", genieTree.StdHepP4[p*4 + 2]*gev2mev, " E: ", genieTree.StdHepP4[p*4 + 3]*gev2mev)
+
     # End particle loop in genie
     Genie_nParts[0] = len(all_genie_pdg_list)
 
@@ -195,6 +205,8 @@ for jentry in range(entries):
     nEdeps[0] = 0
     tot_final_lep_edep = 0
     tot_final_lep_secondary_edep = 0
+    tot_final_proton_edep = 0
+    tot_final_proton_secondary_edep = 0
 
     #print("number of primaries: ", event.Primaries.size())
     #print("number of trajectories: ", event.Trajectories.size())
@@ -224,6 +236,10 @@ for jentry in range(entries):
                 print("mom x: ", momx, " y: ", momy, " z: ", momz, " [MeV]")
                 print("PrimaryLepTrackID: ", PrimaryLepTrackID)
                 """
+            PrimaryProtonTrackID = -99 # in case event doesn't contain primary proton
+            if PDGCode == 2212: # in case of multipile protons, this registers the last one
+                PrimaryProtonTrackID = particle.GetTrackId()
+                print("edepsim: has primary outcoming proton, TrackID = ", PrimaryProtonTrackID)
 
     trajectories_parentid = np.empty(len(event.Trajectories), dtype=np.int32)
     trajectories_pdg = np.empty(len(event.Trajectories), dtype=np.int32)
@@ -274,7 +290,13 @@ for jentry in range(entries):
                 tot_final_lep_edep = tot_final_lep_edep + edep
                 tot_final_lep_secondary_edep =  tot_final_lep_secondary_edep + secondary_edep
 
+            # edep from primary lepton
+            if PrimaryProtonTrackID != -99 and IsFromPrimaryProton(edep_trkID, trajectories_parentid, PrimaryProtonTrackID) == True:
+                tot_final_proton_edep = tot_final_proton_edep + edep
+                tot_final_proton_secondary_edep =  tot_final_proton_secondary_edep + secondary_edep
+
     print("edepsim: Final lep total deposited [MeV]: ", tot_final_lep_edep, " Final lep total secondary deposited [MeV]: ", tot_final_lep_secondary_edep)
+    print("edepsim: Final proton total deposited [MeV]: ", tot_final_proton_edep, " Final proton total secondary deposited [MeV]: ", tot_final_proton_secondary_edep)
 
     # for use in processing events before and after transformations
     nEdeps[0] = len(all_edep_list)

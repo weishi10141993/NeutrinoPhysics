@@ -140,13 +140,14 @@ cat ".(get)(nu_dune10kt_1x2x6_13027245_0_20181110T035353_gen_g4_detsim_reco.root
 ```
 To prestage dataset:
 ```
-samweb prestage-dataset --defname=<dataset name>
+samweb prestage-dataset --defname=<dataset name> --touch
+#  --touch option reset the LRU clock automatically by reading a few bytes from each file
 # e.g. it may take 24hrs to prestage each 7TB dataset
 ```
 
 Finally you can submit the job. The following submits N jobs (we will run 1 files/job, so N is the number of input files),
 ```
-jobsub_submit -G dune -N 1 --memory=2000MB --disk=5GB --expected-lifetime=24h --cpu=1 --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC,OFFSITE --tar_file_name=dropbox:///dune/app/users/weishi/dunetpclegacy.tar.gz --use-cvmfs-dropbox -l '+SingularityImage=\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\"' --append_condor_requirements='(TARGET.HAS_Singularity==true&&TARGET.HAS_CVMFS_dune_opensciencegrid_org==true&&TARGET.HAS_CVMFS_larsoft_opensciencegrid_org==true&&TARGET.CVMFS_dune_opensciencegrid_org_REVISION>=1105&&TARGET.HAS_CVMFS_fifeuser1_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser2_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser3_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser4_opensciencegrid_org==true)' file:///dune/app/users/weishi/run_FDlegacyCAF_autogrid.sh
+jobsub_submit -G dune -N 1 --memory=2000MB --disk=5GB --expected-lifetime=48h --cpu=1 --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC,OFFSITE --tar_file_name=dropbox:///dune/app/users/weishi/dunetpclegacy.tar.gz --use-cvmfs-dropbox -l '+SingularityImage=\"/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest\"' --append_condor_requirements='(TARGET.HAS_Singularity==true&&TARGET.HAS_CVMFS_dune_opensciencegrid_org==true&&TARGET.HAS_CVMFS_dune_osgstorage_org==true&&TARGET.HAS_CVMFS_larsoft_opensciencegrid_org==true&&TARGET.CVMFS_dune_opensciencegrid_org_REVISION>=1105&&TARGET.HAS_CVMFS_fifeuser1_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser2_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser3_opensciencegrid_org==true&&TARGET.HAS_CVMFS_fifeuser4_opensciencegrid_org==true)' file:///dune/app/users/weishi/run_FDlegacyCAF_autogrid.sh
 ```
 
 ```
