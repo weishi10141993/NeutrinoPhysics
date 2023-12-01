@@ -2,8 +2,18 @@
 
 ## Monoenergetic neutrino event generation with Marley + edepsim setup
 
-This section provides a single script to do both Marley event generation and edepsim. If you only want one of them, read the remaining two sections.
+This section provides a single script to do both Marley event generation and edepsim. If you only need one of them, read the remaining two sections.
 
+Usage: ```./MarleyGen_MonoE_Flux_Edepsim.sh <energy in MeV> <number of events>```.
+
+Neutrino is default to nue. Target is default to Ar-40.
+
+```
+# For example, this generates 10 'CC' events of nue scattered of Ar40 at an energy of 20MeV
+./MarleyGen_MonoE_Flux_Edepsim.sh 20 10
+```
+
+More configuations available on [Marley website](https://www.marleygen.org/index.html).
 
 ## Monoenergetic neutrino event generation with Marley
 
@@ -29,9 +39,6 @@ marley monoE.js
 
 ## edepsim setup to read Marley events
 
-Marley HEPEVT format is not supported in edepsim ```v3_2_0c``` in ups products.
-
-Instead, compile from source code using edepsim ```master``` branch:
 ```
 # edepsim needs root and geant4 to compile
 source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
@@ -45,12 +52,17 @@ export Geant4_DIR=`dirname $G4_cmake_file`
 # edep-sim needs to have the GEANT bin directory in the path
 export PATH=$PATH:$GEANT4_FQ_DIR/bin
 
+# Marley HEPEVT format is not supported in edepsim ```v3_2_0c``` in ups products.
+#
+# Instead, compile from source code using edepsim ```master``` branch:
 # this fork has modified setup.sh
 git clone https://github.com/weishi10141993/edep-sim.git
 
+cd edep-sim
 source setup.sh
 edep-build
 
+cd ..
 edep-sim -C \
          -g LArBath.gdml \
          -o edep.LArBath.MeVnue.root \

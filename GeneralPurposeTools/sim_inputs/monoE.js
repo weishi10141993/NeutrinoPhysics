@@ -1,8 +1,6 @@
 // Use this example job configuration file as a starting point for your own
 // files.
 {
-  seed: 123456, // Random number seed (omit to use time since Unix epoch)
-
   // Pure 40Ar target
   target: {
     nuclides: [ 1000180400 ],
@@ -13,15 +11,18 @@
   reactions: [ "ve40ArCC_Bhattacharya2009.react" ],
 
   // Neutrino source specification
+  // Valid values for the "neutrino" key are neutrino PDG codes (±12, ±14, ±16)
+  // and the strings "ve", "vebar", "vu", "vubar", "vt", and "vtbar".
   source: {
-    type: "fermi-dirac",
-    neutrino: "ve",       // The source produces electron neutrinos
-    Emin: 0,              // Minimum neutrino energy (MeV)
-    Emax: 60,             // Maximum neutrino energy (MeV)
-    temperature: 3.5,     // Temperature (MeV)
-    eta: 4                // Pinching parameter (dimensionless, default 0)
+    type: "mono",
+    neutrino: "ve",
+    energy: 30,
   },
 
+  // An isotropic neutrino direction may be randomly sampled for each event by
+  // using the following configuration:
+  //
+  // direction: "isotropic",
   // Incident neutrino direction 3-vector
   direction: { x: 0.0, y: 0.0, z: 1.0 },
 
@@ -29,10 +30,10 @@
   executable_settings: {
 
     // The number of events to generate
-    events: 10000,
+    events: 10,
 
     // Event output configuration
-    output: [ { file: "events.ascii", format: "ascii", mode: "overwrite" } ],
+    output: [ { file: "marley_gen_hepevt.txt", format: "hepevt", mode: "overwrite" } ],
 
   },
 }
