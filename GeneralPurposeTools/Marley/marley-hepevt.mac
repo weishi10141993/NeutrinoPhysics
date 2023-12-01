@@ -1,0 +1,13 @@
+/generator/kinematics/hepevt/input marley_gen_hepevt.txt
+/generator/kinematics/hepevt/flavor marley
+/generator/kinematics/hepevt/verbose 2
+/generator/kinematics/set hepevt
+/generator/position/set free
+/generator/time/set fixed
+/generator/count/fixed/number 1
+/generator/count/set fixed
+/generator/add
+/process/msc/UseG4EmSaturation 1
+/process/optical/processActivation Scintillation 1
+/edep/material/birksConstant LAr 0.694 mm/MeV
+/edep/update
