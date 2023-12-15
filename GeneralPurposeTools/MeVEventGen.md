@@ -69,3 +69,24 @@ edep-sim -C \
          -e 10 \
          marley-hepevt.mac
 ```
+
+## Event visualization
+
+This is a useful [event display tool](https://github.com/weishi10141993/PyEdep/tree/Marley?tab=readme-ov-file#description) by C. Zhang.
+
+```
+source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
+setup edepsim v3_2_0 -q e20:prof
+
+# [First time only: install matplotlib]
+# Passing parameters norm and vmin/vmax simultaneously is deprecated since matplotlib 3.3
+pip install --force-reinstall --target=/dune/app/users/weishi/python3libs "matplotlib==3.2.2"
+
+export PYTHONPATH=/dune/app/users/weishi/python3libs:$PYTHONPATH
+
+# Save a few event displays
+python test.py
+
+# Output file with energy info
+python3 writer.py 'edep_nue_*.root' output_file.root
+```
