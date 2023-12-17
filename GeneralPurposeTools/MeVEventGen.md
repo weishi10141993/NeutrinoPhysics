@@ -11,6 +11,8 @@ Neutrino is default to nue. Target is default to Ar-40.
 ```
 # For example, this generates 10 'CC' events of nue scattered of Ar40 at an energy of 20MeV
 ./MarleyGen_MonoE_Flux_Edepsim.sh 20 10
+
+# Example events available: /pnfs/dune/persistent/users/weishi/FD3/LArBath/Marley_Edepsim_noSecondaryDeposit/nue
 ```
 
 More configuations available on [Marley website](https://www.marleygen.org/index.html).
@@ -72,7 +74,7 @@ edep-sim -C \
 
 ## Event visualization
 
-This is a useful [event display tool](https://github.com/weishi10141993/PyEdep/tree/Marley?tab=readme-ov-file#description) by C. Zhang.
+This is a useful [event display tool](https://github.com/czczc/PyEdep?tab=readme-ov-file#description).
 
 ```
 source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
@@ -88,5 +90,5 @@ export PYTHONPATH=/dune/app/users/weishi/python3libs:$PYTHONPATH
 python test.py
 
 # Output file with energy info
-python3 writer.py 'edep_nue_*.root' output_file.root
+python3 writer.py 'edep_nue_*.root' 'Marley' output_file.root
 ```
