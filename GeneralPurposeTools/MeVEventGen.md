@@ -84,7 +84,7 @@ setup edepsim v3_2_0 -q e20:prof
 # Passing parameters norm and vmin/vmax simultaneously is deprecated since matplotlib 3.3
 pip install --force-reinstall --target=/dune/app/users/weishi/python3libs "matplotlib==3.2.2"
 
-export PYTHONPATH=/dune/app/users/weishi/python3libs:$PYTHONPATH
+export PYTHONPATH=/exp/dune/app/users/weishi/python3libs:$PYTHONPATH
 
 # Save a few event displays
 python test.py
