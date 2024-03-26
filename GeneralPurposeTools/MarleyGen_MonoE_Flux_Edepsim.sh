@@ -46,7 +46,8 @@ marley monoE.${ENERGY}.MeV.nue.Evt.${NEVENTS}.js
 # Prepare for edepsim
 # cmake, geant4 and root required for edepsim to compile
 setup cmake v3_19_6
-setup geant4 v4_10_3_p03e -q e19:prof
+#setup geant4 v4_10_3_p03e -q e19:prof
+setup geant4 v4_10_6_p01 -q e19:prof
 setup root v6_18_04d -q e19:prof
 
 # edep-sim needs to know where a certain GEANT .cmake file is...
