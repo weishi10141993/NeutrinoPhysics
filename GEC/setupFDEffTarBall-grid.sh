@@ -6,6 +6,8 @@ DIRECTORY=FDEff
 USERNAME=${GRID_USER}
 echo "Got username"
 source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
+unsetup mrb
+setup mrb v4_04_06 
 setup dunetpc v09_22_02 -q e19:debug # this also sets up the ifdh used in run_FDEffTarBall.sh
 echo "dunetpc is set"
 export WORKDIR=${_CONDOR_JOB_IWD} # if we use the RCDS the localProducts area will be placed in $CONDOR_DIR_INPUT
