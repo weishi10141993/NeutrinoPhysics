@@ -9,6 +9,14 @@ Usage: ```./MarleyGen_MonoE_Flux_Edepsim.sh <energy in MeV> <number of events>``
 Neutrino is default to nue. Target is default to Ar-40.
 
 ```
+# To work on Alma9 at dunegpvm, set up SL7 container:
+
+/cvmfs/oasis.opensciencegrid.org/mis/apptainer/current/bin/apptainer shell --shell=/bin/bash \
+-B /cvmfs,/exp,/nashome,/pnfs/dune,/opt,/run/user,/etc/hostname,/etc/hosts,/etc/krb5.conf --ipc --pid \
+/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-dev-sl7:latest
+
+export UPS_OVERRIDE="-H Linux64bit+3.10-2.17"
+
 # For example, this generates 10 'CC' events of nue scattered of Ar40 at an energy of 20MeV
 ./MarleyGen_MonoE_Flux_Edepsim.sh 20 10
 
@@ -89,9 +97,9 @@ setup edepsim v3_2_0 -q e20:prof
 
 # [First time only: install matplotlib]
 # Passing parameters norm and vmin/vmax simultaneously is deprecated since matplotlib 3.3
-pip install --force-reinstall --target=/exp/dune/app/users/weishi/python3libs "matplotlib==3.2.2"
+pip install --force-reinstall --target=/exp/dune/app/users/weishi/ChaoEvtVisuallibs "matplotlib==3.2.2"
 
-export PYTHONPATH=/exp/dune/app/users/weishi/python3libs:$PYTHONPATH
+export PYTHONPATH=/exp/dune/app/users/weishi/ChaoEvtVisuallibs:$PYTHONPATH
 
 # Save a few event displays
 python test.py
