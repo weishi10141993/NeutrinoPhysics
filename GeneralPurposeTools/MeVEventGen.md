@@ -85,14 +85,18 @@ edep-sim -C \
 This is a useful [event display tool](https://github.com/czczc/PyEdep?tab=readme-ov-file#description).
 
 ```
-# Work in dunegpvm (default to alma9), set SL7 container environment
+[First time only ]
+# log in dunegpvm
+git clone https://github.com/weishi10141993/PyEdep.git -b Marley
+```
+
+Work in dunegpvm (default to alma9), set SL7 container environment
+```
 /cvmfs/oasis.opensciencegrid.org/mis/apptainer/current/bin/apptainer shell --shell=/bin/bash \
 -B /cvmfs,/exp,/nashome,/pnfs/dune,/opt,/run/user,/etc/hostname,/etc/hosts,/etc/krb5.conf --ipc --pid \
 /cvmfs/singularity.opensciencegrid.org/fermilab/fnal-dev-sl7:latest
 
 export UPS_OVERRIDE="-H Linux64bit+3.10-2.17"
-
-git clone https://github.com/weishi10141993/PyEdep.git -b Marley
 
 source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
 setup edepsim v3_2_0 -q e20:prof
@@ -101,6 +105,7 @@ setup edepsim v3_2_0 -q e20:prof
 # Passing parameters norm and vmin/vmax simultaneously is deprecated since matplotlib 3.3
 # change the target dir to your own dir
 pip install --force-reinstall --target=/exp/dune/app/users/weishi/ChaoEvtVisuallibs "matplotlib==3.2.2"
+
 export PYTHONPATH=/exp/dune/app/users/weishi/ChaoEvtVisuallibs:$PYTHONPATH
 
 # Save a few event displays
