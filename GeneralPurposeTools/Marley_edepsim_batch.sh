@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Running Marley edepsim chain"
-for (( k = 91; k < 100; ++k )); do
+for (( k = 10; k <= 160; ++k )); do
   ienergy=$(echo "scale=1; $k*0.5" | bc)
   echo "running $ienergy MeV"
   ./MarleyGen_MonoE_Flux_Edepsim.sh ${ienergy} 1000

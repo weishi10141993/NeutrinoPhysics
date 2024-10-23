@@ -7,6 +7,8 @@
 /generator/count/fixed/number 1
 /generator/count/set fixed
 /generator/add
+/run/initialize
+/process/inactivate nKiller
 /process/msc/UseG4EmSaturation 1
 /process/optical/processActivation Scintillation 1
 /edep/material/birksConstant LAr 0.694 mm/MeV
